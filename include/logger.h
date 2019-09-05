@@ -24,7 +24,7 @@ namespace Satellite {
     public:
         template<class T>
         static inline void log(T t) {
-            if /*constexpr*/ (Debug) {
+            if constexpr (Debug) {
                 std::cout << "[" << current_time_string() << "] ";
                 std::cout << "[Debug] ";
                 std::cout << t << std::endl;
