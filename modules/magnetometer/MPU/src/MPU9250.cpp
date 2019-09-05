@@ -64,7 +64,7 @@ MPUIMU::Error_t MPU9250::runTests(void)
     // Read the WHO_AM_I register, this is a good test of communication
     int id = getId();
     if (id != 0x71 && id != 0x73) {
-        printf("%d\n", id);
+        // printf("%d\n", id);
         return ERROR_IMU_ID;
     }
 
@@ -83,7 +83,7 @@ MPUIMU::Error_t MPU9250::runTests(void)
     // check AK8963 WHO AM I register, expected value is 0x48 (decimal 72)
     int mag_id = getAK8963CID();
     if (mag_id != 0x48) {
-        printf("%d\n", mag_id);
+        // printf("%d\n", mag_id);
         return ERROR_MAG_ID;
     }
 
