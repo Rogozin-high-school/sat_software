@@ -57,9 +57,8 @@ namespace Satellite {
         connectionThread.detach();
 
         // Meanwhile, count down how much time remains until the connection fails.
-        int timeRemaining = SocketTimeoutSeconds;
-        while (connectionStatus == -1 && timeRemaining > 0) {
-            Logger::log(std::to_string(timeRemaining--) + " seconds remaining...");
+        for (int t = SocketTimeoutSeconds; connectionStatus == -1 && t > 0; t--) {
+            Logger::log(std::to_string(t) + " seconds remaining...");
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }
         
