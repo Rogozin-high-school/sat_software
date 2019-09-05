@@ -12,7 +12,7 @@ int main(void) {
     Satellite::Logger::log("Starting the satellite!");
 
     Satellite::Client client;
-    if (!client.connect()) {
+    if (client.failure()) {
         Satellite::Logger::log("Connection has failed!");
         return 1;
     }

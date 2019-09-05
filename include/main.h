@@ -17,4 +17,5 @@ namespace Satellite {
     constexpr bool Debug = true;
     constexpr const char *Address = "10.17.110.69";
     constexpr int Port = 550;
+    constexpr int SocketTimeoutSeconds = 5;
 }

@@ -6,11 +6,29 @@
 
 #pragma once
 #include "main.h"
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <unistd.h>
+#include <thread>
+#include <chrono>
 
 namespace Satellite {
     class Client {
+    private:
+        std::string address;
+        int port;
+
+        sockaddr_in socketStruct;
+        int socketHandle = -1;
+
+        bool lastOperationSuccessful;
+
+        void create_socket();
+        void attempt_connection();
     public:
-        Client();
-        bool connect(std::string address = Address, int port = Port) const;
+        Client(std::string address = Address, int port = Port);
+        ~Client();
+        bool success() const;
+        bool failure() const;
     };
 }
