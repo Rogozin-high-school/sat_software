@@ -1,3 +1,12 @@
+/*
+    Created by Maor Gershman, 6.9.2019
+    ---
+    This class will manage the satellite's magnetometer.
+*/
+
+#pragma once
+
+#ifdef RASPBERRY_PI
 #include "../lib/MPU/MPU9250_Master_I2C.h"
 #include "logger.h"
 #include <wiringPi.h>
@@ -55,3 +64,4 @@ namespace SatelliteSoftware {
         }
     };
 }
+#endif
