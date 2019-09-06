@@ -1,5 +1,7 @@
 /*
     Created by Maor Gershman, 25.8.2019
+    ---
+    Note: Networking should be done on a seperate thread!
 */
 
 #include "../include/logger.h"
@@ -34,16 +36,16 @@ namespace Satellite {
         }
 
         // Set the socket's address and port
-        socketStruct.sin_family = AF_INET;
-        socketStruct.sin_port = htons(port);
-        lastOperationSuccessful = 1 == inet_pton(AF_INET, address.c_str(), &socketStruct.sin_addr.s_addr);
+        socketAddress.sin_family = AF_INET;
+        socketAddress.sin_port = htons(port);
+        lastOperationSuccessful = inet_pton(AF_INET, address.c_str(), &socketAddress.sin_addr.s_addr) == 1;
         if (failure()) {
             return;
         }
         
         // Set the socket's timeout
         timeval timeout = { SocketTimeoutSeconds, 0 };
-        lastOperationSuccessful = 0 == setsockopt(socketHandle, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
+        lastOperationSuccessful = setsockopt(socketHandle, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout)) == 0;
     }
 
     void Client::attempt_connection() {
@@ -52,13 +54,13 @@ namespace Satellite {
         // Attempt to connect to the server (on a new thread).
         int connectionStatus = -1;
         std::thread connectionThread([&] {
-            connectionStatus = connect(socketHandle, (sockaddr*)&socketStruct, sizeof(socketStruct));
+            connectionStatus = connect(socketHandle, (sockaddr*)&socketAddress, sizeof(socketAddress));
         });
         connectionThread.detach();
 
         // Meanwhile, count down how much time remains until the connection fails.
         for (int t = SocketTimeoutSeconds; connectionStatus == -1 && t > 0; t--) {
-            Logger::log(std::to_string(t) + " seconds remaining...");
+            Logger::log(std::to_string(t) + " seconds remaining to the timeout...");
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }
         

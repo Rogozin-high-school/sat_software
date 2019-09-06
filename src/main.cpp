@@ -25,17 +25,20 @@ int main(void) {
     int code = magnetometer.get_error_code();
     switch (code) {
     case MPUIMU::ERROR_IMU_ID:
-        Satellite::Logger::log("Bad IMU device ID!");
+        Satellite::Logger::log("Mangnetometer failure: Bad IMU device ID!");
         return code;
     case MPUIMU::ERROR_MAG_ID:
-        Satellite::Logger::log("Bad magnetometer device ID!");
+        Satellite::Logger::log("Mangnetometer failure: Bad magnetometer device ID!");
         return code;
     case MPUIMU::ERROR_SELFTEST:
-        Satellite::Logger::log("Failed self test!");
+        Satellite::Logger::log("Mangnetometer failure: Failed self test!");
         return code;
     default:
-        Satellite::Logger::log("MPU9250 online!");
+        Satellite::Logger::log("Mangnetometer: MPU9250 online!");
     }
+
+    // Start the communication with the server.
+    client.start_communication_loop();
     
     return 0;
 }

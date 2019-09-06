@@ -18,7 +18,7 @@ namespace Satellite {
         std::string address;
         int port;
 
-        sockaddr_in socketStruct;
+        sockaddr_in socketAddress;
         int socketHandle = -1;
 
         bool lastOperationSuccessful;
