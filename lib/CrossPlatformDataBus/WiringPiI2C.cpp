@@ -16,7 +16,7 @@
    along with CrossPlatformI2C.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "../../../../src/CrossPlatformI2C.h"
+#include "CrossPlatformI2C.h"
 
 #include <wiringPi.h>
 #include <wiringPiI2C.h>
