@@ -11,7 +11,7 @@
 
 // Include these modules ONLY for Raspberry Pi!
 #ifdef RASPBERRY_PI
-#include "../modules/magnetometer/magnetometer.h"
+#include "../include/magnetometer.h"
 #endif
 
 int main(void) {
