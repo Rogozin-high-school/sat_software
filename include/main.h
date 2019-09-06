@@ -6,7 +6,6 @@
 */
 
 #pragma once
-#include <string>
 
 // AFAIK, __arm__ is only defined in Raspberry Pi.
 #ifdef __arm__
@@ -19,7 +18,6 @@ namespace Satellite {
         Convention: CamelCase.
     */
 
-    constexpr bool Debug = true;
     constexpr const char *Address = "10.17.110.69";
     constexpr int Port = 550;
     constexpr int SocketTimeoutSeconds = 5;

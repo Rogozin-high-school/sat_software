@@ -6,6 +6,9 @@
 
 #include "../include/logger.h"
 #include "../include/client.h"
+#include <unistd.h>
+#include <thread>
+#include <chrono>
 
 namespace Satellite {
     Client::Client(std::string address, int port) : address(address), port(port) {
@@ -19,18 +22,18 @@ namespace Satellite {
     Client::~Client() {
         if (socketHandle != -1) {
             close(socketHandle);
-            Logger::log("Closed the socket!");
+            Logger::debug("Closed the socket!", Logger::LogPrefix::CLIENT);
         }
     }
 
     void Client::create_socket() {
-        Logger::log("Creating the socket...");
+        Logger::debug("Creating the socket...", Logger::LogPrefix::CLIENT);
 
         // Open the socket
         socketHandle = socket(AF_INET, SOCK_STREAM, 0);
         lastOperationSuccessful = socketHandle != -1;
         if (success()) {
-            Logger::log("Opened the socket!");
+            Logger::debug("Opened the socket!", Logger::LogPrefix::CLIENT);
         } else {
             return;
         }
@@ -49,7 +52,7 @@ namespace Satellite {
     }
 
     void Client::attempt_connection() {
-        Logger::log("Attempting connection to " + address + ":" + std::to_string(port) + "...");
+        Logger::info("Attempting connection to " + address + ":" + std::to_string(port) + "...", Logger::LogPrefix::CLIENT);
 
         // Attempt to connect to the server (on a new thread).
         int connectionStatus = -1;
@@ -60,7 +63,7 @@ namespace Satellite {
 
         // Meanwhile, count down how much time remains until the connection fails.
         for (int t = SocketTimeoutSeconds; connectionStatus == -1 && t > 0; t--) {
-            Logger::log(std::to_string(t) + " seconds remaining to the timeout...");
+            Logger::debug(std::to_string(t) + " seconds remaining to the timeout...", Logger::LogPrefix::CLIENT);
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }
         

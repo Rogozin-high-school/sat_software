@@ -7,10 +7,7 @@
 #pragma once
 #include "main.h"
 #include <arpa/inet.h>
-#include <sys/socket.h>
-#include <unistd.h>
-#include <thread>
-#include <chrono>
+#include <string>
 
 namespace Satellite {
     class Client {
