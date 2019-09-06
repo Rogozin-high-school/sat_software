@@ -1,4 +1,4 @@
-#include "../lib/MPU/src/MPU9250_Master_I2C.h"
+#include "../lib/MPU/MPU9250_Master_I2C.h"
 #include "logger.h"
 #include <wiringPi.h>
 #include <memory>

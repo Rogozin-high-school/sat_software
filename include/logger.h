@@ -24,7 +24,7 @@ namespace SatelliteSoftware {
         // Recommended minimal level:
         // - On debugging:     DEBUG/INFO
         // - When testing:     SEVERE
-        static constexpr Level MinLogLevel = Level::INFO;
+        static constexpr Level MinLogLevel = Level::DEBUG;
     private:
         static std::string current_time_string() {
             char buffer[9];
