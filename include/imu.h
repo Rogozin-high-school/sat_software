@@ -1,7 +1,7 @@
 /*
     Created by Maor Gershman, 6.9.2019
     ---
-    This class will manage the satellite's magnetometer.
+    This class will manage the satellite's IMU.
 */
 
 #pragma once
@@ -14,35 +14,35 @@
 #include <array>
 
 namespace SatelliteSoftware {
-    class Magnetometer {
+    class IMU {
     private:
         std::unique_ptr<MPU9250_Master_I2C> mpu;
         std::array<std::array<float, 3>, 3> values;
     public:
-        Magnetometer() {
-            Logger::debug("Setting up WiringPi...", Logger::Prefix::MAGNETOMETER);
+        IMU() {
+            Logger::debug("Setting up WiringPi...", Logger::Prefix::IMU);
             wiringPiSetup();
 
-            Logger::debug("Setting up MPU...", Logger::Prefix::MAGNETOMETER);
+            Logger::debug("Setting up MPU...", Logger::Prefix::IMU);
             mpu = std::make_unique<MPU9250_Master_I2C>
                 (MPU9250_Master_I2C::AFS_2G,
                 MPU9250_Master_I2C::GFS_250DPS, 
                 MPU9250_Master_I2C::MFS_16BITS, 
                 MPU9250_Master_I2C::M_8Hz);
             
-            Logger::debug("Starting MPU...", Logger::Prefix::MAGNETOMETER);
+            Logger::debug("Starting MPU...", Logger::Prefix::IMU);
             switch (mpu->begin()) {
             case MPUIMU::ERROR_NONE:
-                Logger::info("Ready!", Logger::Prefix::MAGNETOMETER);
+                Logger::info("Ready!", Logger::Prefix::IMU);
                 break;
             case MPUIMU::ERROR_IMU_ID:
-                Logger::severe("Bad IMU device ID!", Logger::Prefix::MAGNETOMETER);
+                Logger::severe("Bad IMU device ID!", Logger::Prefix::IMU);
                 break;
             case MPUIMU::ERROR_MAG_ID:
-                Logger::severe("Bad MGM device ID!", Logger::Prefix::MAGNETOMETER);
+                Logger::severe("Bad MGM device ID!", Logger::Prefix::IMU);
                 break;
             case MPUIMU::ERROR_SELFTEST:
-                Logger::severe("Failed self test!", Logger::Prefix::MAGNETOMETER);
+                Logger::severe("Failed self test!", Logger::Prefix::IMU);
                 break;
             }
         }
@@ -51,7 +51,7 @@ namespace SatelliteSoftware {
             mpu->calibrateMagnetometer();
         }
 
-        void read_magnetometer() {
+        void read_Magnetometer() {
             mpu->readMagnetometer(values[0][0], values[0][1], values[0][2]);
         }
         
@@ -64,4 +64,4 @@ namespace SatelliteSoftware {
         }
     };
 }
-#endif
+#endif // RASPBERRY_PI

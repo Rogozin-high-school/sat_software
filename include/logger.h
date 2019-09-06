@@ -18,7 +18,7 @@ namespace SatelliteSoftware {
         };
 
         enum class Prefix {
-            GENERAL, CLIENT, MAGNETOMETER
+            GENERAL, CLIENT, IMU
         };
 
         // Recommended minimal level:
@@ -66,8 +66,8 @@ namespace SatelliteSoftware {
                 return "General";
             case Logger::Prefix::CLIENT:
                 return " Client";
-            case Logger::Prefix::MAGNETOMETER:
-                return "    MGM";
+            case Logger::Prefix::IMU:
+                return "    IMU";
             }
             return std::string();
         }

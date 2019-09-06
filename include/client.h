@@ -56,10 +56,12 @@ namespace SatelliteSoftware {
             });
             connectionThread.detach();
 
-            for (int i = 0; status != 0; i++) {
+            bool increasing = true;
+            int dots = 0;
+            while (status != 0) {
                 std::string str = "Connecting";
                 int j = 0;
-                for (; j < (i % 10 <= 5 ? i % 10 : 10 - i % 10); j++) {
+                for (; j < dots; j++) {
                     str += ".";
                 }
                 for (; j < 5; j++) {
@@ -69,6 +71,16 @@ namespace SatelliteSoftware {
                 std::this_thread::sleep_for(std::chrono::milliseconds(200));
                 // Move to the previous line
                 std::cout << "\x1B[1F" << std::flush;
+                
+                if (increasing) {
+                    if (++dots == 5) {
+                        increasing = false;
+                    }
+                } else {
+                    if (--dots == 0) {
+                        increasing = true;
+                    }
+                }
             }
             std::cout << std::endl;
 

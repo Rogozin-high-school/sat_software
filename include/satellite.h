@@ -9,10 +9,7 @@
 #include "main.h"
 #include "logger.h"
 #include "client.h"
-
-#ifdef RASPBERRY_PI
-#include "magnetometer.h"
-#endif
+#include "imu.h"
 
 namespace SatelliteSoftware {
     class Satellite {
@@ -34,8 +31,8 @@ namespace SatelliteSoftware {
 
             // Load the magnetometer.
             #ifdef RASPBERRY_PI
-            Magnetometer magnetometer;
-            #endif
+            IMU imu;
+            #endif // RASPBERRY_PI
         }
 
         ~Satellite() {
