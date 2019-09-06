@@ -8,6 +8,11 @@
 #pragma once
 #include <string>
 
+// AFAIK, __arm__ is only defined in Raspberry Pi.
+#ifdef __arm__
+#define RASPBERRY_PI // A much clearer name :)
+#endif
+
 namespace Satellite {
     /*
         Contants. 

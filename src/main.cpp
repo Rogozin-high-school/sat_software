@@ -7,7 +7,11 @@
 
 #include "../include/logger.h"
 #include "../include/client.h"
+
+// Include these modules ONLY for Raspberry Pi!
+#ifdef RASPBERRY_PI
 #include "../modules/magnetometer/magnetometer.h"
+#endif
 
 int main(void) {
     Satellite::Logger::log("Starting the satellite!");
@@ -20,7 +24,8 @@ int main(void) {
     }
     Satellite::Logger::log("Client connected!");
 
-    // Start the magnetometer
+    // Start the magnetometer (if running on Raspberry Pi)
+    #ifdef RASPBERRY_PI
     Satellite::Modules::Magnetometer magnetometer;
     int code = magnetometer.get_error_code();
     switch (code) {
@@ -36,9 +41,7 @@ int main(void) {
     default:
         Satellite::Logger::log("Mangnetometer: MPU9250 online!");
     }
-
-    // Start the communication with the server.
-    client.start_communication_loop();
+    #endif
     
     return 0;
 }
