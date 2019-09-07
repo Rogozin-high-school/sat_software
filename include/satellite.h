@@ -29,7 +29,7 @@ namespace SatelliteSoftware {
                 return;
             }
 
-            // Load the magnetometer.
+            // Load the IMU.
             #ifdef RASPBERRY_PI
             IMU imu;
             #endif // RASPBERRY_PI
