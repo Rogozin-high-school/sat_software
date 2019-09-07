@@ -106,8 +106,13 @@ namespace SatelliteSoftware {
     public:
         const bool& socketFailed = sockFailed;
 
-        Client(std::string address = Address, int port = Port) 
-            : address(address), port(port) 
+        Client(std::array<uint8_t, 4> addr = DefaultAddress, uint16_t port = DefaultPort) : 
+            address(
+                std::to_string(addr[0]) + "." + 
+                std::to_string(addr[1]) + "." + 
+                std::to_string(addr[2]) + "." + 
+                std::to_string(addr[3])
+            ), port(port) 
         {
             if (!start_connection()) {
                 sockFailed = true;

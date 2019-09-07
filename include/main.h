@@ -7,12 +7,13 @@
 #pragma once
 
 #include <string>
+#include <array>
 
 #ifdef __arm__
 #define RASPBERRY_PI
 #endif // __arm__
 
 namespace SatelliteSoftware {
-    constexpr const char *Address = "10.17.110.69";
-    constexpr int Port = 550;
+    constexpr std::array<uint8_t, 4> DefaultAddress = {10, 17, 110, 69};
+    constexpr uint16_t DefaultPort = 550;
 }

@@ -24,8 +24,8 @@ namespace SatelliteSoftware {
             Helper::print_date();
             Logger::debug("Satellite is alive!");
 
-            // Create the client and connect to the ground station. 
-            Client client("84.109.40.45", 8888);
+            // Create the client and connect to the ground station.
+            Client client;
             if (client.socketFailed) {
                 exCode = 1;
                 return;
