@@ -7,6 +7,7 @@
 #pragma once
 
 #include "main.h"
+#include "helper.h"
 #include "logger.h"
 #include "client.h"
 #include "imu.h"
@@ -19,11 +20,12 @@ namespace SatelliteSoftware {
         const int& exitCode = exCode;
 
         Satellite() {
-            Logger::print_date();
+            Helper::clear_screen();
+            Helper::print_date();
             Logger::debug("Satellite is alive!");
 
             // Create the client and connect to the ground station. 
-            Client client;
+            Client client("84.109.40.45", 8888);
             if (client.socketFailed) {
                 exCode = 1;
                 return;

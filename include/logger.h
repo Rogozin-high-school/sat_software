@@ -6,9 +6,7 @@
 */
 
 #pragma once
-#include <iostream>
-#include <string>
-#include <ctime>
+#include "helper.h"
 
 namespace SatelliteSoftware {
     class Logger {
@@ -26,24 +24,6 @@ namespace SatelliteSoftware {
         // - When testing:     SEVERE
         static constexpr Level MinLogLevel = Level::DEBUG;
     private:
-        static std::string current_time_string() {
-            char buffer[9];
-            time_t t;
-            time(&t);
-            tm *tmStruct = localtime(&t);
-            strftime(buffer, sizeof(buffer), "%H:%M:%S", tmStruct);
-            return buffer;
-        }
-
-        static std::string current_date_string() {
-            char buffer[23];
-            time_t t;
-            time(&t);
-            tm *tmStruct = localtime(&t);
-            strftime(buffer, sizeof(buffer), "%a, %d %b %Y", tmStruct);
-            return buffer;
-        }
-
         static std::string level_string(Logger::Level level) {
             switch (level) {
             case Logger::Level::DEBUG:
@@ -74,7 +54,7 @@ namespace SatelliteSoftware {
 
         template<class T>
         static void log(const T& t, Prefix prefix, Level level) {
-            std::cout << "[" << current_time_string() << "] ";
+            std::cout << "[" << Helper::current_time_string() << "] ";
             std::cout << "[" << level_string(level) << " - " << prefix_string(prefix) << "] ";
             std::cout << t << std::endl;
         }
@@ -112,20 +92,6 @@ namespace SatelliteSoftware {
             if constexpr (MinLogLevel <= Level::ERROR) {
                 log(t, prefix, Level::ERROR);
             }
-        }
-
-        static void print_date() {
-            std::string date = current_date_string();
-            int len = date.length();
-            std::cout << "+";
-            for (int i = 0; i < len + 2; i++) {
-                std::cout << "-";
-            }
-            std::cout << "+\n| " << date << " |\n+";
-            for (int i = 0; i < len + 2; i++) {
-                std::cout << "-";
-            }
-            std::cout << "+" << std::endl;
         }
     };
 }

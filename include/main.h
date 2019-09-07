@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <string>
+
 #ifdef __arm__
 #define RASPBERRY_PI
 #endif // __arm__
