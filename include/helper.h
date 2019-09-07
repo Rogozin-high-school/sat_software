@@ -10,7 +10,6 @@
 #include <iostream>
 #include <ctime>
 #include <chrono>
-#include <type_traits>
 #include <sstream>
 
 namespace SatelliteSoftware {

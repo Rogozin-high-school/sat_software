@@ -14,8 +14,7 @@
 namespace SatelliteSoftware {
     class Client {
     private:
-        static constexpr int ConnectionAttemptSeconds = 5;
-        static constexpr int ConnectionAttemptCooldownSeconds = 3;
+        static constexpr int ConnectionAttemptSeconds = 3;
 
         std::string address;
         int port;
@@ -64,19 +63,13 @@ namespace SatelliteSoftware {
             }
 
             // Attempt to connect on a new thread.
-            bool connecting = true;   
             int status = -1;
             std::thread connectionThread([&] {
                 while (status != 0) {
-                    // Attempt to connect until cooldown hits.
-                    connecting = true;
                     status = connect(socketHandle, (sockaddr*)&socketAddress, sizeof(socketAddress));
-                    // If connection has failed, cooldown.
+                    // If connection has failed, reopen the socket and retry
                     if (status != 0) {
-                        connecting = false;
                         close(socketHandle);
-                        // Sleep and open a new socket.
-                        std::this_thread::sleep_for(std::chrono::seconds(ConnectionAttemptCooldownSeconds));
                         create_socket();
                     }
                 }
@@ -86,27 +79,22 @@ namespace SatelliteSoftware {
             bool increasing = true;
             int dots = 0;
             while (status != 0) {
-                std::string str = connecting ? "Connecting" : "Cooling down";
+                std::string str = "Connecting";
                 int i = 0;
-                for (; i < dots; i++) {
+                for (; i < dots; i++)
                     str += ".";
-                }
-                for (; i < 5; i++) {
+                for (; i < 5; i++)
                     str += " ";
-                }
                 Logger::info(str, Logger::Prefix::CLIENT);
                 std::this_thread::sleep_for(std::chrono::milliseconds(200));
                 // Move to the previous line
                 std::cout << "\x1B[1F" << std::flush;
-                
                 if (increasing) {
-                    if (++dots == 5) {
+                    if (++dots == 5)
                         increasing = false;
-                    }
                 } else {
-                    if (--dots == 0) {
+                    if (--dots == 0)
                         increasing = true;
-                    }
                 }
             }
 
