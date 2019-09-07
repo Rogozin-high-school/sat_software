@@ -51,7 +51,7 @@ namespace SatelliteSoftware {
             mpu->calibrateMagnetometer();
         }
 
-        void read_Magnetometer() {
+        void read_magnetometer() {
             mpu->readMagnetometer(values[0][0], values[0][1], values[0][2]);
         }
         
