@@ -8,6 +8,9 @@
 
 #include <string>
 #include <array>
+#include <chrono>
+#include <iostream>
+#include <thread>
 
 #ifdef __arm__
 #define RASPBERRY_PI
@@ -21,6 +24,8 @@ namespace SatelliteSoftware {
     constexpr std::array Address = {84, 109, 40, 45};
     constexpr int        Port    = 8888;
     #endif
+
+    using Timepoint = std::chrono::high_resolution_clock::time_point;
 
     static_assert(
         Address[0] > 0 && Address[0] < 0xFF &&

@@ -1,3 +1,3 @@
-g++-9   src/main.cpp \
+g++-9   src/*.cpp \
         -s -std=c++17 -O3 \
         -lpthread
