@@ -48,9 +48,16 @@ namespace SatelliteSoftware {
             std::cout << "+" << std::endl;
         }
 
+        static std::string address_to_string(const std::array<int, 4>& address) {
+            return std::to_string(address[0]) + "." + 
+                std::to_string(address[1]) + "." + 
+                std::to_string(address[2]) + "." + 
+                std::to_string(address[3]);
+        }
+
         static std::string time_period_to_string(
-            std::chrono::_V2::system_clock::time_point start, 
-            std::chrono::_V2::system_clock::time_point end) 
+            const std::chrono::high_resolution_clock::time_point& start, 
+            const std::chrono::high_resolution_clock::time_point& end) 
         {
             auto duration = (end - start).count() > 0 ? end - start : start - end;
             int64_t h = std::chrono::duration_cast<std::chrono::hours>(duration).count();

@@ -106,14 +106,7 @@ namespace SatelliteSoftware {
     public:
         const bool& socketFailed = propSocketFailed;
 
-        Client() : 
-            address(
-                std::to_string(DefaultAddress[0]) + "." + 
-                std::to_string(DefaultAddress[1]) + "." + 
-                std::to_string(DefaultAddress[2]) + "." + 
-                std::to_string(DefaultAddress[3])
-            ), port(port), socketHandle(-1)
-        {
+        Client() : address(Helper::address_to_string(Address)), port(port), socketHandle(-1) {
             if (!start_connection()) {
                 propSocketFailed = true;
                 return;
