@@ -10,14 +10,19 @@
 #include "helper.h"
 #include "logger.h"
 #include "client.h"
+
+#ifdef RASPBERRY_PI
 #include "imu.h"
+#else
+#include "fakeimu.h"
+#endif
 
 namespace SatelliteSoftware {
     class Satellite {
     private:
-        int exCode = 0;
+        int propExitCode;
     public:
-        const int& exitCode = exCode;
+        const int& exitCode = propExitCode;
 
         Satellite() {
             Helper::clear_screen();
@@ -27,14 +32,16 @@ namespace SatelliteSoftware {
             // Create the client and connect to the ground station.
             Client client;
             if (client.socketFailed) {
-                exCode = 1;
+                propExitCode = 1;
                 return;
             }
 
-            // Load the IMU.
+            // Load the IMU (or the fake one).
             #ifdef RASPBERRY_PI
             IMU imu;
-            #endif // RASPBERRY_PI
+            #else
+            FakeIMU imu;
+            #endif
         }
 
         ~Satellite() {

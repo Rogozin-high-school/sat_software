@@ -20,9 +20,9 @@ namespace SatelliteSoftware {
         int port;
 
         sockaddr_in socketAddress;
-        int socketHandle = -1;
+        int socketHandle;
         
-        bool sockFailed;
+        bool propSocketFailed;
 
         bool create_socket() {
             // Open the socket
@@ -104,18 +104,18 @@ namespace SatelliteSoftware {
             return true;
         }
     public:
-        const bool& socketFailed = sockFailed;
+        const bool& socketFailed = propSocketFailed;
 
-        Client(std::array<uint8_t, 4> addr = DefaultAddress, uint16_t port = DefaultPort) : 
+        Client() : 
             address(
-                std::to_string(addr[0]) + "." + 
-                std::to_string(addr[1]) + "." + 
-                std::to_string(addr[2]) + "." + 
-                std::to_string(addr[3])
-            ), port(port) 
+                std::to_string(DefaultAddress[0]) + "." + 
+                std::to_string(DefaultAddress[1]) + "." + 
+                std::to_string(DefaultAddress[2]) + "." + 
+                std::to_string(DefaultAddress[3])
+            ), port(port), socketHandle(-1)
         {
             if (!start_connection()) {
-                sockFailed = true;
+                propSocketFailed = true;
                 return;
             }
         }

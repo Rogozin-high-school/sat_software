@@ -11,13 +11,11 @@
 #include "logger.h"
 #include <wiringPi.h>
 #include <memory>
-#include <array>
 
 namespace SatelliteSoftware {
     class IMU {
     private:
         std::unique_ptr<MPU9250_Master_I2C> mpu;
-        std::array<std::array<float, 3>, 3> values;
     public:
         IMU() {
             Logger::debug("Setting up WiringPi...", Logger::Prefix::IMU);
@@ -51,17 +49,22 @@ namespace SatelliteSoftware {
             mpu->calibrateMagnetometer();
         }
 
-        void read_magnetometer() {
-            mpu->readMagnetometer(values[0][0], values[0][1], values[0][2]);
+        std::array<float, 3> read_magnetometer() {
+            float mx, my, mz;
+            mpu->readMagnetometer(mx, my, mz);
+            return {mx, my, mz};
         }
         
-        void read_gyrometer() {
-            mpu->readGyrometer(values[1][0], values[1][1], values[1][2]);
+        std::array<float, 3> read_gyrometer() {
+            float gx, gy, gz;
+            mpu->readGyrometer(gx, gy, gz);
+            return {gx, gy, gz};
         }
         
-        void read_accelerometer() {
-            mpu->readAccelerometer(values[2][0], values[2][1], values[2][2]);
-        }
+        std::array<float, 3> read_accelerometer() {
+            float gx, gy, gz;
+            mpu->readAccelerometer(gx, gy, gz);
+            return {gx, gy, gz};}
     };
 }
 #endif // RASPBERRY_PI
