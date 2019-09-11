@@ -33,6 +33,8 @@ namespace SatelliteSoftware {
         #else
         FakeIMU imu;
         #endif
+
+        // TODO: Actually communicate with the ground station
     }
 
     Satellite::~Satellite() {

@@ -18,7 +18,7 @@
 
 namespace SatelliteSoftware {
     #ifdef RASPBERRY_PI // Lab
-    constexpr std::array Address = {10, 17, 110, 69};
+    constexpr std::array Address = {10, 17, 110, 134};
     constexpr int        Port    = 550;
     #else               // Maor's PC
     constexpr std::array Address = {84, 109, 40, 45};

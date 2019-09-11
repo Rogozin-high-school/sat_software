@@ -20,7 +20,7 @@
 
 #include "MPU9250_Master_I2C.h"
 
-#include "../../CrossPlatformDataBus/src/CrossPlatformI2C.h"
+#include "../CrossPlatformDataBus/CrossPlatformI2C.h"
 
 // One ifdef needed to support delay() cross-platform
 #if defined(ARDUINO)
