@@ -14,29 +14,29 @@
 
 namespace SatelliteSoftware {
     RealIMU::RealIMU() {
-        Logger::debug("Setting up WiringPi...", LogPrefix::RealIMU);
+        Logger::debug("Setting up WiringPi...", LogPrefix::REALIMU);
         wiringPiSetup();
 
-        Logger::debug("Setting up MPU...", LogPrefix::RealIMU);
+        Logger::debug("Setting up MPU...", LogPrefix::REALIMU);
         mpu = std::make_unique<MPU9250_Master_I2C>
             (MPU9250_Master_I2C::AFS_2G,
             MPU9250_Master_I2C::GFS_250DPS, 
             MPU9250_Master_I2C::MFS_16BITS, 
             MPU9250_Master_I2C::M_8Hz);
         
-        Logger::debug("Starting MPU...", LogPrefix::RealIMU);
+        Logger::debug("Starting MPU...", LogPrefix::REALIMU);
         switch (mpu->begin()) {
         case MPUIMU::ERROR_NONE:
-            Logger::info("Ready!", LogPrefix::RealIMU);
+            Logger::info("Ready!", LogPrefix::REALIMU);
             break;
         case MPUIMU::ERROR_IMU_ID:
-            Logger::severe("Bad RealIMU device ID!", LogPrefix::RealIMU);
+            Logger::severe("Bad IMU device ID!", LogPrefix::REALIMU);
             break;
         case MPUIMU::ERROR_MAG_ID:
-            Logger::severe("Bad MGM device ID!", LogPrefix::RealIMU);
+            Logger::severe("Bad MGM device ID!", LogPrefix::REALIMU);
             break;
         case MPUIMU::ERROR_SELFTEST:
-            Logger::severe("Failed self test!", LogPrefix::RealIMU);
+            Logger::severe("Failed self test!", LogPrefix::REALIMU);
             break;
         }
     }
