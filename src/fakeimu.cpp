@@ -4,7 +4,7 @@
     This class will fake the IMU, for testing on the PC.
 */
 
-#include "../include/fakeimu.h"
+#include "../include/imu.h"
 
 #ifndef RASPBERRY_PI
 #include "../include/logger.h"

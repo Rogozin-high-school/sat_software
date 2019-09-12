@@ -8,12 +8,6 @@
 #include "../include/logger.h"
 #include "../include/client.h"
 
-#ifdef RASPBERRY_PI
-#include "../include/imu.h"
-#else
-#include "../include/fakeimu.h"
-#endif
-
 namespace SatelliteSoftware {
     Satellite::Satellite() : exitCode(propExitCode) {
         Helper::clear_screen();
@@ -27,14 +21,11 @@ namespace SatelliteSoftware {
             return;
         }
 
-        // Load the IMU (or the fake one).
-        #ifdef RASPBERRY_PI
+        // Load the IMU (the real or the fake one).
         IMU imu;
-        #else
-        FakeIMU imu;
-        #endif
 
-        // TODO: Actually communicate with the ground station
+        // Actually communicate with the ground station
+        client.communicate(imu);
     }
 
     Satellite::~Satellite() {

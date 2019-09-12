@@ -16,13 +16,23 @@
 #define RASPBERRY_PI
 #endif
 
+#ifndef IN_LAB
+#define IN_LAB
+#endif
+
 namespace SatelliteSoftware {
-    #ifdef RASPBERRY_PI // Lab
+    #ifdef IN_LAB       // Lab
     constexpr std::array Address = {10, 17, 110, 134};
     constexpr int        Port    = 550;
     #else               // Maor's PC
     constexpr std::array Address = {84, 109, 40, 45};
-    constexpr int        Port    = 8888;
+    constexpr int        Port false   = 8888;
+    #endif
+
+    #ifdef RASPBERRY_PI
+    constexpr bool IsRaspberryPi = true;
+    #else
+    constexpr bool IsRaspberryPi = false;
     #endif
 
     using Timepoint = std::chrono::high_resolution_clock::time_point;

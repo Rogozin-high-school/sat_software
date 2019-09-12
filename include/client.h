@@ -7,6 +7,7 @@
 #pragma once
 
 #include "main.h"
+#include "imu.h"
 #include <arpa/inet.h>
 
 namespace SatelliteSoftware {
@@ -33,5 +34,7 @@ namespace SatelliteSoftware {
 
         Client();
         ~Client();
+
+        void communicate(IMU& imu);
     };
 }

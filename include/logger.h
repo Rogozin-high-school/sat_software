@@ -18,7 +18,7 @@ namespace SatelliteSoftware {
     constexpr LogLevel MinLogLevel = LogLevel::DEBUG;
 
     enum class LogPrefix {
-        GENERAL, CLIENT, IMU, FAKEIMU
+        GENERAL, CLIENT, REALIMU, FAKEIMU, IMU
     };
 
     class Logger {
@@ -40,13 +40,16 @@ namespace SatelliteSoftware {
         }
 
         static std::string prefix_string(LogPrefix prefix) {
+            if (prefix == LogPrefix::IMU)
+                prefix = IsRaspberryPi ? LogPrefix::REALIMU : LogPrefix::FAKEIMU;
+
             switch (prefix) {
             case LogPrefix::GENERAL:
                 return "General";
             case LogPrefix::CLIENT:
                 return " Client";
-            case LogPrefix::IMU:
-                return "    IMU";
+            case LogPrefix::REALIMU:
+                return "RealIMU";
             case LogPrefix::FAKEIMU:
                 return "FakeIMU";
             }
@@ -62,35 +65,35 @@ namespace SatelliteSoftware {
     public:
         template<typename T>
         static void debug(const T& t, LogPrefix prefix = LogPrefix::GENERAL) {
-            if constexpr (MinLogLevel == LogLevel::DEBUG) {
+            if constexpr(MinLogLevel == LogLevel::DEBUG) {
                 log(t, prefix, LogLevel::DEBUG);
             }
         }
 
         template<typename T>
         static void info(const T& t, LogPrefix prefix = LogPrefix::GENERAL) {
-            if constexpr (MinLogLevel <= LogLevel::INFO) {
+            if constexpr(MinLogLevel <= LogLevel::INFO) {
                 log(t, prefix, LogLevel::INFO);
             }
         }
 
         template<typename T>
         static void warn(const T& t, LogPrefix prefix = LogPrefix::GENERAL) {
-            if constexpr (MinLogLevel <= LogLevel::WARNING) {
+            if constexpr(MinLogLevel <= LogLevel::WARNING) {
                 log(t, prefix, LogLevel::WARNING);
             }
         }
         
         template<typename T>
         static void severe(const T& t, LogPrefix prefix = LogPrefix::GENERAL) {
-            if constexpr (MinLogLevel <= LogLevel::SEVERE) {
+            if constexpr(MinLogLevel <= LogLevel::SEVERE) {
                 log(t, prefix, LogLevel::SEVERE);
             }
         }
 
         template<typename T>
         static void error(const T& t, LogPrefix prefix = LogPrefix::GENERAL) {
-            if constexpr (MinLogLevel <= LogLevel::ERROR) {
+            if constexpr(MinLogLevel <= LogLevel::ERROR) {
                 log(t, prefix, LogLevel::ERROR);
             }
         }
