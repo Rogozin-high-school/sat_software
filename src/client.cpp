@@ -13,48 +13,12 @@ namespace SatelliteSoftware {
     Client::Client() : 
         address(Helper::address_to_string(Address)), 
         port(Port),
-        socketHandle(CodeInvalidSocket),
-        socketFailed(propSocketFailed) 
-    {
-        propSocketFailed = !start_connection();
-    }
+        socketHandle(CodeInvalidSocket)
+    {}
 
     Client::~Client() {
         if (socketHandle != CodeInvalidSocket) {
             close(socketHandle);
-        }
-    }
-
-    void Client::communicate(IMU& imu) {
-        char serverResponse;
-        int status;
-        while (true) {
-            Logger::debug("Waiting for server response...", LogPrefix::CLIENT);
-            status = read(socketHandle, &serverResponse, 1);
-            if (status == -1) {
-                Logger::error("Error when receiving response from the server!", LogPrefix::CLIENT);
-                break;
-            } else if (status == 0) {
-                Logger::warn("Received UNEXPECTED EOF from the server!", LogPrefix::CLIENT);
-                break;
-            } else if (serverResponse == 0) {
-                Logger::warn("Received EOF from the server!", LogPrefix::CLIENT);
-                break;
-            } else if (serverResponse == 1) {
-                Logger::debug("Reading MGM values...", LogPrefix::IMU);
-                std::array<float, 3> mgmValues = imu.read_magnetometer();
-                Logger::debug(
-                    "X: " + std::to_string(mgmValues[0]) +
-                    ", Y: " + std::to_string(mgmValues[1]) +
-                    ", Z: " + std::to_string(mgmValues[2]),
-                    LogPrefix::IMU);
-                char buffer[13];
-                buffer[0] = 1;
-                memcpy(buffer + 1, &mgmValues[0], sizeof(float));
-                memcpy(buffer + 5, &mgmValues[1], sizeof(float));
-                memcpy(buffer + 9, &mgmValues[2], sizeof(float));
-                send(socketHandle, buffer, sizeof(buffer), 0);
-            }
         }
     }
 
@@ -92,6 +56,38 @@ namespace SatelliteSoftware {
         return true;
     }
 
+    void Client::communicate(IMU& imu) {
+        char serverResponse;
+        int status;
+        while (true) {
+            status = read(socketHandle, &serverResponse, 1);
+            if (status <= 0) {
+                Logger::severe("Server is down!", LogPrefix::CLIENT);
+                return;
+            }
+            Logger::debug("Server send code " + std::to_string((int)serverResponse) + "!");
+            if (serverResponse == 0) {
+                // Don't do anything
+                continue;
+            }
+            if (serverResponse == 1) {
+                // Send MGM values
+                std::array<float, 3> mgmValues = imu.read_magnetometer();
+                Logger::debug(
+                    "Read MGM values: (" + std::to_string(mgmValues[0]) +
+                    ", " + std::to_string(mgmValues[1]) +
+                    ", " + std::to_string(mgmValues[2]) + ")",
+                    LogPrefix::IMU);
+                char buffer[13];
+                buffer[0] = 1;
+                memcpy(buffer + 1, &mgmValues[0], sizeof(float));
+                memcpy(buffer + 5, &mgmValues[1], sizeof(float));
+                memcpy(buffer + 9, &mgmValues[2], sizeof(float));
+                send(socketHandle, buffer, sizeof(buffer), 0);
+            }
+        }
+    }
+
     bool Client::create_socket() {
         // Open the socket
         socketHandle = socket(AF_INET, SOCK_STREAM, 0);
@@ -109,8 +105,9 @@ namespace SatelliteSoftware {
         }
 
         // Set the socket's timeout
-        timeval timeout = { ConnectionAttemptSeconds, 0 };
-        if (setsockopt(socketHandle, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout)) == CodeSetSocketOptFailed) {
+        timeval timeout = { 0, SocketTimeoutMillis * 1000 };
+        if (setsockopt(socketHandle, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout)) == CodeSetSocketOptFailed ||
+            setsockopt(socketHandle, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)) == CodeSetSocketOptFailed) {
             Logger::error("Unable to set socket timeout!", LogPrefix::CLIENT);
             return false;
         }

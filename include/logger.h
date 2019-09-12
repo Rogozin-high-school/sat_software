@@ -15,7 +15,7 @@ namespace SatelliteSoftware {
         DEBUG, INFO, WARNING, SEVERE, ERROR
     };
 
-    constexpr LogLevel MinLogLevel = LogLevel::DEBUG;
+    constexpr LogLevel MinLogLevel = LogLevel::INFO;
 
     enum class LogPrefix {
         GENERAL, CLIENT, REALIMU, FAKEIMU, IMU

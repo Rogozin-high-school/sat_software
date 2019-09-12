@@ -11,7 +11,7 @@
 #include <arpa/inet.h>
 
 namespace SatelliteSoftware {
-    constexpr int ConnectionAttemptSeconds = 3;
+    constexpr int SocketTimeoutMillis = 500;
     constexpr int CodeInvalidSocket = -1;
     constexpr int CodeNotConnected = -1;
     constexpr int CodeAddressParseSucceeded = 1;
@@ -24,17 +24,13 @@ namespace SatelliteSoftware {
 
         sockaddr_in socketAddress;
         int socketHandle;
-        
-        bool propSocketFailed;
 
         bool create_socket();
-        bool start_connection();
     public:
-        const bool& socketFailed;
-
         Client();
         ~Client();
 
+        bool start_connection();
         void communicate(IMU& imu);
     };
 }

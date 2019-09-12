@@ -14,22 +14,20 @@ namespace SatelliteSoftware {
         Helper::print_date();
         Logger::debug("Satellite is alive!");
 
-        // Create the client and connect to the ground station.
-        Client client;
-        if (client.socketFailed) {
+        // Load the IMU (the real or the fake one).
+        IMU imu;
+        if (!imu.allOk) {
             propExitCode = 1;
             return;
         }
 
-        // Load the IMU (the real or the fake one).
-        IMU imu;
-        if (!imu.allOk) {
-            propExitCode = 2;
-            return;
+        // Reconnect everytime something goes wrong!
+        while (true) {
+            Client client;
+            if (client.start_connection()) {
+                client.communicate(imu);
+            }
         }
-
-        // Actually communicate with the ground station
-        client.communicate(imu);
     }
 
     Satellite::~Satellite() {
