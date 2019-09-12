@@ -13,7 +13,7 @@
 #include <memory>
 
 namespace SatelliteSoftware {
-    RealIMU::RealIMU() {
+    RealIMU::RealIMU() : propAllOk(true), allOk(propAllOk) {
         Logger::debug("Setting up WiringPi...", LogPrefix::REALIMU);
         wiringPiSetup();
 
@@ -30,13 +30,16 @@ namespace SatelliteSoftware {
             Logger::info("Ready!", LogPrefix::REALIMU);
             break;
         case MPUIMU::ERROR_IMU_ID:
-            Logger::severe("Bad IMU device ID!", LogPrefix::REALIMU);
+            Logger::error("Bad IMU device ID!", LogPrefix::REALIMU);
+            propAllOk = false;
             break;
         case MPUIMU::ERROR_MAG_ID:
-            Logger::severe("Bad MGM device ID!", LogPrefix::REALIMU);
+            Logger::error("Bad MGM device ID!", LogPrefix::REALIMU);
+            propAllOk = false;
             break;
         case MPUIMU::ERROR_SELFTEST:
-            Logger::severe("Failed self test!", LogPrefix::REALIMU);
+            Logger::error("Failed self test!", LogPrefix::REALIMU);
+            propAllOk = false;
             break;
         }
     }

@@ -23,6 +23,10 @@ namespace SatelliteSoftware {
 
         // Load the IMU (the real or the fake one).
         IMU imu;
+        if (imu.allOk) {
+            propExitCode = 2;
+            return;
+        }
 
         // Actually communicate with the ground station
         client.communicate(imu);

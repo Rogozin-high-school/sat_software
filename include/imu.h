@@ -17,7 +17,11 @@ namespace SatelliteSoftware {
     class RealIMU {
     private:
         std::unique_ptr<MPU9250_Master_I2C> mpu;
+
+        bool propAllOk;
     public:
+        bool& allOk;
+
         RealIMU();
 
         void calibrate_magnetometer();
@@ -31,7 +35,11 @@ namespace SatelliteSoftware {
     using IMU = RealIMU;
     #else
     class FakeIMU {
+    private:
+        bool propAllOk;
     public:
+        bool& allOk;
+
         FakeIMU();
 
         void calibrate_magnetometer();

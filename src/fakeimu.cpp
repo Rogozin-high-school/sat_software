@@ -11,7 +11,7 @@
 #include <random>
 
 namespace SatelliteSoftware {
-    FakeIMU::FakeIMU() {
+    FakeIMU::FakeIMU() : propAllOk(true), allOk(propAllOk) {
         Logger::info("Ready!", LogPrefix::FAKEIMU);
     }
 
