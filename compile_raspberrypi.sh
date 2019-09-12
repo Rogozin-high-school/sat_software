@@ -1,4 +1,4 @@
-g++-9.1 src/*.cpp \
+time g++-9.1 src/*.cpp \
         lib/MPU/MPU.cpp \
         lib/MPU/MPU9250.cpp \
         lib/MPU/MPU9250_Master.cpp \
