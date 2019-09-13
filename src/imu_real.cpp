@@ -43,6 +43,13 @@ namespace SatelliteSoftware {
     std::array<float, 3> RealIMU::read_magnetometer() {
         float mx, my, mz;
         mpu->readMagnetometer(mx, my, mz);
+
+        Logger::debug("Read MGM values: (" + 
+            std::to_string(mx) + ", " + 
+            std::to_string(my) + ", " + 
+            std::to_string(mz) + ")",
+            LogPrefix::IMU);
+        
         return {mx, my, mz};
     }
     

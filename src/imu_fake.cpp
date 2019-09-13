@@ -32,6 +32,13 @@ namespace SatelliteSoftware {
         float mx =   5.0f + distribution(generator);
         float my =  25.0f + distribution(generator);
         float mz = -28.0f + distribution(generator);
+
+        Logger::debug("Read MGM values: (" + 
+            std::to_string(mx) + ", " + 
+            std::to_string(my) + ", " + 
+            std::to_string(mz) + ")",
+            LogPrefix::IMU);
+        
         return {mx, my, mz};
     }
     

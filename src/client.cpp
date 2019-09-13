@@ -6,8 +6,8 @@
 
 #include "../include/client.h"
 #include "../include/logger.h"
-#include <unistd.h>
-#include <cstring>
+#include "../include/packets/packet_in.h"
+#include "../include/packets/packet_out_send_mgm_values.h"
 
 namespace SatelliteSoftware {
     Client::Client() : 
@@ -43,33 +43,25 @@ namespace SatelliteSoftware {
     }
 
     void Client::communicate(IMU& imu) {
-        char serverResponse;
-        int status;
-        while (true) {
-            status = read(socketHandle, &serverResponse, 1);
-            if (status <= 0) {
+        bool connected = true;
+        Packets::PacketIn packetIn(socketHandle);
+        while (connected) {
+            try {
+                std::array input = packetIn.receive_packet<1>();
+                switch (packetIn.type) {
+                case Packets::PacketIn::Type::UNKNOWN:
+                    Logger::warn("Received unknown packet! ID = " + std::to_string(input[0]), LogPrefix::CLIENT);
+                    break;
+                case Packets::PacketIn::Type::KEEPALIVE: // Don't do anything.
+                    break;
+                case Packets::PacketIn::Type::REQUIRE_MGM_VALUES:
+                    Packets::PacketOutSendMGMValues packetOut(socketHandle, imu);
+                    packetOut.send_packet();
+                    break;
+                }
+            } catch (const std::exception& ex) {
                 Logger::severe("Lost connection with the ground station!", LogPrefix::CLIENT);
-                return;
-            }
-            Logger::debug("Server send code " + std::to_string((int)serverResponse) + "!");
-            if (serverResponse == 0) {
-                // Don't do anything
-                continue;
-            }
-            if (serverResponse == 1) {
-                // Send MGM values
-                std::array<float, 3> mgmValues = imu.read_magnetometer();
-                Logger::debug(
-                    "Read MGM values: (" + std::to_string(mgmValues[0]) +
-                    ", " + std::to_string(mgmValues[1]) +
-                    ", " + std::to_string(mgmValues[2]) + ")",
-                    LogPrefix::IMU);
-                char buffer[13];
-                buffer[0] = 1;
-                memcpy(buffer + 1, &mgmValues[0], sizeof(float));
-                memcpy(buffer + 5, &mgmValues[1], sizeof(float));
-                memcpy(buffer + 9, &mgmValues[2], sizeof(float));
-                send(socketHandle, buffer, sizeof(buffer), 0);
+                connected = false;
             }
         }
     }

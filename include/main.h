@@ -23,11 +23,9 @@ namespace SatelliteSoftware {
     constexpr bool InLab = false;
 
     constexpr auto Address = InLab ?
-        std::array {10, 17, 110, 134} :
-        std::array {84, 109, 40, 45};
-    constexpr int  Port    = InLab ? 
-        550 : 
-        8888;
+        std::array { 10,  17, 110, 134} :
+        std::array { 84, 109,  40,  45};
+    constexpr int  Port    = InLab ? 550 : 8888;
 
     using Timepoint = std::chrono::high_resolution_clock::time_point;
 

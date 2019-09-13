@@ -26,15 +26,15 @@ namespace SatelliteSoftware {
         static inline const std::string level_string(const LogLevel level) {
             switch (level) {
             case LogLevel::DEBUG:
-                return "DEBUG ";
+                return "DEBUG  ";
             case LogLevel::INFO:
-                return "INFO  ";
+                return "INFO   ";
             case LogLevel::WARNING:
-                return "WARN  ";
+                return "WARNING";
             case LogLevel::SEVERE:
-                return "SEVERE";
+                return "SEVERE ";
             case LogLevel::ERROR:
-                return "ERROR ";
+                return "ERROR  ";
             }
             throw std::invalid_argument("Invalid logging level!");
         }
