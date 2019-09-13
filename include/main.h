@@ -11,10 +11,7 @@
 #include <chrono>
 #include <iostream>
 #include <thread>
-
-#ifdef __arm__
-#define RASPBERRY_PI
-#endif
+#include <stdexcept>
 
 namespace SatelliteSoftware {
     #ifdef RASPBERRY_PI

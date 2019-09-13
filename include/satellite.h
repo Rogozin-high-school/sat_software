@@ -7,13 +7,10 @@
 #pragma once
 
 namespace SatelliteSoftware {
-    class Satellite {
-    private:
-        int propExitCode;
-    public:
-        const int& exitCode;
-
+    struct Satellite {
         Satellite();
         ~Satellite();
+
+        void run() const;
     };
 }

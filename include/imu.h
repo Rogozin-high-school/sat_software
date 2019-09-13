@@ -15,14 +15,10 @@
 namespace SatelliteSoftware {
     #ifdef RASPBERRY_PI
     class RealIMU {
-    private:
-        std::unique_ptr<MPU9250_Master_I2C> mpu;
-
-        bool propAllOk;
     public:
-        bool& allOk;
-
         RealIMU();
+
+        void initialize();
 
         void calibrate_magnetometer();
 
@@ -31,16 +27,13 @@ namespace SatelliteSoftware {
         std::array<float, 3> read_gyrometer();
         
         std::array<float, 3> read_accelerometer();
+    private:
+        std::unique_ptr<MPU9250_Master_I2C> mpu;
     };
     using IMU = RealIMU;
     #else
-    class FakeIMU {
-    private:
-        bool propAllOk;
-    public:
-        bool& allOk;
-
-        FakeIMU();
+    struct FakeIMU {
+        void initialize();
 
         void calibrate_magnetometer();
 

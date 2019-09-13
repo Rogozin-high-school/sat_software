@@ -13,38 +13,30 @@
 #include <memory>
 
 namespace SatelliteSoftware {
-    RealIMU::RealIMU() : propAllOk(true), allOk(propAllOk) {
-        Logger::debug("Setting up WiringPi...", LogPrefix::REALIMU);
+    RealIMU::RealIMU() {
         wiringPiSetup();
-
-        Logger::debug("Setting up MPU...", LogPrefix::REALIMU);
         mpu = std::make_unique<MPU9250_Master_I2C>
             (MPU9250_Master_I2C::AFS_2G,
             MPU9250_Master_I2C::GFS_250DPS, 
             MPU9250_Master_I2C::MFS_16BITS, 
             MPU9250_Master_I2C::M_8Hz);
-        
-        Logger::debug("Starting MPU...", LogPrefix::REALIMU);
+    }
+
+    void RealIMU::initialize() {
+        Logger::debug("Initializing MPU...", LogPrefix::IMU);
         switch (mpu->begin()) {
-        case MPUIMU::ERROR_NONE:
-            Logger::info("Ready!", LogPrefix::REALIMU);
-            break;
         case MPUIMU::ERROR_IMU_ID:
-            Logger::error("Bad IMU device ID!", LogPrefix::REALIMU);
-            propAllOk = false;
-            break;
+            throw std::runtime_error("Bad IMU device ID!");
         case MPUIMU::ERROR_MAG_ID:
-            Logger::error("Bad MGM device ID!", LogPrefix::REALIMU);
-            propAllOk = false;
-            break;
+            throw std::runtime_error("Bad MGM device ID!");
         case MPUIMU::ERROR_SELFTEST:
-            Logger::error("Failed self test!", LogPrefix::REALIMU);
-            propAllOk = false;
-            break;
-        }
+            throw std::runtime_error("Failed self test!");
+        }            
+        Logger::info("Ready!", LogPrefix::IMU);
     }
 
     void RealIMU::calibrate_magnetometer() {
+        // Maybe will be used in the future.
         mpu->calibrateMagnetometer();
     }
 

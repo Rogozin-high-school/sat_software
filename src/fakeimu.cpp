@@ -11,8 +11,9 @@
 #include <random>
 
 namespace SatelliteSoftware {
-    FakeIMU::FakeIMU() : propAllOk(true), allOk(propAllOk) {
-        Logger::info("Ready!", LogPrefix::FAKEIMU);
+    void FakeIMU::initialize() {
+        // Kept to be compatible with the original IMU!
+        Logger::info("Ready!", LogPrefix::IMU);
     }
 
     void FakeIMU::calibrate_magnetometer() {

@@ -11,26 +11,28 @@
 #include <arpa/inet.h>
 
 namespace SatelliteSoftware {
-    constexpr int SocketTimeoutMillis = 500;
-    constexpr int CodeInvalidSocket = -1;
-    constexpr int CodeNotConnected = -1;
+    constexpr int SocketTimeoutMillis       = 500;
+    constexpr int CodeInvalidSocket         = -1;
+    constexpr int CodeNotConnected          = -1;
     constexpr int CodeAddressParseSucceeded = 1;
-    constexpr int CodeSetSocketOptFailed = -1;
+    constexpr int CodeSetSocketOptFailed    = -1;
     
     class Client {
-    private:
-        std::string address;
-        int port;
-
-        sockaddr_in socketAddress;
-        int socketHandle;
-
-        bool create_socket();
     public:
         Client();
         ~Client();
 
-        bool start_connection();
+        void start_connection();
         void communicate(IMU& imu);
+        void cleanup();
+    private:
+        const std::string address;
+        const int port;
+
+        sockaddr_in socketAddress;
+        int socketHandle;
+
+        void create_socket();
+        void attempt_connection(bool& isConnected);
     };
 }

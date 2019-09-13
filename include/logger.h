@@ -15,15 +15,15 @@ namespace SatelliteSoftware {
         DEBUG, INFO, WARNING, SEVERE, ERROR
     };
 
-    constexpr LogLevel MinLogLevel = LogLevel::INFO;
-
     enum class LogPrefix {
-        GENERAL, CLIENT, REALIMU, FAKEIMU, IMU
+        GENERAL, CLIENT, IMU
     };
+
+    constexpr LogLevel MinLogLevel = LogLevel::INFO;
 
     class Logger {
     private:
-        static std::string level_string(LogLevel level) {
+        static inline const std::string level_string(const LogLevel level) {
             switch (level) {
             case LogLevel::DEBUG:
                 return "DEBUG ";
@@ -36,63 +36,58 @@ namespace SatelliteSoftware {
             case LogLevel::ERROR:
                 return "ERROR ";
             }
-            return std::string();
+            throw std::invalid_argument("Invalid logging level!");
         }
 
-        static std::string prefix_string(LogPrefix prefix) {
-            if (prefix == LogPrefix::IMU)
-                prefix = IsRaspberryPi ? LogPrefix::REALIMU : LogPrefix::FAKEIMU;
-
+        static inline const std::string prefix_string(const LogPrefix prefix) {
             switch (prefix) {
             case LogPrefix::GENERAL:
                 return "General";
             case LogPrefix::CLIENT:
                 return " Client";
-            case LogPrefix::REALIMU:
-                return "RealIMU";
-            case LogPrefix::FAKEIMU:
-                return "FakeIMU";
+            case LogPrefix::IMU:
+                return IsRaspberryPi ? "    IMU" : "FakeIMU";
             }
-            return std::string();
+            throw std::invalid_argument("Invalid logging prefix!");
         }
 
         template<typename T>
-        static void log(const T& t, LogPrefix prefix, LogLevel level) {
+        static inline void log(const T& t, const LogPrefix prefix, const LogLevel level) {
             std::cout << "[" << Helper::current_time_string() << "] ";
             std::cout << "[" << level_string(level) << " - " << prefix_string(prefix) << "] ";
             std::cout << t << std::endl;
         }
     public:
         template<typename T>
-        static void debug(const T& t, LogPrefix prefix = LogPrefix::GENERAL) {
+        static inline void debug(const T& t, const LogPrefix prefix = LogPrefix::GENERAL) {
             if constexpr(MinLogLevel == LogLevel::DEBUG) {
                 log(t, prefix, LogLevel::DEBUG);
             }
         }
 
         template<typename T>
-        static void info(const T& t, LogPrefix prefix = LogPrefix::GENERAL) {
+        static inline void info(const T& t, const LogPrefix prefix = LogPrefix::GENERAL) {
             if constexpr(MinLogLevel <= LogLevel::INFO) {
                 log(t, prefix, LogLevel::INFO);
             }
         }
 
         template<typename T>
-        static void warn(const T& t, LogPrefix prefix = LogPrefix::GENERAL) {
+        static inline void warn(const T& t, const LogPrefix prefix = LogPrefix::GENERAL) {
             if constexpr(MinLogLevel <= LogLevel::WARNING) {
                 log(t, prefix, LogLevel::WARNING);
             }
         }
         
         template<typename T>
-        static void severe(const T& t, LogPrefix prefix = LogPrefix::GENERAL) {
+        static inline void severe(const T& t, const LogPrefix prefix = LogPrefix::GENERAL) {
             if constexpr(MinLogLevel <= LogLevel::SEVERE) {
                 log(t, prefix, LogLevel::SEVERE);
             }
         }
 
         template<typename T>
-        static void error(const T& t, LogPrefix prefix = LogPrefix::GENERAL) {
+        static inline void error(const T& t, const LogPrefix prefix = LogPrefix::GENERAL) {
             if constexpr(MinLogLevel <= LogLevel::ERROR) {
                 log(t, prefix, LogLevel::ERROR);
             }

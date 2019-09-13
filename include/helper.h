@@ -30,7 +30,7 @@ namespace SatelliteSoftware {
     
         template<typename Rep, typename Period>
         static void draw_animation_with_dots(
-            const bool& condition,
+            const bool& breakingCondition,
             const std::string baseText,
             const std::chrono::duration<Rep, Period>& delay,
             const int minDots,
@@ -40,7 +40,7 @@ namespace SatelliteSoftware {
         {
             bool increasingDotsCount = true;
             int dots = minDots;
-            while (condition) {
+            while (!breakingCondition) {
                 std::string text = baseText;
                 int i = 0;
                 for (; i < dots; i++)

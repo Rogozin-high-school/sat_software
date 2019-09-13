@@ -9,5 +9,10 @@
 
 int main(void) {
     SatelliteSoftware::Satellite satellite;
-    return satellite.exitCode;
+    try {
+        satellite.run();
+    } catch (...) {
+        return 1;
+    }
+    return 0;
 }
