@@ -18,10 +18,9 @@ namespace SatelliteSoftware::Packets {
             REQUIRE_MGM_VALUES = 1,
         };
 
-        const Type& type;
+        const Type& type = propType;
 
-        inline PacketIn(int socketHandle) :
-            socketHandle(socketHandle), type(propType) 
+        inline PacketIn(int socketHandle) : socketHandle(socketHandle)
         {}
 
         template<int BufferSize>
@@ -32,15 +31,12 @@ namespace SatelliteSoftware::Packets {
             if (read(socketHandle, buffer.begin(), BufferSize) <= 0)
                 throw std::exception();
 
-            switch (static_cast<PacketInType>(buffer[0])) {
-            case PacketInType::KEEPALIVE:
-                propType = PacketInType::KEEPALIVE;
+            switch (static_cast<Type>(buffer[0])) {
+            case Type::KEEPALIVE:
+                propType = Type::KEEPALIVE;
                 break;
-            case PacketInType::REQUIRE_MGM_VALUES:
-                propType = PacketInType::REQUIRE_MGM_VALUES;
-                break;
-            default:
-                propType = PacketInType::UNKNOWN;
+            case Type::REQUIRE_MGM_VALUES:
+                propType = Type::REQUIRE_MGM_VALUES;
                 break;
             }
 
@@ -48,6 +44,6 @@ namespace SatelliteSoftware::Packets {
         }
     private:
         const int socketHandle;
-        Type propType;
+        Type propType = Type::UNKNOWN;
     };
 }

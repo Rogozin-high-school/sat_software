@@ -8,6 +8,7 @@
 
 #include "packet_out.h"
 #include "../imu.h"
+#include <cstring>
 
 namespace SatelliteSoftware::Packets {
     class PacketOutSendMGMValues : public PacketOut<13> {

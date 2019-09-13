@@ -48,12 +48,6 @@ namespace SatelliteSoftware {
         std::cout << "+" << std::endl;
     }
 
-    std::string Helper::address_to_string(const std::array<int, 4>& bytes) {
-        std::stringstream ss;
-        ss << bytes[0] << "." << bytes[1] << "." << bytes[2] << "." << bytes[3];
-        return ss.str();
-    }
-
     std::string Helper::time_period_to_string(const Timepoint& start, const Timepoint& end) {
         auto duration = (end - start).count() > 0 ? end - start : start - end;
         int64_t h = std::chrono::duration_cast<std::chrono::hours>(duration).count();

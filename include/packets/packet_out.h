@@ -8,7 +8,6 @@
 
 #include "../main.h"
 #include <unistd.h>
-#include <cstring>
 
 namespace SatelliteSoftware::Packets {
     constexpr int SenderID = 1; // Satellite ID = 1
@@ -21,7 +20,7 @@ namespace SatelliteSoftware::Packets {
             buffer[0] = SenderID;
         }
 
-        inline void send_packet() {
+        inline void send_packet() const {
             send(socketHandle, buffer, BufferSize, 0);
         }
     protected:

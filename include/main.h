@@ -6,12 +6,15 @@
 
 #pragma once
 
+#include "server.h"
 #include <string>
 #include <array>
 #include <chrono>
 #include <iostream>
 #include <thread>
 #include <stdexcept>
+
+#define IN_LAB false
 
 namespace SatelliteSoftware {
     #ifdef RASPBERRY_PI
@@ -20,22 +23,11 @@ namespace SatelliteSoftware {
     constexpr bool IsRaspberryPi = false;
     #endif
 
-    constexpr bool InLab = false;
-
-    constexpr auto Address = InLab ?
-        std::array { 10,  17, 110, 134} :
-        std::array { 84, 109,  40,  45};
-    constexpr int  Port    = InLab ? 550 : 8888;
+    #if IN_LAB
+    constexpr Server<Address<10, 17, 110, 134>, 550> server;
+    #else
+    constexpr Server<Address<84, 109, 40, 45>, 8888> server;
+    #endif
 
     using Timepoint = std::chrono::high_resolution_clock::time_point;
-
-    static_assert(
-        Address[0] > 0 && Address[0] < 0xFF &&
-        Address[1] > 0 && Address[1] < 0xFF &&
-        Address[2] > 0 && Address[2] < 0xFF &&
-        Address[3] > 0 && Address[3] < 0xFF,
-        "Bad address!"
-    );
-
-    static_assert(Port > 0 && Port < 0xFFFF, "Bad port!");
 }

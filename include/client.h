@@ -8,6 +8,7 @@
 
 #include "main.h"
 #include "imu.h"
+#include "helper.h"
 #include <arpa/inet.h>
 
 namespace SatelliteSoftware {
@@ -19,18 +20,17 @@ namespace SatelliteSoftware {
     
     class Client {
     public:
-        Client();
         ~Client();
 
         void start_connection();
         void communicate(IMU& imu);
         void cleanup();
     private:
-        const std::string address;
-        const int port;
+        const std::string address = server.address.to_string();
+        const int port = server.port;
 
         sockaddr_in socketAddress;
-        int socketHandle;
+        int socketHandle = CodeInvalidSocket;
 
         void create_socket();
         void attempt_connection(bool& isConnected);

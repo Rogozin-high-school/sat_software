@@ -10,12 +10,6 @@
 #include "../include/packets/packet_out_send_mgm_values.h"
 
 namespace SatelliteSoftware {
-    Client::Client() : 
-        address(Helper::address_to_string(Address)), 
-        port(Port),
-        socketHandle(CodeInvalidSocket)
-    {}
-
     Client::~Client() {
         cleanup();
     }

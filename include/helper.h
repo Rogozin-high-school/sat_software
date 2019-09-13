@@ -24,8 +24,6 @@ namespace SatelliteSoftware {
 
         static void print_date();
 
-        static std::string address_to_string(const std::array<int, 4>& addressBytes);
-
         static std::string time_period_to_string(const Timepoint& start, const Timepoint& end);
     
         template<typename Rep, typename Period>
