@@ -6,8 +6,6 @@
 
 #include "../include/helper.h"
 #include <iostream>
-#include <sstream>
-#include <thread>
 
 namespace SatelliteSoftware {
     const tm *Helper::current_time_c() {
@@ -39,13 +37,17 @@ namespace SatelliteSoftware {
     void Helper::print_date() {
         const std::string date = current_date_string();
         const int len = date.length();
-        std::cout << "+";
+        std::stringstream ss;
+
+        ss << "+";
         for (int i = 0; i < len + 2; i++)
-            std::cout << "-";
-        std::cout << "+\n| " << date << " |\n+";
+            ss << "-";
+        ss << "+\n| " << date << " |\n+";
         for (int i = 0; i < len + 2; i++)
-            std::cout << "-";
-        std::cout << "+" << std::endl;
+            ss << "-";
+        ss << "+" << std::endl;
+
+        std::cout << ss.str();
     }
 
     std::string Helper::time_period_to_string(const Timepoint& start, const Timepoint& end) {

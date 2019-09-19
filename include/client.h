@@ -9,14 +9,13 @@
 #include "main.h"
 #include "imu.h"
 #include "helper.h"
-#include <arpa/inet.h>
 
 namespace SatelliteSoftware {
-    constexpr int SocketTimeoutMillis       = 500;
-    constexpr int CodeInvalidSocket         = -1;
-    constexpr int CodeNotConnected          = -1;
-    constexpr int CodeAddressParseSucceeded = 1;
-    constexpr int CodeSetSocketOptFailed    = -1;
+    constexpr int socketTimeoutMillis       = 500;
+    constexpr int codeInvalidSocket         = -1;
+    constexpr int codeNotConnected          = -1;
+    constexpr int codeAddressParseSucceeded = 1;
+    constexpr int codeSetSocketOptFailed    = -1;
     
     class Client {
     public:
@@ -29,8 +28,8 @@ namespace SatelliteSoftware {
         const std::string address = server.address.to_string();
         const int port = server.port;
 
-        sockaddr_in socketAddress;
-        int socketHandle = CodeInvalidSocket;
+        SocketAddress sockAddr;
+        Socket sock = codeInvalidSocket;
 
         void create_socket();
         void attempt_connection(bool& isConnected);

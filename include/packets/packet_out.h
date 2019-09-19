@@ -10,22 +10,22 @@
 #include <unistd.h>
 
 namespace SatelliteSoftware::Packets {
-    constexpr int SenderID = 1; // Satellite ID = 1
+    constexpr Byte senderID = 1; // Satellite ID = 1
 
-    template<int BufferSize>
+    template<int size>
     class PacketOut {
     public:
-        inline PacketOut(int socketHandle) : socketHandle(socketHandle) {
-            static_assert(BufferSize > 0 && BufferSize <= 1024);
-            buffer[0] = SenderID;
+        inline PacketOut(const Socket sock) : sock(sock) {
+            static_assert(size > 0 && size <= maxPacketSize);
+            buffer[0] = senderID;
         }
 
         inline void send_packet() const {
-            send(socketHandle, buffer, BufferSize, 0);
+            send(sock, buffer, size, 0);
         }
     protected:
-        char buffer[BufferSize];
+        Byte buffer[size];
     private:
-        const int socketHandle;
+        const Socket sock;
     };
 }

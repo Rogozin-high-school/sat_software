@@ -38,22 +38,23 @@ namespace SatelliteSoftware {
 
     void Client::communicate(IMU& imu) {
         bool connected = true;
-        Packets::PacketIn packetIn(socketHandle);
+        Packets::PacketIn packetIn(sock);
         while (connected) {
-            try {
-                std::array input = packetIn.receive_packet<1>();
+            auto input = packetIn.receive_packet<1>();
+            if (input.has_value()) {
+                std::array data = input.value();
                 switch (packetIn.type) {
                 case Packets::PacketIn::Type::UNKNOWN:
-                    Logger::warn("Received unknown packet! ID = " + std::to_string(input[0]), LogPrefix::CLIENT);
+                    Logger::warn("Received unknown packet! ID = " + std::to_string(data[0]), LogPrefix::CLIENT);
                     break;
                 case Packets::PacketIn::Type::KEEPALIVE: // Don't do anything.
                     break;
                 case Packets::PacketIn::Type::REQUIRE_MGM_VALUES:
-                    Packets::PacketOutSendMGMValues packetOut(socketHandle, imu);
+                    Packets::PacketOutSendMGMValues packetOut(sock, imu);
                     packetOut.send_packet();
                     break;
                 }
-            } catch (const std::exception& ex) {
+            } else {
                 Logger::severe("Lost connection with the ground station!", LogPrefix::CLIENT);
                 connected = false;
             }
@@ -61,16 +62,16 @@ namespace SatelliteSoftware {
     }
 
     void Client::cleanup() {
-        if (socketHandle != CodeInvalidSocket) {
-            close(socketHandle);
+        if (sock != codeInvalidSocket) {
+            close(sock);
         }
     }
 
     void Client::attempt_connection(bool& isConnected) {
         while (!isConnected) {
             // If connection has failed, reopen the socket and retry
-            if (connect(socketHandle, (sockaddr*)&socketAddress, sizeof(socketAddress)) == CodeNotConnected) {
-                close(socketHandle);
+            if (connect(sock, (sockaddr*)&sockAddr, sizeof(SocketAddress)) == codeNotConnected) {
+                close(sock);
                 create_socket();
             } else 
                 isConnected = true;
@@ -79,20 +80,20 @@ namespace SatelliteSoftware {
 
     void Client::create_socket() {
         // Open the socket
-        socketHandle = socket(AF_INET, SOCK_STREAM, 0);
-        if (socketHandle == CodeInvalidSocket)
+        sock = socket(AF_INET, SOCK_STREAM, 0);
+        if (sock == codeInvalidSocket)
             throw std::runtime_error("Unable to open socket!");
 
         // Set the socket's address and port
-        socketAddress.sin_family = AF_INET;
-        socketAddress.sin_port = htons(port);
-        if (inet_pton(AF_INET, address.c_str(), &socketAddress.sin_addr.s_addr) != CodeAddressParseSucceeded)
+        sockAddr.sin_family = AF_INET;
+        sockAddr.sin_port = htons(port);
+        if (inet_pton(AF_INET, address.c_str(), &sockAddr.sin_addr.s_addr) != codeAddressParseSucceeded)
             throw std::runtime_error("Unable to parse address!");
 
         // Set the socket's timeout
-        timeval timeout = { 0, SocketTimeoutMillis * 1000 };
-        bool b1 = setsockopt(socketHandle, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout)) == CodeSetSocketOptFailed;
-        bool b2 = setsockopt(socketHandle, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)) == CodeSetSocketOptFailed;
+        timeval timeout = { 0, socketTimeoutMillis * 1000 };
+        bool b1 = setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeval)) == codeSetSocketOptFailed;
+        bool b2 = setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeval)) == codeSetSocketOptFailed;
         if (b1 || b2)
             throw std::runtime_error("Unable to set socket timeout!");
     }

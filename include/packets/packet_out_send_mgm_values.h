@@ -13,7 +13,7 @@
 namespace SatelliteSoftware::Packets {
     class PacketOutSendMGMValues : public PacketOut<13> {
     public:
-        inline PacketOutSendMGMValues(int socketHandle, IMU& imu) : PacketOut(socketHandle) {
+        inline PacketOutSendMGMValues(const Socket sock, IMU& imu) : PacketOut(sock) {
             std::array values = imu.read_magnetometer();
             // Copy the values to the buffer
             for (int i = 0; i < 3; i++)

@@ -13,14 +13,17 @@
 #include <iostream>
 #include <thread>
 #include <stdexcept>
+#include <optional>
+
+#include <arpa/inet.h>
 
 #define IN_LAB false
 
 namespace SatelliteSoftware {
     #ifdef RASPBERRY_PI
-    constexpr bool IsRaspberryPi = true;
+    constexpr bool isRaspberryPi = true;
     #else
-    constexpr bool IsRaspberryPi = false;
+    constexpr bool isRaspberryPi = false;
     #endif
 
     #if IN_LAB
@@ -29,5 +32,10 @@ namespace SatelliteSoftware {
     constexpr Server<Address<84, 109, 40, 45>, 8888> server;
     #endif
 
+    constexpr int maxPacketSize = 1024;
+
     using Timepoint = std::chrono::high_resolution_clock::time_point;
+    using Byte = char;
+    using Socket = int;
+    using SocketAddress = sockaddr_in;
 }
