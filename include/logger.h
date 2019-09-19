@@ -19,7 +19,7 @@ namespace SatelliteSoftware {
         GENERAL, CLIENT, IMU
     };
 
-    constexpr LogLevel minLogLevel = LogLevel::INFO;
+    constexpr LogLevel minLogLevel = LogLevel::DEBUG;
 
     class Logger {
     private:
