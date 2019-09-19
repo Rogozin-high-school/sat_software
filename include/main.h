@@ -17,7 +17,7 @@
 
 #include <arpa/inet.h>
 
-#define IN_LAB false
+#define IN_LAB true
 
 namespace SatelliteSoftware {
     #ifdef RASPBERRY_PI
