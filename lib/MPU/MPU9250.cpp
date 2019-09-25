@@ -70,9 +70,9 @@ MPUIMU::Error_t MPU9250::runTests(void)
 
     reset(); // start by resetting MPU9250
 
-    if (!selfTest()) {
-        return ERROR_SELFTEST;
-    }
+    // if (!selfTest()) {
+    //     return ERROR_SELFTEST;
+    // }
 
     // Calibrate gyro and accelerometers, load biases in bias registers.
     // Comment out if using pre-measured, pre-stored accel/gyro offset biases.
