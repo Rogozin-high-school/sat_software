@@ -22,7 +22,7 @@ namespace SatelliteSoftware {
 
     void RealIMU::initialize() {
         Logger::debug("Initializing MPU...", LogPrefix::IMU);
-        switch (mpu->begin()) {
+        switch (mpu.begin()) {
         case MPUIMU::ERROR_IMU_ID:
             throw std::runtime_error("Bad IMU device ID!");
         case MPUIMU::ERROR_MAG_ID:
@@ -35,12 +35,12 @@ namespace SatelliteSoftware {
 
     void RealIMU::calibrate_magnetometer() {
         // Maybe will be used in the future.
-        mpu->calibrateMagnetometer();
+        mpu.calibrateMagnetometer();
     }
 
     std::array<float, 3> RealIMU::read_magnetometer() {
         float mx, my, mz;
-        mpu->readMagnetometer(mx, my, mz);
+        mpu.readMagnetometer(mx, my, mz);
 
         Logger::debug("Read MGM values: (" + 
             std::to_string(mx) + ", " + 
@@ -53,13 +53,13 @@ namespace SatelliteSoftware {
     
     std::array<float, 3> RealIMU::read_gyrometer() {
         float gx, gy, gz;
-        mpu->readGyrometer(gx, gy, gz);
+        mpu.readGyrometer(gx, gy, gz);
         return {gx, gy, gz};
     }
     
     std::array<float, 3> RealIMU::read_accelerometer() {
         float gx, gy, gz;
-        mpu->readAccelerometer(gx, gy, gz);
+        mpu.readAccelerometer(gx, gy, gz);
         return {gx, gy, gz};
     }
 }
