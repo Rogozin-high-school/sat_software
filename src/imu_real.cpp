@@ -9,18 +9,16 @@
 #ifdef RASPBERRY_PI
 
 #include "../include/logger.h"
-#include <wiringPi.h>
 #include <memory>
 
 namespace SatelliteSoftware {
-    RealIMU::RealIMU() {
-        wiringPiSetup();
-        mpu = std::make_unique<MPU9250_Master_I2C>
-            (MPU9250_Master_I2C::AFS_2G,
-            MPU9250_Master_I2C::GFS_250DPS, 
-            MPU9250_Master_I2C::MFS_16BITS, 
-            MPU9250_Master_I2C::M_8Hz);
-    }
+    RealIMU::RealIMU() : 
+        mpu(MPU9250_Master_I2C::AFS_2G,
+            MPU9250_Master_I2C::GFS_250DPS,
+            MPU9250_Master_I2C::MFS_16BITS,
+            MPU9250_Master_I2C::M_8Hz
+        ) 
+    {}
 
     void RealIMU::initialize() {
         Logger::debug("Initializing MPU...", LogPrefix::IMU);

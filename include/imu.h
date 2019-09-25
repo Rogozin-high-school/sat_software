@@ -28,7 +28,7 @@ namespace SatelliteSoftware {
         
         std::array<float, 3> read_accelerometer();
     private:
-        std::unique_ptr<MPU9250_Master_I2C> mpu;
+        MPU9250_Master_I2C mpu;
     };
     using IMU = RealIMU;
     #else

@@ -27,7 +27,7 @@ namespace SatelliteSoftware {
     #endif
 
     #if IN_LAB
-    constexpr Server<Address<192, 168, 43, 235>, 550> server;
+    constexpr Server<Address<10, 17, 110, 134>, 550> server;
     #else
     constexpr Server<Address<84, 109, 40, 45>, 8888> server;
     #endif

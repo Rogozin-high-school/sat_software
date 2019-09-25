@@ -7,12 +7,18 @@
 #include "../include/satellite.h"
 #include "../include/logger.h"
 #include "../include/client.h"
+#ifdef RASPBERRY_PI
+#include <wiringPi.h>
+#endif
 
 namespace SatelliteSoftware {
     Satellite::Satellite() {
         Helper::clear_screen();
         Helper::print_date();
         Logger::debug("Satellite is alive!");
+        #ifdef RASPBERRY_PI
+        wiringPiSetup();
+        #endif
     }
 
     Satellite::~Satellite() {
