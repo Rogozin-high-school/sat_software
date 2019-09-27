@@ -8,6 +8,7 @@
 #include "../include/logger.h"
 #include "../include/packets/packet_in.h"
 #include "../include/packets/packet_out_send_mgm_values.h"
+#include "../include/Torq/Torq.hpp"
 
 namespace SatelliteSoftware {
     Client::~Client() {
@@ -52,6 +53,11 @@ namespace SatelliteSoftware {
                 case Packets::PacketIn::Type::REQUIRE_MGM_VALUES:
                     Packets::PacketOutSendMGMValues packetOut(sock, imu);
                     packetOut.send_packet();
+                    break;
+                case Packets::PacketIn::Type::TORQ_FIELD: // use torq
+                    auto field_direction = packetIn.receive_packet<1>();
+                    
+                    // TODO: use the torq library to use the mgnetic field
                     break;
                 }
             } else {

@@ -7,6 +7,8 @@
 #include "../include/satellite.h"
 #include "../include/logger.h"
 #include "../include/client.h"
+#include "../include/Torq/Torq.hpp"
+
 #ifdef RASPBERRY_PI
 #include <wiringPi.h>
 #endif

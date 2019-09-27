@@ -16,6 +16,7 @@ namespace SatelliteSoftware::Packets {
             UNKNOWN            = -1,
             KEEPALIVE          = 0,
             REQUIRE_MGM_VALUES = 1,
+            TORQ_FIELD         = 2
         };
 
         const PacketIn::Type& type = propType;
