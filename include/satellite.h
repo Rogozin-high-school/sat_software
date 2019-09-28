@@ -1,5 +1,6 @@
 /*
     Created by Maor Gershman, 6.9.2019
+    Updated and Upgraded by Yanir Harel, 28.9.2019
     ---
     This file will contain the satellite class.
 */

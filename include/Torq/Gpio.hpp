@@ -1,3 +1,10 @@
+/*
+    Created by Yanir Harel, 28.9.2019
+    ---------------------------------
+    This is an embeded module to set a gpio pin to a specified communication manner,
+    and set the pin o either 1 or 0 i.e. power or not.
+*/
+
 #pragma once
 
 #include "GPIOException.hpp"

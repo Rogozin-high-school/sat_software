@@ -1,5 +1,6 @@
 /*
     Created by Maor Gershman, 9.9.2019
+    Updated and Upgraded by Yanir Harel, 28.9.2019
     ---
     This class will handle the communication with the ground station.
 */
@@ -9,6 +10,9 @@
 #include "../include/packets/packet_in.h"
 #include "../include/packets/packet_out_send_mgm_values.h"
 #include "../include/Torq/Torq.hpp"
+
+using std::this_thread::sleep_for;
+using std::chrono::milliseconds;
 
 namespace SatelliteSoftware {
     Client::~Client() {
@@ -37,7 +41,7 @@ namespace SatelliteSoftware {
         Logger::info("Connected after " + delayStr + "!", LogPrefix::CLIENT);
     }
 
-    void Client::communicate(IMU& imu) {
+    void Client::communicate(IMU& imu, Torquer& torq) {
         bool connected = true;
         Packets::PacketIn packetIn(sock);
         while (connected) {
@@ -55,9 +59,17 @@ namespace SatelliteSoftware {
                     packetOut.send_packet();
                     break;
                 case Packets::PacketIn::Type::TORQ_FIELD: // use torq
-                    auto field_direction = packetIn.receive_packet<1>();
-                    
-                    // TODO: use the torq library to use the mgnetic field
+                    auto field_direction = packetIn.receive_packet<3>();
+                    if (field_direction.has_value()) {
+                        auto direction = field_direction.value();
+                        torq.set_dir_x(direction[0]);
+                        torq.set_dir_y(direction[1]);
+                        torq.set_dir_z(direction[2]);
+                        sleep_for(milliseconds(5));
+                        torq.reset_dir();
+                        Packets::PacketOut<1> outConnsock(sock);
+                        outConnsock.send_packet();
+                    }
                     break;
                 }
             } else {

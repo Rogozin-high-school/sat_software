@@ -1,5 +1,6 @@
 /*
     Created by Maor Gershman, 9.9.2019
+    Updated and Upgraded by Yanir Harel, 28.9.2019
     ---
     This file will contain the satellite class.
 */
@@ -30,7 +31,7 @@ namespace SatelliteSoftware {
     void Satellite::run() const {
         IMU imu;
         Client client;
-
+        Torquer torq;
         try {
             imu.initialize();
         } catch (const std::runtime_error& error) {
@@ -42,7 +43,7 @@ namespace SatelliteSoftware {
             // As long as there are no UNRECOVERABLE ERRORS, reconnect.
             while (true) {
                 client.start_connection();
-                client.communicate(imu);
+                client.communicate(imu, torq);
                 client.cleanup();
             }
         } catch (const std::runtime_error& error) {

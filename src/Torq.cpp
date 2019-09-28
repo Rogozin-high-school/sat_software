@@ -1,3 +1,9 @@
+/*
+    Created by Yanir Harel, 28.9.2019
+    ---------------------------------
+    This module uses the torq direction.
+*/
+
 #include "Torq.hpp"
 
 Torquer::Torquer () {
@@ -30,4 +36,12 @@ void Torquer::set_dir_z (int z_dir) {
     if (z_dir && z_dir != 1 && z_dir != -1) return;
     this->direction[this->Z] = z_dir;
     this->hBridges[this->Z]->setDirection (z_dir);
+}
+
+
+void Torquer::reset_dir () { // close all hbridge ports and stop the torq
+    for (int i = 0; i < 3; i++) {
+        this->direction[i] = 0;
+        this->hBridges[i]->setDirection (0);
+    }
 }

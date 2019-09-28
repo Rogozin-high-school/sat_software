@@ -1,9 +1,12 @@
+/*
+    Created by Yanir Harel, 28.9.2019
+    ---------------------------------
+    This module is used to set the power flow direction of the electric current.
+*/
+
 #include "hBridge.hpp"
 
 using std::string;
-using std::this_thread::sleep_for;
-using std::chrono::milliseconds;
-using std::exception;
 
 hBridge::hBridge(string portNames[]) {
     for (int i = 0; i < 2; i++) {

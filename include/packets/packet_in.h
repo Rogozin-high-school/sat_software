@@ -1,5 +1,6 @@
 /*
     Created by Maor Gershman, 13.9.2019
+    Updated and Upgraded by Yanir Harel, 28.9.2019
     ---
     This class will represent data sent from the ground station.
 */
@@ -38,6 +39,8 @@ namespace SatelliteSoftware::Packets {
                 propType = PacketIn::Type::REQUIRE_MGM_VALUES;
                 break;
             }
+            case PacketIn::Type::TORQ_FIELD:
+                propType = PacketIn::Type::TORQ_FIELD;
             return buffer;
         }
     private:

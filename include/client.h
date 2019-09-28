@@ -1,5 +1,6 @@
 /*
     Created by Maor Gershman, 25.8.2019
+    Updated and Upgraded by Yanir Harel, 28.9.2019
     ---
     This class will handle the communication with the ground station.
 */
@@ -9,6 +10,8 @@
 #include "main.h"
 #include "imu.h"
 #include "helper.h"
+#include <chrono>
+#include <thread>
 
 namespace SatelliteSoftware {
     constexpr int socketTimeoutMillis       = 500;
@@ -22,7 +25,7 @@ namespace SatelliteSoftware {
         ~Client();
 
         void start_connection();
-        void communicate(IMU& imu);
+        void communicate(IMU& imu, Torquer& torq);
         void cleanup();
     private:
         const std::string address = server.address.to_string();

@@ -1,5 +1,6 @@
 /*
     Created by Maor Gershman, 14.9.2019
+    Updated and Upgraded by Yanir Harel, 28.9.2019
     ---
     These classes will represent the server's address and port.
 */
