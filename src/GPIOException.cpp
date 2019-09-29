@@ -4,7 +4,7 @@
     Custom Exception to alert of gpio opening errors
 */
 
-#include "GPIOException.hpp"
+#include "../include/Torq/GPIOException.hpp"
 
 const char* GPIOException::what() const throw() {
     return "error opening gpio!";

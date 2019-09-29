@@ -4,7 +4,7 @@
     This module is used to set the power flow direction of the electric current.
 */
 
-#include "hBridge.hpp"
+#include "../include/Torq/hBridge.hpp"
 
 using std::string;
 
