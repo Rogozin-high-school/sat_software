@@ -18,6 +18,7 @@ int main(void) {
         satellite.run();
     } catch (exception e) {
         printf("%s", e.what());
+        getc(stdin);
         return 1;
     }
     return 0;
