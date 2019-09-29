@@ -7,12 +7,14 @@
 */
 
 #include "../include/satellite.h"
+#include "../include/logger.h"
 
 int main(void) {
     SatelliteSoftware::Satellite satellite;
     try {
         satellite.run();
     } catch (...) {
+        Logger::debug("exception accured!");
         return 1;
     }
     return 0;

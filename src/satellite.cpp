@@ -43,7 +43,7 @@ namespace SatelliteSoftware {
             // As long as there are no UNRECOVERABLE ERRORS, reconnect.
             while (true) {
                 client.start_connection();
-                client.communicate(imu, nullptr);
+                client.communicate(imu, NULL);
                 client.cleanup();
             }
         } catch (const std::runtime_error& error) {
