@@ -12,6 +12,7 @@
 #include "helper.h"
 #include <chrono>
 #include <thread>
+#include "Torq/Torq.hpp"
 
 namespace SatelliteSoftware {
     constexpr int socketTimeoutMillis       = 500;
