@@ -6,15 +6,18 @@
     This file should be as short and precise as possible.
 */
 
-#include <stdio.h>
+#include <iostream>
+#include <exception>
 #include "../include/satellite.h"
+
+using std::exception;
 
 int main(void) {
     SatelliteSoftware::Satellite satellite;
     try {
         satellite.run();
-    } catch (...) {
-        puts("exception accured");
+    } catch (exception e) {
+        puts(e.what());
         return 1;
     }
     return 0;
