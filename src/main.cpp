@@ -6,15 +6,15 @@
     This file should be as short and precise as possible.
 */
 
+#include <stdio.h>
 #include "../include/satellite.h"
-#include "../include/logger.h"
 
 int main(void) {
     SatelliteSoftware::Satellite satellite;
     try {
         satellite.run();
     } catch (...) {
-        Logger::debug("exception accured!");
+        puts("exception accured");
         return 1;
     }
     return 0;
