@@ -49,12 +49,14 @@ namespace SatelliteSoftware {
             if (input.has_value()) {
                 std::array data = input.value();
                 switch (packetIn.type) {
-                case Packets::PacketIn::Type::UNKNOWN:
+                case Packets::PacketIn::Type::UNKNOWN: {
                     Logger::warn("Received unknown packet! ID = " + std::to_string(data[0]), LogPrefix::CLIENT);
-                    break;
-                case Packets::PacketIn::Type::KEEPALIVE: // Don't do anything.
-                    break;
-                case Packets::PacketIn::Type::TORQ_FIELD: // use torq
+                    
+                } break;
+                case Packets::PacketIn::Type::KEEPALIVE: { // Don't do anything.
+                
+                } break;
+                case Packets::PacketIn::Type::TORQ_FIELD: { // use torq
                     auto field_direction = packetIn.receive_packet<3>();
                     if (field_direction.has_value()) {
                         auto direction = field_direction.value();
@@ -66,11 +68,11 @@ namespace SatelliteSoftware {
                         Packets::PacketOut<1> outConnsock(sock);
                         outConnsock.send_packet();
                     }
-                    break;
-                case Packets::PacketIn::Type::REQUIRE_MGM_VALUES:
+                } break;
+                case Packets::PacketIn::Type::REQUIRE_MGM_VALUES: {
                     Packets::PacketOutSendMGMValues packetOut(sock, imu);
                     packetOut.send_packet();
-                    break;
+                } break;
                 }
             } else {
                 Logger::severe("Lost connection with the ground station!", LogPrefix::CLIENT);
