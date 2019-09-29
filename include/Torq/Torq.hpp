@@ -12,6 +12,7 @@ class Torquer {
 public:
     Torquer(void);
     ~Torquer(void);
+    void init (void);
     void set_dir_x (int x_dir);
     void set_dir_y (int y_dir);
     void set_dir_z (int z_dir);

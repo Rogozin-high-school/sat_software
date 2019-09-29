@@ -17,7 +17,7 @@ int main(void) {
     try {
         satellite.run();
     } catch (exception e) {
-        puts(e.what());
+        printf("%s", e.what());
         return 1;
     }
     return 0;

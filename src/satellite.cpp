@@ -33,6 +33,7 @@ namespace SatelliteSoftware {
         Client client;
         Torquer torq;
         try {
+            torq.init();
             imu.initialize();
         } catch (const std::runtime_error& error) {
             Logger::error(error.what(), LogPrefix::IMU);

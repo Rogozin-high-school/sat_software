@@ -7,6 +7,10 @@
 #include "../include/Torq/Torq.hpp"
 
 Torquer::Torquer () {
+    
+}
+
+void Torquer::init () {
     string pins[3][2] = { { "20", "26" }, { "16", "19" }, { "23", "22" } };
     for (int i = 0; i < 3; i++) {
         this->direction[i] = 0;
