@@ -38,9 +38,9 @@ namespace SatelliteSoftware::Packets {
             case PacketIn::Type::REQUIRE_MGM_VALUES:
                 propType = PacketIn::Type::REQUIRE_MGM_VALUES;
                 break;
-            }
             case PacketIn::Type::TORQ_FIELD:
                 propType = PacketIn::Type::TORQ_FIELD;
+            }
             return buffer;
         }
     private:
