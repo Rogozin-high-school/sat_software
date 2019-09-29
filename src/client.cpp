@@ -54,10 +54,6 @@ namespace SatelliteSoftware {
                     break;
                 case Packets::PacketIn::Type::KEEPALIVE: // Don't do anything.
                     break;
-                case Packets::PacketIn::Type::REQUIRE_MGM_VALUES:
-                    Packets::PacketOutSendMGMValues packetOut(sock, imu);
-                    packetOut.send_packet();
-                    break;
                 case Packets::PacketIn::Type::TORQ_FIELD: // use torq
                     auto field_direction = packetIn.receive_packet<3>();
                     if (field_direction.has_value()) {
@@ -70,6 +66,10 @@ namespace SatelliteSoftware {
                         Packets::PacketOut<1> outConnsock(sock);
                         outConnsock.send_packet();
                     }
+                    break;
+                case Packets::PacketIn::Type::REQUIRE_MGM_VALUES:
+                    Packets::PacketOutSendMGMValues packetOut(sock, imu);
+                    packetOut.send_packet();
                     break;
                 }
             } else {
