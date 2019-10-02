@@ -4,7 +4,7 @@
 #include <sstream>
 #include <chrono>
 #include <thread>
-#include "Gpio.hpp"
+#include "../include/Torq/Gpio.hpp"
 
 using namespace std;
 using std::chrono::milliseconds;

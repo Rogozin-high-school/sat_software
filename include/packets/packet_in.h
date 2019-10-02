@@ -16,7 +16,7 @@ namespace SatelliteSoftware::Packets {
             UNKNOWN            = -1,
             KEEPALIVE          = 0,
             REQUIRE_MGM_VALUES = 1,
-            USE_TORQ           = 2,
+            USE_TORQ           = 2
         };
 
         const PacketIn::Type& type = propType;
@@ -41,9 +41,8 @@ namespace SatelliteSoftware::Packets {
                 propType = PacketIn::Type::USE_TORQ;
                 break;
             }
-            }
-            return buffer;
-        }
+	    return buffer;
+	}
     private:
         const Socket sock;
         PacketIn::Type propType = PacketIn::Type::UNKNOWN;

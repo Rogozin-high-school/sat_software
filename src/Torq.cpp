@@ -1,4 +1,4 @@
-#include "Torq.hpp"
+#include "../include/Torq/Torq.hpp"
 
 Torquer::Torquer () {
     string pins[3][2] = { { "20", "26" }, { "16", "19" }, { "23", "22" } };

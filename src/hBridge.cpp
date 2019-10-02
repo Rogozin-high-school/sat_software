@@ -1,4 +1,4 @@
-#include "hBridge.hpp"
+#include "../include/Torq/hBridge.hpp"
 
 using std::string;
 using std::this_thread::sleep_for;

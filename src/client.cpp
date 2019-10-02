@@ -49,26 +49,32 @@ namespace SatelliteSoftware {
             if (input.has_value()) {
                 std::array data = input.value();
                 switch (packetIn.type) {
-                case Packets::PacketIn::Type::UNKNOWN:
+                case Packets::PacketIn::Type::UNKNOWN: {
                     Logger::warn("Received unknown packet! ID = " + std::to_string(data[0]), LogPrefix::CLIENT);
                     break;
-                case Packets::PacketIn::Type::KEEPALIVE: // Don't do anything.
+		}
+                case Packets::PacketIn::Type::KEEPALIVE: { // Don't do anything.
                     break;
-                case Packets::PacketIn::Type::REQUIRE_MGM_VALUES:
+		}
+                case Packets::PacketIn::Type::REQUIRE_MGM_VALUES: {
                     Packets::PacketOutSendMGMValues packetOut(sock, imu);
                     packetOut.send_packet();
                     break;
-                case Packets::PacketIn::Type::USE_TORQ:
+		}
+                case Packets::PacketIn::Type::USE_TORQ: {
+		    Logger::info("Starting Torq!", LogPrefix::CLIENT);
                     auto fd = packetIn.receive_packet<3>();
                     std::array fds = fd.value();
                     torq.set_dir_x(fds[0]);
                     torq.set_dir_y(fds[1]);
                     torq.set_dir_z(fds[2]);
-                    sleep_for(milliseconds(5));
+                    sleep_for(milliseconds(500));
                     torq.reset();
+ 		    Logger::info("Stopping torq!", LogPrefix::CLIENT);
                     Packets::PacketOut<1> pout(sock);
                     pout.send_packet();
                     break;
+		}
                 }
             } else {
                 Logger::severe("Lost connection with the ground station!", LogPrefix::CLIENT);
