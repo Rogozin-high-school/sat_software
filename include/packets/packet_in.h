@@ -16,6 +16,7 @@ namespace SatelliteSoftware::Packets {
             UNKNOWN            = -1,
             KEEPALIVE          = 0,
             REQUIRE_MGM_VALUES = 1,
+            USE_TORQ           = 2,
         };
 
         const PacketIn::Type& type = propType;
@@ -36,6 +37,10 @@ namespace SatelliteSoftware::Packets {
             case PacketIn::Type::REQUIRE_MGM_VALUES:
                 propType = PacketIn::Type::REQUIRE_MGM_VALUES;
                 break;
+            case PacketIn::Type::USE_TORQ:
+                propType = PacketIn::Type::USE_TORQ;
+                break;
+            }
             }
             return buffer;
         }

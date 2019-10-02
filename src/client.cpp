@@ -8,6 +8,11 @@
 #include "../include/logger.h"
 #include "../include/packets/packet_in.h"
 #include "../include/packets/packet_out_send_mgm_values.h"
+#include <thread>
+#include <chrono>
+
+using std::chrono::milliseconds;
+using std::this_thread::sleep_for;
 
 namespace SatelliteSoftware {
     Client::~Client() {
@@ -36,7 +41,7 @@ namespace SatelliteSoftware {
         Logger::info("Connected after " + delayStr + "!", LogPrefix::CLIENT);
     }
 
-    void Client::communicate(IMU& imu) {
+    void Client::communicate(IMU& imu, Torquer& torq) {
         bool connected = true;
         Packets::PacketIn packetIn(sock);
         while (connected) {
@@ -52,6 +57,18 @@ namespace SatelliteSoftware {
                 case Packets::PacketIn::Type::REQUIRE_MGM_VALUES:
                     Packets::PacketOutSendMGMValues packetOut(sock, imu);
                     packetOut.send_packet();
+                    break;
+                case Packets::PacketIn::Type::USE_TORQ:
+                    auto fd = packetIn.receive_packet<3>();
+                    std::array fds = fd.value();
+                    // TODO: set the field directions
+                    torq.set_dir_x(fds[0]);
+                    torq.set_dir_y(fds[1]);
+                    torq.set_dir_z(fds[2]);
+                    sleep_for(milliseconds(5));
+                    torq.reset();
+                    Packets::PacketOut<1> pout(sock);
+                    pout.send_packet();
                     break;
                 }
             } else {

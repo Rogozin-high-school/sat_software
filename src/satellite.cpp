@@ -27,6 +27,7 @@ namespace SatelliteSoftware {
 
     void Satellite::run() const {
         IMU imu;
+        Torquer torq = Torquer();
         Client client;
 
         try {
@@ -40,7 +41,7 @@ namespace SatelliteSoftware {
             // As long as there are no UNRECOVERABLE ERRORS, reconnect.
             while (true) {
                 client.start_connection();
-                client.communicate(imu);
+                client.communicate(imu, torq);
                 client.cleanup();
             }
         } catch (const std::runtime_error& error) {

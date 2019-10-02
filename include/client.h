@@ -9,6 +9,7 @@
 #include "main.h"
 #include "imu.h"
 #include "helper.h"
+#include "Torq/Torq.hpp"
 
 namespace SatelliteSoftware {
     constexpr int socketTimeoutMillis       = 500;
@@ -22,7 +23,7 @@ namespace SatelliteSoftware {
         ~Client();
 
         void start_connection();
-        void communicate(IMU& imu);
+        void communicate(IMU& imu, Torquer& torq);
         void cleanup();
     private:
         const std::string address = server.address.to_string();
