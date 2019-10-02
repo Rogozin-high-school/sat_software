@@ -61,7 +61,6 @@ namespace SatelliteSoftware {
                 case Packets::PacketIn::Type::USE_TORQ:
                     auto fd = packetIn.receive_packet<3>();
                     std::array fds = fd.value();
-                    // TODO: set the field directions
                     torq.set_dir_x(fds[0]);
                     torq.set_dir_y(fds[1]);
                     torq.set_dir_z(fds[2]);
