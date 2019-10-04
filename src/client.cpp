@@ -65,11 +65,11 @@ namespace SatelliteSoftware {
 		    Logger::info("Starting Torq!", LogPrefix::CLIENT);
                     auto fd = packetIn.receive_packet<3>();
                     std::array fds = fd.value();
-                    torq.set_dir_x(fds[0]);
-                    torq.set_dir_y(fds[1]);
-                    torq.set_dir_z(fds[2]);
-                    sleep_for(milliseconds(500));
-                    torq.reset();
+		    if (torq.directions[0] != fds[0]) {
+                    	torq.set_dir_x(fds[0] == 2 ? -1 : fds[0]);
+		    	sleep_for(milliseconds(500));
+		    	torq.set_dir_x(0);
+		    }
  		    Logger::info("Stopping torq!", LogPrefix::CLIENT);
                     Packets::PacketOut<1> pout(sock);
                     pout.send_packet();
