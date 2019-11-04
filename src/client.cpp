@@ -12,6 +12,7 @@
 #include <chrono>
 
 using std::chrono::milliseconds;
+using std::chrono::seconds;
 using std::this_thread::sleep_for;
 
 namespace SatelliteSoftware {
@@ -67,8 +68,10 @@ namespace SatelliteSoftware {
                     std::array fds = fd.value();
 		    if (torq.directions[0] != fds[0]) {
                     	torq.set_dir_x(fds[0] == 2 ? -1 : fds[0]);
-		    	sleep_for(milliseconds(500));
-		    	torq.set_dir_x(0);
+		    }
+		    if (torq.directions[0] != 0) {
+			sleep_for(seconds(2));
+			torq.set_dir_x(0);
 		    }
  		    Logger::info("Stopping torq!", LogPrefix::CLIENT);
                     Packets::PacketOut<1> pout(sock);
