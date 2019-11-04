@@ -6,11 +6,11 @@
 
 #pragma once
 
-#include "packet_out.h"
-#include "../imu.h"
+#include <packets/packet_out.hpp>
+#include <imu.hpp>
 #include <cstring>
 
-namespace SatelliteSoftware::Packets {
+namespace Packets {
     class PacketOutSendMGMValues : public PacketOut<13> {
     public:
         inline PacketOutSendMGMValues(const Socket sock, IMU& imu) : PacketOut(sock) {

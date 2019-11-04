@@ -1,3 +1,4 @@
-time g++-9 src/*.cpp \
-        -s -std=c++17 -O3 \
-        -lpthread
+time g++ -Iinclude \
+         src/*.cpp \
+         -s -std=c++17 \
+         -lpthread

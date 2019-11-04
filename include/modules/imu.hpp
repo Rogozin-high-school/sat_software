@@ -6,17 +6,16 @@
 
 #pragma once
 
-#include "main.h"
+#include <array>
 
-#ifdef RASPBERRY_PI
-#include "../lib/MPU/MPU9250_Master_I2C.h"
-#endif
+#ifdef RASPBERRY_PI // Real IMU
 
-namespace SatelliteSoftware {
-    #ifdef RASPBERRY_PI
-    class RealIMU {
+#include <MPU/MPU9250_Master_I2C.h>
+
+namespace Modules {
+    class IMU {
     public:
-        RealIMU();
+        IMU();
 
         void initialize();
 
@@ -30,9 +29,13 @@ namespace SatelliteSoftware {
     private:
         MPU9250_Master_I2C mpu;
     };
-    using IMU = RealIMU;
-    #else
-    struct FakeIMU {
+}
+
+#else // Fake IMU
+
+namespace Modules {
+    class IMU {
+    public:
         void initialize();
 
         void calibrate_magnetometer();
@@ -43,6 +46,6 @@ namespace SatelliteSoftware {
         
         std::array<float, 3> read_accelerometer();
     };
-    using IMU = FakeIMU;
-    #endif // RASPBERRY_PI
 }
+
+#endif // RASPBERRY_PI

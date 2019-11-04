@@ -6,10 +6,11 @@
 
 #pragma once
 
-#include "../main.h"
+#include <client_base.hpp>
 #include <unistd.h>
+#include <optional>
 
-namespace SatelliteSoftware::Packets {
+namespace Packets {
     class PacketIn {
     public:
         enum class Type {

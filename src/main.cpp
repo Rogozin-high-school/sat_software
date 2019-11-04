@@ -5,14 +5,18 @@
     This file should be as short and precise as possible.
 */
 
-#include "../include/satellite.h"
+#include <satellite.hpp>
 
 int main(void) {
-    SatelliteSoftware::Satellite satellite;
+    Satellite satellite;
+
     try {
         satellite.run();
     } catch (...) {
+        // Let's hope we won't get here!
         return 1;
     }
+    
+    // Or here too!
     return 0;
 }
