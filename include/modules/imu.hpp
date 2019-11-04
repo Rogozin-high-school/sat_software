@@ -33,7 +33,7 @@ namespace Modules {
 
 #else // Fake IMU
 
-namespace Modules {
+namespace Modules { 
     class IMU {
     public:
         void initialize();

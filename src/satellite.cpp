@@ -24,8 +24,8 @@ Satellite::~Satellite() {
 }
 
 void Satellite::run() const {
-    IMU imu;
-    Torquer torq;
+    Modules::IMU imu;
+    Modules::Magnetorquer magnetorquer;
     Client client;
 
     try {
@@ -39,7 +39,7 @@ void Satellite::run() const {
         // As long as there are no UNRECOVERABLE ERRORS, reconnect.
         while (true) {
             client.start_connection();
-            client.communicate(imu, torq);
+            client.communicate(imu, magnetorquer);
             client.cleanup();
         }
     } catch (const std::runtime_error& error) {
