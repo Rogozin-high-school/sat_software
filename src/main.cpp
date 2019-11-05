@@ -8,9 +8,10 @@
 #include <satellite.hpp>
 
 int main(void) {
-    Satellite satellite;
+    Satellite satellite; // This constructor doesn't do anything interesting
 
     try {
+        // Let's go! :)
         satellite.run();
     } catch (...) {
         // Let's hope we won't get here!

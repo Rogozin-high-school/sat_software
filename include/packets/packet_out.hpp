@@ -15,17 +15,18 @@ namespace Packets {
     template<int size>
     class PacketOut {
     public:
-        PacketOut(const Socket sock) : sock(sock) {
+        PacketOut(const Socket socketFD) : socketFD(socketFD) {
             static_assert(size > 0 && size <= maxPacketSize);
+            
             buffer[0] = senderID;
         }
 
         void send_packet() const {
-            send(sock, buffer, size, 0);
+            send(socketFD, buffer, size, 0);
         }
     protected:
         Byte buffer[size];
     private:
-        const Socket sock;
+        const Socket socketFD;
     };
 }

@@ -11,95 +11,109 @@
 #include <sstream>
 
 enum class LogLevel {
-    DEBUG, INFO, WARNING, SEVERE, ERROR
+    VERBOSE, DEBUG, INFO, WARNING, SEVERE, ERROR
 };
 
 enum class LogPrefix {
-    GENERAL, CLIENT, IMU
+    GENERAL, CLIENT, IMU, MAGNETORQUER
 };
 
-constexpr LogLevel minLogLevel = LogLevel::DEBUG;
+constexpr LogLevel minLogLevel = LogLevel::VERBOSE;
 
 class Logger {
-    #ifdef RASPBERRY_PI
-    static constexpr bool isRaspberryPi = true;
-    #else
-    static constexpr bool isRaspberryPi = false;
-    #endif // RASPBERRY_PI
 public:
-    template<typename T>
-    static inline void debug(const T& t, const LogPrefix prefix = LogPrefix::GENERAL) {
-        if constexpr(minLogLevel == LogLevel::DEBUG) {
-            log(t, prefix, LogLevel::DEBUG);
+    template<LogPrefix prefix, class T, bool endl = true>
+    static void verbose(const T& t) {
+        if constexpr(minLogLevel == LogLevel::VERBOSE) {
+            log<T, prefix, LogLevel::VERBOSE, endl>(t);
         }
     }
 
-    template<typename T>
-    static inline void info(const T& t, const LogPrefix prefix = LogPrefix::GENERAL) {
+    template<LogPrefix prefix, class T, bool endl = true>
+    static void debug(const T& t) {
+        if constexpr(minLogLevel <= LogLevel::DEBUG) {
+            log<T, prefix, LogLevel::DEBUG, endl>(t);
+        }
+    }
+
+    template<LogPrefix prefix, class T, bool endl = true>
+    static void info(const T& t) {
         if constexpr(minLogLevel <= LogLevel::INFO) {
-            log(t, prefix, LogLevel::INFO);
+            log<T, prefix, LogLevel::INFO, endl>(t);
         }
     }
 
-    template<typename T>
-    static inline void warn(const T& t, const LogPrefix prefix = LogPrefix::GENERAL) {
+    template<LogPrefix prefix, class T, bool endl = true>
+    static void warn(const T& t) {
         if constexpr(minLogLevel <= LogLevel::WARNING) {
-            log(t, prefix, LogLevel::WARNING);
+            log<T, prefix, LogLevel::WARNING, endl>(t);
         }
     }
     
-    template<typename T>
-    static inline void severe(const T& t, const LogPrefix prefix = LogPrefix::GENERAL) {
+    template<LogPrefix prefix, class T, bool endl = true>
+    static void severe(const T& t) {
         if constexpr(minLogLevel <= LogLevel::SEVERE) {
-            log(t, prefix, LogLevel::SEVERE);
+            log<T, prefix, LogLevel::SEVERE, endl>(t);
         }
     }
 
-    template<typename T>
-    static inline void error(const T& t, const LogPrefix prefix = LogPrefix::GENERAL) {
-        if constexpr(minLogLevel <= LogLevel::ERROR) {
-            log(t, prefix, LogLevel::ERROR);
-        }
+    template<LogPrefix prefix, class T, bool endl = true>
+    static void error(const T& t) {
+        log<T, prefix, LogLevel::ERROR, endl>(t);
     }
 private:
-    static inline const std::string level_string(const LogLevel level) {
-        switch (level) {
-        case LogLevel::DEBUG:
+    static const tm *current_time_c() {
+        time_t t;
+        time(&t);
+        return localtime(&t);
+    }
+
+    static const std::string current_time_string() {
+        char buffer[9];
+        strftime(buffer, sizeof(buffer), "%H:%M:%S", current_time_c());
+        return buffer;
+    }
+
+    template<LogLevel level>
+    static constexpr std::string level_string() {
+        if constexpr(level == LogLevel::VERBOSE)
+            return "VERBOSE";
+        if constexpr(level == LogLevel::DEBUG)
             return "DEBUG  ";
-        case LogLevel::INFO:
+        if constexpr(level == LogLevel::INFO)
             return "INFO   ";
-        case LogLevel::WARNING:
+        if constexpr(level == LogLevel::WARNING)
             return "WARNING";
-        case LogLevel::SEVERE:
+        if constexpr(level == LogLevel::SEVERE)
             return "SEVERE ";
-        case LogLevel::ERROR:
+        if constexpr(level == LogLevel::ERROR)
             return "ERROR  ";
-        }
-        throw std::invalid_argument("Invalid logging level!");
     }
 
-    static inline const std::string prefix_string(const LogPrefix prefix) {
-        switch (prefix) {
-        case LogPrefix::GENERAL:
-            return  "General";
-        case LogPrefix::CLIENT:
-            return  " Client";
-        case LogPrefix::IMU:
-            return isRaspberryPi ? 
-                    "    IMU" : 
-                    "FakeIMU";
-        }
-        throw std::invalid_argument("Invalid logging prefix!");
+    template<LogPrefix prefix>
+    static constexpr std::string prefix_string() {
+        if constexpr(prefix == LogPrefix::GENERAL)
+            return "      General";
+        if constexpr(prefix == LogPrefix::CLIENT)
+            return "       Client";
+        if constexpr(prefix == LogPrefix::IMU)
+            return "          IMU";
+        if constexpr(prefix == LogPrefix::MAGNETORQUER)
+            return " Magnetorquer";
     }
 
-    template<typename T>
-    static inline void log(const T& t, const LogPrefix prefix, const LogLevel level) {
+    template<class T, LogPrefix prefix, LogLevel level, bool endl>
+    static void log(const T& t) {
         std::stringstream ss;
-        
-        ss << "[" << Helper::current_time_string() << "] ";
-        ss << "[" << level_string(level) << " - " << prefix_string(prefix) << "] ";
-        ss << t << std::endl;
+        ss << "[" << current_time_string() << "] ";
+        ss << "[" << level_string<level>() << " - " << prefix_string<prefix>() << "] ";
+        ss << t;
 
+        if constexpr(endl) {
+            ss << std::endl;
+        }
+        
         std::cout << ss.str();
+        logStream << ss.str();
     }
 };

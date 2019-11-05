@@ -11,18 +11,10 @@
 #include <client_base.hpp>
 #include <helper.hpp>
 
-#include <modules/imu.hpp>
-#include <modules/magnetorquer.hpp>
-
 using SocketAddress = sockaddr_in;
 
 class Client {
     static constexpr int socketTimeoutMillis       = 500;
-
-    static constexpr int codeInvalidSocket         = -1;
-    static constexpr int codeNotConnected          = -1;
-    static constexpr int codeAddressParseSucceeded = 1;
-    static constexpr int codeSetSocketOptFailed    = -1;
 public:
     Client();
     ~Client();
@@ -35,7 +27,7 @@ private:
     int port;
 
     SocketAddress sockAddr;
-    Socket sock = codeInvalidSocket;
+    Socket socketFD = -1;
 
     void create_socket();
     void attempt_connection(bool& isConnected);

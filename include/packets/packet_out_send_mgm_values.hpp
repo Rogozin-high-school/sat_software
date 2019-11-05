@@ -11,13 +11,14 @@
 #include <cstring>
 
 namespace Packets {
-    class PacketOutSendMGMValues : public PacketOut<13> {
+    class PacketOutSendMGMValues : public PacketOut<1 + 12> {
     public:
-        inline PacketOutSendMGMValues(const Socket sock, Modules::IMU& imu) : PacketOut(sock) {
+        PacketOutSendMGMValues(const Socket socketFD, Modules::IMU& imu) : PacketOut(socketFD) {
             std::array values = imu.read_magnetometer();
             // Copy the values to the buffer
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 3; i++) {
                 memcpy(buffer + i * sizeof(float) + 1, &values[i], sizeof(float));
+            }
         }
     };
 }

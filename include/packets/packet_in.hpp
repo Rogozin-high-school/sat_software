@@ -13,39 +13,47 @@
 namespace Packets {
     class PacketIn {
     public:
-        enum class Type {
-            UNKNOWN            = -1,
-            KEEPALIVE          = 0,
-            REQUIRE_MGM_VALUES = 1,
-            USE_TORQ           = 2
+        enum class Type : Byte {
+            UNKNOWN            = 0xff,
+            
+            KEEPALIVE          = 0x00,
+            REQUIRE_MGM_VALUES = 0x01,
+            USE_TORQUE         = 0x02
         };
 
-        const PacketIn::Type& type = propType;
+        const PacketIn::Type& type = _type;
 
-        inline PacketIn(const Socket sock) : sock(sock)
+        PacketIn(const Socket socketFD) : socketFD(socketFD)
         {}
 
         template<int size>
-        inline const std::optional<std::array<Byte, size>> receive_packet() {
+        const std::optional<std::array<Byte, size>> receive_packet() {
             static_assert(size > 0 && size <= maxPacketSize);
+            
             std::array<Byte, size> buffer;
-            if (read(sock, buffer.begin(), size) <= 0)
+            if (read(socketFD, buffer.begin(), size) <= 0) {
                 return std::nullopt;
-            switch (static_cast<PacketIn::Type>(buffer[0])) {
+            }
+
+            Byte packetTypeId = buffer.front();
+            auto packetType = static_cast<PacketIn::Type>(packetTypeId);
+
+            switch (packetTypeId) {
             case PacketIn::Type::KEEPALIVE:
-                propType = PacketIn::Type::KEEPALIVE;
+                _type = PacketIn::Type::KEEPALIVE;
                 break;
             case PacketIn::Type::REQUIRE_MGM_VALUES:
-                propType = PacketIn::Type::REQUIRE_MGM_VALUES;
+                _type = PacketIn::Type::REQUIRE_MGM_VALUES;
                 break;
-            case PacketIn::Type::USE_TORQ:
-                propType = PacketIn::Type::USE_TORQ;
+            case PacketIn::Type::USE_TORQUE:
+                _type = PacketIn::Type::USE_TORQUE;
                 break;
             }
-	    return buffer;
-	}
+            
+            return buffer;
+        }
     private:
-        const Socket sock;
-        PacketIn::Type propType = PacketIn::Type::UNKNOWN;
+        const Socket socketFD;
+        PacketIn::Type _type = PacketIn::Type::UNKNOWN;
     };
 }

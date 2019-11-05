@@ -6,10 +6,17 @@
 
 #pragma once
 
+#include <modules/imu/imu.hpp>
+#include <modules/magnetorquer/magnetorquer.hpp>
+
 class Satellite {
 public:
     Satellite();
     ~Satellite();
 
-    void run() const;
+    void initialize();
+    void run();
+private:
+    Modules::IMU imu;
+    Modules::Magnetorquer magnetorquer;
 };

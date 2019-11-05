@@ -17,21 +17,126 @@ using Timepoint = std::chrono::high_resolution_clock::time_point;
 
 class Helper {
 public:
-    static const tm *current_time_c();
-
-    static const Timepoint current_time();
-
-    static std::string current_time_string();
-
-    static std::string current_date_string();
-
-    static void clear_screen();
-
-    static void print_date();
-
-    static void start_date_printing_loop();
-
-    static std::string time_period_to_string(const Timepoint& start, const Timepoint& end);
+    static inline std::string time_period_to_string(const Timepoint& start, const Timepoint& end) {
+        auto duration = (end - start).count() > 0 ? end - start : start - end;
+        int64_t h = std::chrono::duration_cast<std::chrono::hours>(duration).count();
+        duration %= std::chrono::hours(1);
+        int64_t m = std::chrono::duration_cast<std::chrono::minutes>(duration).count();
+        duration %= std::chrono::minutes(1);
+        int64_t s = std::chrono::duration_cast<std::chrono::seconds>(duration).count();
+        duration %= std::chrono::seconds(1);
+        int64_t ms = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+        duration %= std::chrono::milliseconds(1);
+        int64_t us = std::chrono::duration_cast<std::chrono::microseconds>(duration).count();
+        
+        std::stringstream ss;
+        if (h > 0) {
+            if (m > 0) {
+                if (s > 0) {
+                    if (ms > 0) {
+                        if (us > 0)
+                            ss << h << "h, " << m << "m, " << s << "s, " << ms << "ms and " << us << "µs";
+                        else
+                            ss << h << "h, " << m << "m, " << s << "s and " << ms << "ms";
+                    } else {
+                        if (us > 0)
+                            ss << h << "h, " << m << "m, " << s << "s and " << us << "µs";
+                        else
+                            ss << h << "h, " << m << "m and " << s << "s";
+                    }
+                } else {
+                    if (ms > 0) {
+                        if (us > 0)
+                            ss << h << "h, " << m << "m, " << ms << "ms and " << us << "µs";
+                        else
+                            ss << h << "h, " << m << "m and " << ms << "ms";
+                    } else {
+                        if (us > 0)
+                            ss << h << "h, " << m << "m and " << us << "µs";
+                        else
+                            ss << h << "h and " << m << "m";
+                    }
+                }
+            } else {
+                if (s > 0) {
+                    if (ms > 0) {
+                        if (us > 0)
+                            ss << h << "h, " << s << "s, " << ms << "ms and " << us << "µs";
+                        else
+                            ss << h << "h, " << s << "s and " << ms << "ms";
+                    } else {
+                        if (us > 0)
+                            ss << h << "h, " << s << "s and " << us << "µs";
+                        else
+                            ss << h << "h and " << s << "s";
+                    }
+                } else {
+                    if (ms > 0) {
+                        if (us > 0)
+                            ss << h << "h, " << ms << "ms and " << us << "µs";
+                        else
+                            ss << h << "h and " << ms << "ms";
+                    } else {
+                        if (us > 0)
+                            ss << h << "h and " << us << "µs";
+                        else
+                            ss << h << "h";
+                    }
+                }
+            }
+        } else {
+            if (m > 0) {
+                if (s > 0) {
+                    if (ms > 0) {
+                        if (us > 0)
+                            ss << m << "m, " << s << "s, " << ms << "ms and " << us << "µs";
+                        else
+                            ss << m << "m, " << s << "s and " << ms << "ms";
+                    } else {
+                        if (us > 0)
+                            ss << m << "m, " << s << "s and " << us << "µs";
+                        else
+                            ss << m << "m and " << s << "s";
+                    }
+                } else {
+                    if (ms > 0) {
+                        if (us > 0)
+                            ss << m << "m, " << ms << "ms and " << us << "µs";
+                        else
+                            ss << m << "m and " << ms << "ms";
+                    } else {
+                        if (us > 0)
+                            ss << m << "m and " << us << "µs";
+                        else
+                            ss << m << "m";
+                    }
+                }
+            } else {
+                if (s > 0) {
+                    if (ms > 0) {
+                        if (us > 0)
+                            ss << s << "s, " << ms << "ms and " << us << "µs";
+                        else
+                            ss << s << "s and " << ms << "ms";
+                    } else {
+                        if (us > 0)
+                            ss << s << "s and " << us << "µs";
+                        else
+                            ss << s << "s";
+                    }
+                } else {
+                    if (ms > 0) {
+                        if (us > 0)
+                            ss << ms << "ms and " << us << "µs";
+                        else
+                            ss << ms << "ms";
+                    } else if (us > 0)
+                        ss << us << "µs";
+                }
+            }
+        }
+        return ss.str();
+    }
 
     template<typename Rep, typename Period>
     static void draw_animation_with_dots(
