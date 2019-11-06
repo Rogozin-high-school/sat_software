@@ -6,12 +6,13 @@
 
 #pragma once
 
-#include <chrono>
-#include <string>
 #include <ctime>
+#include <chrono>
+#include <thread>
 #include <functional>
 #include <iostream>
-#include <thread>
+#include <string>
+#include <sstream>
 
 using Timepoint = std::chrono::high_resolution_clock::time_point;
 
@@ -139,33 +140,35 @@ public:
     }
 
     template<typename Rep, typename Period>
-    static void draw_animation_with_dots(
-        const bool& breakingCondition,
+    static void draw_animation_with_dots(const bool& breakingCondition,
         const std::string baseText,
         const std::chrono::duration<Rep, Period>& delay,
-        const int minDots,
-        const int maxDots,
-        const std::function<void(const std::string& text)> function
-    )
+        const uint8_t minDots,
+        const uint8_t maxDots,
+        const std::function<void(const std::string& text)> function)
     {
         bool increasingDotsCount = true;
-        int dots = minDots;
+        uint8_t dots = minDots;
         while (!breakingCondition) {
             std::string text = baseText;
-            int i = 0;
-            for (; i < dots; i++)
+            uint8_t i = 0;
+            for (; i < dots; i++) {
                 text += ".";
-            for (; i < maxDots; i++)
+            }
+            for (; i < maxDots; i++) {
                 text += " ";
+            }
             function(text);
             std::this_thread::sleep_for(delay);
-            std::cout << "\x1B[1F" << std::flush; // Move to the previous line
+            std::cout << "\033[A\33[2K\r" << std::flush; // Move to the previous line
             if (increasingDotsCount) {
-                if (++dots == maxDots)
+                if (++dots == maxDots) {
                     increasingDotsCount = false;
+                }
             } else {
-                if (--dots == minDots)
+                if (--dots == minDots) {
                     increasingDotsCount = true;
+                }
             }
         }
     }

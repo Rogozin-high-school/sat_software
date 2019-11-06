@@ -31,40 +31,44 @@ Client::~Client() {
     cleanup();
 }
 
+inline Timepoint current_time() {
+    return std::chrono::high_resolution_clock::now();
+}
+
 void Client::start_connection() {
     bool isConnected = false;
 
-    Logger::info("Attempting to connect to the ground station!", LogPrefix::CLIENT);
-    Logger::debug("Ground station: " + address + ":" + std::to_string(port), LogPrefix::CLIENT);
+    Logger::info<LogPrefix::CLIENT>("Attempting to connect to the ground station!");
+    Logger::debug<LogPrefix::CLIENT>("Ground station: " + address + ":" + std::to_string(port));
     create_socket();
 
-    Timepoint whenStarted = Helper::current_time();
+    Timepoint whenStarted = current_time();
     std::thread connectionThread(&Client::attempt_connection, this, std::ref(isConnected));
     connectionThread.detach();
 
-    Logger::info("Connecting...", LogPrefix::CLIENT);
+    Helper::draw_animation_with_dots(isConnected, "Connecting", std::chrono::milliseconds(200), 0, 5,
+        [&](const std::string& text) {
+            // Don't end the line
+            Logger::info<LogPrefix::CLIENT, const std::string&, true>(text);
+        }
+    );
 
-    // Helper::draw_animation_with_dots(isConnected, "Connecting", std::chrono::milliseconds(200), 0, 5,
-    //     [&](const std::string& text) {
-    //         Logger::info(text, LogPrefix::CLIENT);
-    //     }
-    // );
-
-    Timepoint whenFinished = Helper::current_time();
+    Timepoint whenFinished = current_time();
     std::string delayStr = Helper::time_period_to_string(whenStarted, whenFinished);
-    Logger::info("Connected after " + delayStr + "!", LogPrefix::CLIENT);
+    Logger::info<LogPrefix::CLIENT>("Connected after " + delayStr + "!");
 }
 
 void Client::communicate(Modules::IMU& imu, Modules::Magnetorquer& magnetorquer) {
     bool connected = true;
     Packets::PacketIn packetIn(socketFD);
     while (connected) {
-        auto input = packetIn.receive_packet<1>();
+        // Make this clearer.
+        auto input = packetIn.receive_packet<32>(); // Max packet buffer size = 32 bytes for now.
         if (input.has_value()) {
             std::array data = input.value();
             switch (packetIn.type) {
                 case Packets::PacketIn::Type::UNKNOWN: {
-                    Logger::warn("Received unknown packet! ID = " + std::to_string(data[0]), LogPrefix::CLIENT);
+                    Logger::warn<LogPrefix::CLIENT>("Received unknown packet! ID = " + std::to_string(data[0]));
                     break;
                 }
                 case Packets::PacketIn::Type::KEEPALIVE: { // Don't do anything.
@@ -94,7 +98,7 @@ void Client::communicate(Modules::IMU& imu, Modules::Magnetorquer& magnetorquer)
                 }
             }
         } else {
-            Logger::severe("Lost connection with the ground station!", LogPrefix::CLIENT);
+            Logger::severe<LogPrefix::CLIENT>("Lost connection with the ground station!");
             connected = false;
         }
     }

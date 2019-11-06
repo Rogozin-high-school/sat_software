@@ -114,6 +114,5 @@ private:
         }
         
         std::cout << ss.str();
-        logStream << ss.str();
     }
 };

@@ -38,7 +38,7 @@ namespace Packets {
             Byte packetTypeId = buffer.front();
             auto packetType = static_cast<PacketIn::Type>(packetTypeId);
 
-            switch (packetTypeId) {
+            switch (packetType) {
             case PacketIn::Type::KEEPALIVE:
                 _type = PacketIn::Type::KEEPALIVE;
                 break;

@@ -10,4 +10,9 @@ namespace RaspberryPi {
         wiringPiSetup();
 #endif // RASPBERRY_PI
     }
+    static inline void cleanup() {
+#ifdef RASPBERRY_PI
+        // TODO: cleanups
+#endif // RASPBERRY_PI
+    }
 }

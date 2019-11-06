@@ -9,12 +9,14 @@
 #include <arpa/inet.h>
 
 #include <client_base.hpp>
+#include <modules/imu/imu.hpp>
+#include <modules/magnetorquer/magnetorquer.hpp>
 #include <helper.hpp>
 
 using SocketAddress = sockaddr_in;
 
 class Client {
-    static constexpr int socketTimeoutMillis       = 500;
+    static constexpr int socketTimeoutMillis = 500;
 public:
     Client();
     ~Client();

@@ -7,7 +7,7 @@
 #pragma once
 
 #include <packets/packet_out.hpp>
-#include <modules/imu.hpp>
+#include <modules/imu/imu.hpp>
 #include <cstring>
 
 namespace Packets {
