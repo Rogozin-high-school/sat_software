@@ -11,6 +11,7 @@ int main(void) {
     Satellite satellite; // This constructor doesn't do anything interesting
 
     try {
+        satellite.initialize();
         // Let's go! :)
         satellite.run();
     } catch (...) {
