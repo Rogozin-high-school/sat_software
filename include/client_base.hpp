@@ -1,6 +1,6 @@
 #pragma once
 
-#include <bits/stdint-uintn.h>
+#include <stdint.h>
 
 using Socket = int;
 using Byte = uint8_t;
