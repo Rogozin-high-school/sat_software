@@ -1,15 +1,17 @@
 #pragma once
 
+#include <stdint.h>
+
 namespace Modules::SubModules {
     class GPIO {
     public:
-        enum class Pin : unsigned char {};
+        enum class Pin : uint8_t {};
 
-        enum class Direction : bool { IN, OUT };
+        enum class Direction : uint8_t { IN, OUT };
 
-        enum class Value : bool { 
-            CLOSED = true, 
-            OPEN = false 
+        enum class Value : uint8_t { 
+            OPEN = 0,
+            CLOSED = 1 
         };
 
         const GPIO::Pin& pin = _pin;

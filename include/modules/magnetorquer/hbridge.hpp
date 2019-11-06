@@ -5,10 +5,10 @@
 namespace Modules::SubModules {
     class HBridge {
     public:
-        enum class Direction {
+        enum class Direction : uint8_t {
             NONE     = 0,
             FORWARD  = 1,
-            BACKWARD = -1
+            BACKWARD = 2
         };
 
         const HBridge::Direction& direction = _direction;

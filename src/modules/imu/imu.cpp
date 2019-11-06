@@ -24,7 +24,7 @@ namespace Modules {
 #endif // RASPBERRY_PI
     }
 
-    std::array<float, 3> IMU::read_magnetometer() {
+    std::unordered_map<Axis, float> IMU::read_magnetometer() {
         float mx = 0, my = 0, mz = 0;
 #ifdef RASPBERRY_PI
         mpu.readMagnetometer(mx, my, mz);
@@ -38,22 +38,26 @@ namespace Modules {
 #endif // RASPBERRY_PI
         Logger::debug<LogPrefix::IMU>("Read MGM values: (" + std::to_string(mx) + ", " + std::to_string(my) + ", " + std::to_string(mz) + ")");
         
-        return { mx, my, mz };
+        return { 
+                { Axis::X, mx }, 
+                { Axis::Y, my }, 
+                { Axis::Z, mz } 
+        };
     }
 
-    std::array<float, 3> IMU::read_gyrometer() {
-        float gx = 0, gy = 0, gz = 0;
-#ifdef RASPBERRY_PI
-        mpu.readGyrometer(gx, gy, gz);
-#endif // RASPBERRY_PI
-        return { gx, gy, gz };
-    }
+//     std::array<float, 3> IMU::read_gyrometer() {
+//         float gx = 0, gy = 0, gz = 0;
+// #ifdef RASPBERRY_PI
+//         mpu.readGyrometer(gx, gy, gz);
+// #endif // RASPBERRY_PI
+//         return { gx, gy, gz };
+//     }
 
-    std::array<float, 3> IMU::read_accelerometer() {
-        float ax = 0, ay = 0, az = 0;
-#ifdef RASPBERRY_PI
-        mpu.readAccelerometer(ax, ay, az);
-#endif // RASPBERRY_PI
-        return { ax, ay, az };
-    }
+//     std::array<float, 3> IMU::read_accelerometer() {
+//         float ax = 0, ay = 0, az = 0;
+// #ifdef RASPBERRY_PI
+//         mpu.readAccelerometer(ax, ay, az);
+// #endif // RASPBERRY_PI
+//         return { ax, ay, az };
+//     }
 }

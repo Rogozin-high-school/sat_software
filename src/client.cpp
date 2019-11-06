@@ -6,8 +6,7 @@
 
 #include <client.hpp>
 #include <logger.hpp>
-#include <packets/packet_in.hpp>
-#include <packets/packet_out_send_mgm_values.hpp>
+#include <packets.hpp>
 #include <thread>
 #include <chrono>
 #include <fstream>
@@ -48,8 +47,7 @@ void Client::start_connection() {
 
     Helper::draw_animation_with_dots(isConnected, "Connecting", std::chrono::milliseconds(200), 0, 5,
         [&](const std::string& text) {
-            // Don't end the line
-            Logger::info<LogPrefix::CLIENT, const std::string&, true>(text);
+            Logger::info<LogPrefix::CLIENT>(text);
         }
     );
 
@@ -59,47 +57,39 @@ void Client::start_connection() {
 }
 
 void Client::communicate(Modules::IMU& imu, Modules::Magnetorquer& magnetorquer) {
-    bool connected = true;
-    Packets::PacketIn packetIn(socketFD);
-    while (connected) {
-        // Make this clearer.
-        auto input = packetIn.receive_packet<32>(); // Max packet buffer size = 32 bytes for now.
-        if (input.has_value()) {
-            std::array data = input.value();
-            switch (packetIn.type) {
-                case Packets::PacketIn::Type::UNKNOWN: {
-                    Logger::warn<LogPrefix::CLIENT>("Received unknown packet! ID = " + std::to_string(data[0]));
-                    break;
-                }
-                case Packets::PacketIn::Type::KEEPALIVE: { // Don't do anything.
-                    break;
-                }
-                case Packets::PacketIn::Type::REQUIRE_MGM_VALUES: {
-                    Packets::PacketOutSendMGMValues packetOut(socketFD, imu);
-                    packetOut.send_packet();
-                    break;
-                }
-                case Packets::PacketIn::Type::USE_TORQUE: {
-                    // Logger::info("Starting Torq!", LogPrefix::CLIENT);
-                    // auto fd = packetIn.receive_packet<3>();
-                    // std::array fds = fd.value();
-                    // if (torq.directions[0] != fds[0]) {
-                    //     torq.set_dir_x(fds[0] == 2 ? -1 : fds[0]);
-                    // }
-                    // if (torq.directions[0] != 0) {
-                    //     sleep_for(seconds(2));
-                    //     torq.set_dir_x(0);
-                    // }
-                    // Logger::info("Stopping torq!", LogPrefix::CLIENT);
-                    // Packets::PacketOut<1> pout(socketFD);
-                    // pout.send_packet();
-                    // TODO: fix this
-                    break;
-                }
-            }
-        } else {
+    using namespace Packets;
+    
+    while (true) {
+        ReceivablePacket recvPacket = receive_packet(socketFD);
+        
+        if (is_error_packet(recvPacket)) {
             Logger::severe<LogPrefix::CLIENT>("Lost connection with the ground station!");
-            connected = false;
+            break;
+        }
+
+        if (is_unknown_packet(recvPacket)) {
+            Logger::verbose<LogPrefix::CLIENT>("Received an unknown packet!");
+            continue;
+        }
+
+        ValidInPacket& validInPacket = std::get<ValidInPacket>(recvPacket);
+        PacketId packetId = static_cast<PacketId>(validInPacket.index());
+
+        switch (packetId) {
+            case PacketId::KEEPALIVE: {
+                send_packet(KeepAliveResponsePacket::instance, socketFD);
+                break;
+            }
+            case PacketId::MGM: {
+                send_packet(RequireMGMValuesResponsePacket(imu.read_magnetometer()), socketFD);
+                break;
+            }
+            case PacketId::MAGNETORQUER: {
+                UseMagnetorquerPacket packet = std::get<UseMagnetorquerPacket>(validInPacket);
+                packet.start_torque(magnetorquer);
+                send_packet(UseMagnetorquerResponsePacket::instance, socketFD);
+                break;
+            }
         }
     }
 }
