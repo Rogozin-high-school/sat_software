@@ -16,6 +16,7 @@ public:
 
     void initialize();
     void run();
+    void cleanup();
 private:
     Modules::IMU imu;
     Modules::Magnetorquer magnetorquer;

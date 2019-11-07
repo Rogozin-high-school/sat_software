@@ -1,11 +1,14 @@
 #include <modules/magnetorquer/gpio.hpp>
+#include <properties.hpp>
 #include <logger.hpp>
 #include <fstream>
 
-namespace Modules::SubModules {
-    void GPIO::initialize(GPIO::Pin pin = static_cast<GPIO::Pin>(4)) {
+namespace Modules {
+    void GPIO::initialize(GPIO::Pin pin) {
         _pin = pin;
-        Logger::verbose<LogPrefix::MAGNETORQUER>("Initialized GPIO pin #" + std::to_string((int)pin) + "!");
+
+        pinStr = std::to_string(int(pin));
+        Logger::verbose<LogPrefix::GPIO>("Initialized GPIO pin #" + pinStr + "!");
     }
 
     template<class T>
@@ -19,44 +22,51 @@ namespace Modules::SubModules {
     }
 
     void GPIO::export_gpio() {
-        const std::string strPin = std::to_string((int)pin);
-        
-        Logger::verbose<LogPrefix::MAGNETORQUER>("Exporting GPIO pin #" + strPin + "!");
+        const std::string pinExportPath = Properties::get_string("pin_export_path");
+
+        Logger::verbose<LogPrefix::GPIO>("Exporting pin #" + pinStr + " to \"" + pinExportPath + "\"!");
 #ifdef RASPBERRY_PI
-        constexpr auto path = "/sys/class/gpio/export";
-        write_to_file(path, strPin, "Unable to export GPIO pin #" + strPin + "!");
+        write_to_file(path, pinStr, "Unable to export pin #" + pinStr + "!");
 #endif // RASPBERRY_PI
     }
 
     void GPIO::unexport_gpio() {
-        const std::string strPin = std::to_string((int)pin);
+        const std::string pinUnexportPath = Properties::get_string("pin_unexport_path");
 
-        Logger::verbose<LogPrefix::MAGNETORQUER>("Unexporting GPIO pin #" + strPin + "!");
+        Logger::verbose<LogPrefix::GPIO>("Unexporting pin #" + pinStr + " to \"" + pinUnexportPath + "\"!");
 #ifdef RASPBERRY_PI
-        constexpr auto path = "/sys/class/gpio/unexport";
-        write_to_file(path, strPin, "Unable to unexport GPIO pin #" + strPin + "!");
+        write_to_file(pinUnexportPath, pinStr, "Unable to unexport pin #" + pinStr + "!");
 #endif // RASPBERRY_PI
     }
 
-    void GPIO::set_direction(GPIO::Direction direction) {
-        const std::string strPin = std::to_string((int)pin);
-        const std::string strDirection = direction == GPIO::Direction::IN ? "in" : "out";
+    inline void replace_char_with_string(std::string& str, char c, std::string replacement) {
+        int position;
+        while ((position = str.find(c)) != std::string::npos) {
+            str.replace(position, 1, replacement);
+        }
+    }
 
-        Logger::verbose<LogPrefix::MAGNETORQUER>("Setting GPIO pin #" + strPin + " direction to " + strDirection + "!");
+    void GPIO::set_direction(GPIO::Direction direction) {
+        std::string directionStr = direction == GPIO::Direction::IN ? "in" : "out";
+
+        std::string pinDirectionPath = Properties::get_string("pin_direction_path");
+        replace_char_with_string(pinDirectionPath, '#', pinStr);
+
+        Logger::verbose<LogPrefix::GPIO>("Setting pin #" + pinStr + " direction at \"" + pinDirectionPath + "\" to \"" + directionStr + "\"!");
 #ifdef RASPBERRY_PI
-        const auto path = "/sys/class/gpio/gpio" + strPin + "/direction";
-        write_to_file(path, strDirection, "Unable to set direction on GPIO pin #" + strPin + "!");
+        write_to_file(pinDirectionPath, directionStr, "Unable to set direction on pin #" + pinStr + "!");
 #endif // RASPBERRY_PI
     }
 
     void GPIO::set_value(GPIO::Value value) {
-        const std::string strPin = std::to_string((int)pin);
-        const std::string strValue = std::to_string((int)value);
+        std::string valueStr = std::to_string(int(value));
 
-        Logger::verbose<LogPrefix::MAGNETORQUER>("Setting GPIO pin #" + strPin + " value to " + strValue + "!");
+        std::string pinValuePath = Properties::get_string("pin_value_path");
+        replace_char_with_string(pinValuePath, '#', pinStr);
+
+        Logger::verbose<LogPrefix::GPIO>("Setting pin #" + pinStr + " value at \"" + pinValuePath + "\" to \"" + valueStr + "\"!");
 #ifdef RASPBERRY_PI
-        const auto path = "/sys/class/gpio/gpio" + strPin + "/value";
-        write_to_file(path, strValue, "Unable to set value on GPIO pin #" + strPin + "!");
+        write_to_file(pinValuePath, valueStr, "Unable to set value on pin #" + pinStr + "!");
 #endif // RASPBERRY_PI
     }
 }

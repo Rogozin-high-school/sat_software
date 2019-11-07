@@ -2,14 +2,10 @@
 
 #include <modules/magnetorquer/gpio.hpp>
 
-namespace Modules::SubModules {
+namespace Modules {
     class HBridge {
     public:
-        enum class Direction : uint8_t {
-            NONE     = 0,
-            FORWARD  = 1,
-            BACKWARD = 2
-        };
+        enum class Direction : uint8_t { NONE = 0, FORWARD = 1, BACKWARD = 2 };
 
         const HBridge::Direction& direction = _direction;
 

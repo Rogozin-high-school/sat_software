@@ -3,6 +3,4 @@
 #include <array>
 #include <unordered_map>
 
-enum class Axis {
-    X, Y, Z
-};
+enum class Axis { X, Y, Z };

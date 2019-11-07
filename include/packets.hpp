@@ -36,7 +36,7 @@ namespace Packets {
     public:
         static constexpr uint8_t size = 3;
 
-        const std::unordered_map<Axis, Modules::SubModules::HBridge::Direction> torqueDirections;
+        const std::unordered_map<Axis, Modules::HBridge::Direction> torqueDirections;
 
         UseMagnetorquerPacket(const std::array<Byte, size> bytes);
 
@@ -113,7 +113,7 @@ namespace Packets {
     static inline ReceivablePacket receive_packet(Socket socketFD) {
         std::array<Byte, maxPacketSize> buffer;
         if (read(socketFD, buffer.begin(), buffer.size()) > 0) {
-            PacketId id = static_cast<PacketId>(buffer.front());
+            PacketId id = PacketId(buffer.front());
 
             // Check the packet's ID
             switch (id) {
@@ -138,7 +138,7 @@ namespace Packets {
         std::array<Byte, 1 + T::size> buffer;
         
         if constexpr(T::size > 0) {
-            buffer[0] = static_cast<Byte>(T::id);
+            buffer[0] = Byte(T::id);
             std::copy(buffer.begin() + 1, buffer.end(), outPacket.buffer.begin());
         }
 

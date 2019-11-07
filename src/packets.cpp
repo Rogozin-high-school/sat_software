@@ -2,22 +2,19 @@
 #include <logger.hpp>
 
 namespace Packets {
-    const KeepAlivePacket           KeepAlivePacket::instance;
+    const KeepAlivePacket           KeepAlivePacket       ::instance;
     const RequireMGMValuesPacket    RequireMGMValuesPacket::instance;
-    const UnknownPacket             UnknownPacket::instance;
-    const ErrorPacket               ErrorPacket::instance;
+    const UnknownPacket             UnknownPacket         ::instance;
+    const ErrorPacket               ErrorPacket           ::instance;
 
     // UseMagnetorquerPacket
 
     template<size_t size>
     inline const auto directionsBufferToMap(const std::array<Byte, size>& bytes) {
-        using namespace Modules::SubModules;
-
-        std::unordered_map<Axis, HBridge::Direction> map;
-        map[Axis::X] = static_cast<HBridge::Direction>(bytes[0]);
-        map[Axis::Y] = static_cast<HBridge::Direction>(bytes[1]);
-        map[Axis::Z] = static_cast<HBridge::Direction>(bytes[2]);
-
+        std::unordered_map<Axis, Modules::HBridge::Direction> map;
+        map[Axis::X] = Modules::HBridge::Direction(bytes[0]);
+        map[Axis::Y] = Modules::HBridge::Direction(bytes[1]);
+        map[Axis::Z] = Modules::HBridge::Direction(bytes[2]);
         return map;
     }
 

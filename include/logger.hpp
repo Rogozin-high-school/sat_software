@@ -15,7 +15,7 @@ enum class LogLevel {
 };
 
 enum class LogPrefix {
-    GENERAL, CLIENT, IMU, MAGNETORQUER
+    GENERAL, CLIENT, IMU, MAGNETORQUER, HBRIDGE, GPIO
 };
 
 constexpr LogLevel minLogLevel = LogLevel::VERBOSE;
@@ -100,6 +100,10 @@ private:
             return "          IMU";
         if constexpr(prefix == LogPrefix::MAGNETORQUER)
             return " Magnetorquer";
+        if constexpr(prefix == LogPrefix::HBRIDGE)
+            return "      HBridge";
+        if constexpr(prefix == LogPrefix::GPIO)
+            return "         GPIO";
     }
 
     template<class T, LogPrefix prefix, LogLevel level, bool endl>

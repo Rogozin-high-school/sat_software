@@ -7,10 +7,10 @@ namespace Modules {
     class Magnetorquer {
     public:
         void initialize();
-        void set_torque_direction(Axis axis, SubModules::HBridge::Direction direction);
+        void set_torque_direction(Axis axis, HBridge::Direction direction);
         void reset_torque_directions();
         void cleanup();
     private:
-        std::unordered_map<Axis, SubModules::HBridge> HBridges;
+        std::unordered_map<Axis, HBridge> Hbridges;
     };
 }

@@ -1,18 +1,16 @@
 #pragma once
 
+#include <string>
 #include <stdint.h>
 
-namespace Modules::SubModules {
+namespace Modules {
     class GPIO {
     public:
-        enum class Pin : uint8_t {};
+        enum class Pin          : uint8_t {};
 
-        enum class Direction : uint8_t { IN, OUT };
+        enum class Direction    : uint8_t { IN, OUT };
 
-        enum class Value : uint8_t { 
-            OPEN = 0,
-            CLOSED = 1 
-        };
+        enum class Value        : uint8_t { OPEN = 0, CLOSED = 1 };
 
         const GPIO::Pin& pin = _pin;
 
@@ -23,5 +21,6 @@ namespace Modules::SubModules {
         void set_value(GPIO::Value value);
     private:
         GPIO::Pin _pin;
+        std::string pinStr;
     };
 }

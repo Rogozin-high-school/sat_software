@@ -8,17 +8,19 @@
 #include <satellite.hpp>
 
 int main(void) {
-    Satellite satellite; // This constructor doesn't do anything interesting
+    Satellite satellite;
 
     try {
         satellite.initialize();
-        // Let's go! :)
         satellite.run();
     } catch (...) {
         // Let's hope we won't get here!
-        return 1;
+        try {
+            satellite.cleanup();
+        } catch (...) {
+            // There's nothing you can do, since the satellite has already failed :(
+        }
     }
     
-    // Or here too!
-    return 0;
+    return 1;
 }

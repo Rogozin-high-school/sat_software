@@ -7,27 +7,18 @@
 #include <client.hpp>
 #include <logger.hpp>
 #include <packets.hpp>
+#include <properties.hpp>
 #include <thread>
 #include <chrono>
-#include <fstream>
 
 Client::Client() {
-    // Load server address & port from a file
-    constexpr auto serverInfoFilePath = "server";
-    std::string strAddress, strPort;
-
-    std::ifstream file(serverInfoFilePath);
-    std::getline(file, strAddress);
-    std::getline(file, strPort);
-
-    this->address = strAddress;
-    this->port = stoi(strPort);
-
-    file.close();
+    address = Properties::get_string("ground_station_address");
+    port = Properties::get_int("ground_station_port");
 }
 
 Client::~Client() {
     cleanup();
+    Logger::verbose<LogPrefix::CLIENT>("Destroyed the client instance!");
 }
 
 inline Timepoint current_time() {
@@ -95,6 +86,7 @@ void Client::communicate(Modules::IMU& imu, Modules::Magnetorquer& magnetorquer)
 }
 
 void Client::cleanup() {
+    Logger::verbose<LogPrefix::CLIENT>("Cleaning up!");
     if (socketFD != -1) {
         close(socketFD);
     }

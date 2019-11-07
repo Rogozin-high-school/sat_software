@@ -18,8 +18,6 @@ namespace Modules {
         void initialize();
         void calibrate_magnetometer();
         std::unordered_map<Axis, float> read_magnetometer();
-        // std::array<float, 3> read_gyrometer();
-        // std::array<float, 3> read_accelerometer();
 #ifdef RASPBERRY_PI
     private:
         MPU9250_Master_I2C mpu {
