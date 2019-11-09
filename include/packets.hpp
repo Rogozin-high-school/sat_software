@@ -133,12 +133,12 @@ namespace Packets {
         return ErrorPacket::instance;
     }
 
-    template<class T>
-    static inline bool send_packet(T outPacket, Socket socketFD) {
-        std::array<Byte, 1 + T::size> buffer;
+    template<class Packet_t>
+    static inline bool send_packet(const Packet_t& outPacket, Socket socketFD) {
+        std::array<Byte, 1 + Packet_t::size> buffer;
         
         if constexpr(T::size > 0) {
-            buffer[0] = Byte(T::id);
+            buffer[0] = Byte(Packet_t::id);
             std::copy(buffer.begin() + 1, buffer.end(), outPacket.buffer.begin());
         }
 

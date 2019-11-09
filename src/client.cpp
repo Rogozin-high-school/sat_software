@@ -64,7 +64,7 @@ void Client::communicate(Modules::IMU& imu, Modules::Magnetorquer& magnetorquer)
         }
 
         ValidInPacket& validInPacket = std::get<ValidInPacket>(recvPacket);
-        PacketId packetId = static_cast<PacketId>(validInPacket.index());
+        PacketId packetId = PacketId(validInPacket.index());
 
         switch (packetId) {
             case PacketId::KEEPALIVE: {
