@@ -7,3 +7,4 @@ Hbridge_axis_y_pins     : 16 19
 Hbridge_axis_z_pins     : 23 22
 ground_station_address  : "10.17.110.122"
 ground_station_port     : 550
+socket_timeout_ms       : 500
