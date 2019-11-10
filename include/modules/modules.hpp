@@ -5,4 +5,5 @@
 
 namespace Modules {
     void initialize(IMU& imu, Magnetorquer& magnetorquer);
+    void cleanup(Magnetorquer& magnetorquer);
 }

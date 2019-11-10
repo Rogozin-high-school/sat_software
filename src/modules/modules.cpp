@@ -28,4 +28,13 @@ namespace Modules {
             throw error;
         }
     }
+
+    void cleanup(Magnetorquer& magnetorquer) {
+        try {
+            magnetorquer.cleanup();
+        } catch (const std::runtime_error& error) {
+            Logger::error<LogPrefix::MAGNETORQUER>(error.what());
+            throw error;
+        }
+    }
 }

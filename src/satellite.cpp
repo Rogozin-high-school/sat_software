@@ -54,9 +54,8 @@ void Satellite::cleanup() {
     Logger::verbose<LogPrefix::GENERAL>("Cleaning up!");
 
     try {
-        magnetorquer.cleanup();
+        Modules::cleanup(magnetorquer);
     } catch (const std::runtime_error& error) {
-        Logger::error<LogPrefix::CLIENT>(error.what());
         throw error;
     }
 
