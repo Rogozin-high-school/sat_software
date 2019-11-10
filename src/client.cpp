@@ -119,7 +119,10 @@ void Client::create_socket() {
     }
 
     // Set the socket's timeout
-    timeval timeout = { 0, socketTimeoutMillis * 1000 };
+    int timeoutMillis = Properties::get_int("socket_timeout_ms");
+    int timeoutSecs = timeoutMillis / 1000;
+    timeoutMillis %= 1000;
+    timeval timeout { timeoutSecs, timeoutMillis * 1000 };
     bool b1 = setsockopt(socketFD, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeval)) == -1;
     bool b2 = setsockopt(socketFD, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeval)) == -1;
     if (b1 || b2) {

@@ -47,8 +47,8 @@ const std::string& Properties::raw_get(std::string propertyName) {
 }
 
 std::string Properties::get_string(std::string propertyName) {
-    const std::string& got = raw_get(propertyName);
-    return got.substr(1, got.length() - 2);
+    const std::string& raw = raw_get(propertyName);
+    return raw.substr(1, raw.length() - 2);
 }
 
 int Properties::get_int(std::string propertyName) {

@@ -16,7 +16,6 @@
 using SocketAddress = sockaddr_in;
 
 class Client {
-    static constexpr int socketTimeoutMillis = 500;
 public:
     Client();
     ~Client();
