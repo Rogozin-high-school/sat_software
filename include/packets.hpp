@@ -17,19 +17,9 @@ namespace Packets {
 
     // Valid in packets
 
-    class KeepAlivePacket { // Singleton
-    public:
-        static const KeepAlivePacket instance;
-    private:
-        KeepAlivePacket() {}
-    };
+    class KeepAlivePacket {};
 
-    class RequireMGMValuesPacket { // Singleton
-    public:
-        static const RequireMGMValuesPacket instance;
-    private:
-        RequireMGMValuesPacket() {}
-    };
+    class RequireMGMValuesPacket {};
 
     class UseMagnetorquerPacket {
         static constexpr auto torqueEpoch = std::chrono::seconds(1);
@@ -51,15 +41,11 @@ namespace Packets {
 
     // Out packets
 
-    class KeepAliveResponsePacket { // Singleton
+    class KeepAliveResponsePacket {
     public:
         static constexpr PacketId id = PacketId::KEEPALIVE;
 
         static constexpr uint8_t size = 0;
-
-        static const KeepAliveResponsePacket instance;
-    private:
-        KeepAliveResponsePacket() {}
     };
 
     class RequireMGMValuesResponsePacket {
@@ -73,15 +59,11 @@ namespace Packets {
         RequireMGMValuesResponsePacket(std::unordered_map<Axis, float> mgmValues);
     };
     
-    class UseMagnetorquerResponsePacket { // Singleton
+    class UseMagnetorquerResponsePacket {
     public:
         static constexpr PacketId id = PacketId::MAGNETORQUER;
 
         static constexpr uint8_t size = 0;
-
-        static const UseMagnetorquerResponsePacket instance;
-    private:
-        UseMagnetorquerResponsePacket() {}
     };
 
     using OutPacket = std::variant<
@@ -90,66 +72,15 @@ namespace Packets {
         UseMagnetorquerResponsePacket
     >;
 
-    // Unknown packet
+    class UnknownPacket {};
 
-    class UnknownPacket { // Singleton
-    public:
-        static const UnknownPacket instance;
-    private:
-        UnknownPacket() {}
-    };
-
-    // Error packet
-
-    class ErrorPacket { // Singleton
-    public:
-        static const ErrorPacket instance;
-    private:
-        ErrorPacket() {}
-    };
+    class ErrorPacket {};
 
     using ReceivablePacket = std::variant<ValidInPacket, UnknownPacket, ErrorPacket>;
 
-    static inline ReceivablePacket receive_packet(Socket socketFD) {
-        std::array<Byte, maxPacketSize> buffer;
-        if (read(socketFD, buffer.begin(), buffer.size()) > 0) {
-            PacketId id = PacketId(buffer.front());
+    ReceivablePacket receive_packet(Socket socketFD);
 
-            // Check the packet's ID
-            switch (id) {
-                case PacketId::KEEPALIVE: 
-                    return ValidInPacket { KeepAlivePacket::instance };
-                case PacketId::MGM:
-                    return ValidInPacket { RequireMGMValuesPacket::instance };
-                case PacketId::MAGNETORQUER: {
-                    std::array<Byte, UseMagnetorquerPacket::size> cutBuffer;
-                    std::copy(buffer.begin() + 1, buffer.end(), cutBuffer.begin());
+    bool is_unknown_packet(const ReceivablePacket& packet);
 
-                    return ValidInPacket { UseMagnetorquerPacket(cutBuffer) };
-                }
-            }
-            return UnknownPacket::instance;
-        }
-        return ErrorPacket::instance;
-    }
-
-    template<class Packet_t>
-    static inline bool send_packet(const Packet_t& outPacket, Socket socketFD) {
-        std::array<Byte, 1 + Packet_t::size> buffer;
-        
-        if constexpr(T::size > 0) {
-            buffer[0] = Byte(Packet_t::id);
-            std::copy(buffer.begin() + 1, buffer.end(), outPacket.buffer.begin());
-        }
-
-        return send(socketFD, buffer.begin(), buffer.size(), 0) > 0;
-    }
-
-    static inline bool is_unknown_packet(const ReceivablePacket& packet) {
-        return packet.index() == 1;
-    }
-
-    static inline bool is_error_packet(const ReceivablePacket& packet) {
-        return packet.index() == 2;
-    }
+    bool is_error_packet(const ReceivablePacket& packet);
 }

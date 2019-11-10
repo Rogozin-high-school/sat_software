@@ -7,7 +7,6 @@
 #include <satellite.hpp>
 #include <logger.hpp>
 #include <properties.hpp>
-#include <raspberry_pi.hpp>
 #include <client.hpp>
 
 inline void clear_screen() {
@@ -23,23 +22,12 @@ Satellite::~Satellite() {
     Logger::verbose<LogPrefix::GENERAL>("Destroyed the satellite instance!");
 }
 
-void Satellite::initialize() { // Never touch this function unless you know what you're doing
+void Satellite::initialize() {
     Properties::reload();
-    RaspberryPi::initialize();
 
-    // Initialize the IMU
     try {
-        imu.initialize();
+        Modules::initialize(imu, magnetorquer);
     } catch (const std::runtime_error& error) {
-        Logger::error<LogPrefix::IMU>(error.what());
-        throw error;
-    }
-
-    // Initialize the magnetorquer
-    try {
-        magnetorquer.initialize();
-    } catch (const std::runtime_error& error) {
-        Logger::error<LogPrefix::MAGNETORQUER>(error.what());
         throw error;
     }
 
@@ -71,8 +59,6 @@ void Satellite::cleanup() {
         Logger::error<LogPrefix::CLIENT>(error.what());
         throw error;
     }
-
-    RaspberryPi::cleanup();
 
     Logger::verbose<LogPrefix::GENERAL>("All cleaned up!");
 }

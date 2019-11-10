@@ -6,8 +6,7 @@
 
 #pragma once
 
-#include <modules/imu/imu.hpp>
-#include <modules/magnetorquer/magnetorquer.hpp>
+#include <modules/modules.hpp>
 
 class Satellite {
 public:

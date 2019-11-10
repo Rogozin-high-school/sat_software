@@ -2,10 +2,36 @@
 #include <logger.hpp>
 
 namespace Packets {
-    const KeepAlivePacket           KeepAlivePacket       ::instance;
-    const RequireMGMValuesPacket    RequireMGMValuesPacket::instance;
-    const UnknownPacket             UnknownPacket         ::instance;
-    const ErrorPacket               ErrorPacket           ::instance;
+    ReceivablePacket receive_packet(Socket socketFD) {
+        std::array<Byte, maxPacketSize> buffer;
+        if (read(socketFD, buffer.begin(), buffer.size()) > 0) {
+            PacketId id = PacketId(buffer.front());
+
+            // Check the packet's ID
+            switch (id) {
+                case PacketId::KEEPALIVE: 
+                    return ValidInPacket { KeepAlivePacket {} };
+                case PacketId::MGM:
+                    return ValidInPacket { RequireMGMValuesPacket {} };
+                case PacketId::MAGNETORQUER: {
+                    std::array<Byte, UseMagnetorquerPacket::size> cutBuffer;
+                    std::copy(buffer.begin() + 1, buffer.end(), cutBuffer.begin());
+
+                    return ValidInPacket { UseMagnetorquerPacket(cutBuffer) };
+                }
+            }
+            return UnknownPacket {};
+        }
+        return ErrorPacket {};
+    }
+
+    bool is_unknown_packet(const ReceivablePacket& packet) {
+        return packet.index() == 1;
+    }
+
+    bool is_error_packet(const ReceivablePacket& packet) {
+        return packet.index() == 2;
+    }
 
     // UseMagnetorquerPacket
 

@@ -47,6 +47,18 @@ void Client::start_connection() {
     Logger::info<LogPrefix::CLIENT>("Connected after " + delayStr + "!");
 }
 
+template<class Packet_t>
+inline bool send_packet(Packet_t&& outPacket, Socket socketFD) {
+    std::array<Byte, 1 + Packet_t::size> buffer;
+    
+    if constexpr(Packet_t::size > 0) {
+        buffer[0] = Byte(Packet_t::id);
+        std::copy(buffer.begin() + 1, buffer.end(), outPacket.buffer.begin());
+    }
+
+    return send(socketFD, buffer.begin(), buffer.size(), 0) > 0;
+}
+
 void Client::communicate(Modules::IMU& imu, Modules::Magnetorquer& magnetorquer) {
     using namespace Packets;
     
@@ -68,17 +80,17 @@ void Client::communicate(Modules::IMU& imu, Modules::Magnetorquer& magnetorquer)
 
         switch (packetId) {
             case PacketId::KEEPALIVE: {
-                send_packet(KeepAliveResponsePacket::instance, socketFD);
+                send_packet(KeepAliveResponsePacket {}, socketFD);
                 break;
             }
             case PacketId::MGM: {
-                send_packet(RequireMGMValuesResponsePacket(imu.read_magnetometer()), socketFD);
+                send_packet(RequireMGMValuesResponsePacket { imu.read_magnetometer() }, socketFD);
                 break;
             }
             case PacketId::MAGNETORQUER: {
                 UseMagnetorquerPacket packet = std::get<UseMagnetorquerPacket>(validInPacket);
                 packet.start_torque(magnetorquer);
-                send_packet(UseMagnetorquerResponsePacket::instance, socketFD);
+                send_packet(UseMagnetorquerResponsePacket {}, socketFD);
                 break;
             }
         }

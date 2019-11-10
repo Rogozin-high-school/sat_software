@@ -28,7 +28,7 @@
 #if defined(ARDUINO)
 #include <Arduino.h>
 
-#elif defined(__arm__) 
+#elif defined(RASPBERRY_PI) 
 #if defined(STM32F303)  || defined(STM32F405xx)
 extern "C" { void delay(uint32_t msec); }
 #else

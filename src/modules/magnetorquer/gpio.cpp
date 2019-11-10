@@ -26,7 +26,7 @@ namespace Modules {
 
         Logger::verbose<LogPrefix::GPIO>("Exporting pin #" + pinStr + " to \"" + pinExportPath + "\"!");
 #ifdef RASPBERRY_PI
-        write_to_file(path, pinStr, "Unable to export pin #" + pinStr + "!");
+        write_to_file(pinExportPath, pinStr, "Unable to export pin #" + pinStr + "!");
 #endif // RASPBERRY_PI
     }
 
