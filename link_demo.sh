@@ -1,2 +1,2 @@
 cd bin
-time g++ *.o modules/fake/*.o -lpthread
+time g++ -m32 *.o modules/fake/*.o -lpthread

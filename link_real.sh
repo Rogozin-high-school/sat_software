@@ -1,2 +1,2 @@
 cd bin
-time g++ *.o modules/real/*.o -lpthread -lwiringPi
+time g++ -m32 *.o modules/real/*.o -lpthread -lwiringPi
