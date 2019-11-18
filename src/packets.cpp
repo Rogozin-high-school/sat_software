@@ -61,9 +61,17 @@ namespace Packets {
 
     // RequireMGMValuesResponsePacket
 
+    template<class T>
+    inline void custom_fill(T begin_point, T end_point, float number) {
+        int i { 0 };
+        for (auto it = begin_point; it != end_point; it++) {
+            *it = reinterpret_cast<Byte*>(&number)[i++];
+        }
+    }
+
     RequireMGMValuesResponsePacket::RequireMGMValuesResponsePacket(std::unordered_map<Axis, float> mgmValues) {
-        std::fill(buffer.begin() + sizeof(float) * 0, buffer.begin() + sizeof(float) * 1, mgmValues[Axis::X]);
-        std::fill(buffer.begin() + sizeof(float) * 1, buffer.begin() + sizeof(float) * 2, mgmValues[Axis::Y]);
-        std::fill(buffer.begin() + sizeof(float) * 2, buffer.begin() + sizeof(float) * 3, mgmValues[Axis::Z]);
+        custom_fill(buffer.begin() + sizeof(float) * 0, buffer.begin() + sizeof(float) * 1, mgmValues[Axis::X]);
+        custom_fill(buffer.begin() + sizeof(float) * 1, buffer.begin() + sizeof(float) * 2, mgmValues[Axis::Y]);
+        custom_fill(buffer.begin() + sizeof(float) * 2, buffer.begin() + sizeof(float) * 3, mgmValues[Axis::Z]);
     }
 }

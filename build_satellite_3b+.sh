@@ -1,14 +1,12 @@
-echo Enter satellite IP...
+printf "Satellite ID: "
 
-read ip
+read id
 
 cd bin_satellite
 
-time \
-arm-linux-gnueabihf-g++-9 \
--D RASPBERRY_PI \
--I../include \
--I../lib \
+arm-linux-gnueabihf-g++-9                      \
+-D RASPBERRY_PI                                \
+-I../include -I../lib                          \
 ../lib/MPU/MPU.cpp                             \
 ../lib/MPU/MPU9250.cpp                         \
 ../lib/MPU/MPU9250_Master.cpp                  \
@@ -23,10 +21,11 @@ arm-linux-gnueabihf-g++-9 \
 cd ..
 
 sshpass -p "raspberry" \
-rm -rf pi@$ip:~/sat_software_cpp/bin_satellite/
-
+    rm  -rf pi@10.17.110.$id:~/sat_software_cpp/bin_satellite/
+    
 sshpass -p "raspberry" \
-scp -r bin_satellite/ pi@$ip:~/sat_software_cpp/
-
+    scp -r bin_satellite/ pi@10.17.110.$id:~/sat_software_cpp/
+    
 sshpass -p "raspberry" \
-ssh -t pi@$ip "cd ~/sat_software_cpp/bin_satellite && g++ *.o -lpthread -lwiringPi"
+    ssh -t pi@10.17.110.$id "cd ~/sat_software_cpp/bin_satellite && \
+                             g++ *.o -lpthread -lwiringPi"

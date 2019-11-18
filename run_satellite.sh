@@ -1,6 +1,6 @@
-echo Enter satellite IP...
+printf "Satellite ID: "
 
-read ip
+read id
 
 sshpass -p "raspberry" \
-ssh -t pi@$ip "cd ~/sat_software_cpp/bin_satellite && sudo ./a.out"
+ssh -t pi@10.17.110.$id "cd ~/sat_software_cpp/bin_satellite && sudo ./a.out"
