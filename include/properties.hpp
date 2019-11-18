@@ -4,7 +4,7 @@
 #include <map>
 
 class Properties {
-    static constexpr auto fileName = "properties";
+    static constexpr auto fileName = "../properties";
 public:
     static void reload();
 

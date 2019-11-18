@@ -1,6 +1,4 @@
-printf "Satellite ID: "
-
-read id
+pi="pi@10.17.110.$1"
 
 cd bin_satellite
 
@@ -22,11 +20,14 @@ arm-linux-gnueabihf-g++-9                      \
 cd ..
 
 sshpass -p "raspberry" \
-    rm  -rf pi@10.17.110.$id:~/sat_software_cpp/bin_satellite/
+    rm  -rf $pi:~/sat_software_cpp
     
 sshpass -p "raspberry" \
-    scp -r bin_satellite/ pi@10.17.110.$id:~/sat_software_cpp/
+    scp -r properties $pi:~/sat_software_cpp/
     
 sshpass -p "raspberry" \
-    ssh -t pi@10.17.110.$id "cd ~/sat_software_cpp/bin_satellite && \
-                             g++ *.o -lpthread -lwiringPi"
+    scp -r bin_satellite/ $pi:~/sat_software_cpp/
+    
+sshpass -p "raspberry" \
+    ssh -t $pi "cd ~/sat_software_cpp/bin_satellite && \
+                g++ *.o -lpthread -lwiringPi"
