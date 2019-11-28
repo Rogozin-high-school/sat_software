@@ -5,6 +5,6 @@ pin_value_path          : "/sys/class/gpio/gpio#/value"
 Hbridge_axis_x_pins     : 20 26
 Hbridge_axis_y_pins     : 16 19
 Hbridge_axis_z_pins     : 23 22
-ground_station_address  : "10.17.110.122"
+ground_station_address  : "10.17.110.133"
 ground_station_port     : 550
 socket_timeout_ms       : 500

@@ -1,5 +1,6 @@
 pi="pi@10.17.110.$1"
 
+mkdir -p bin_satellite
 cd bin_satellite
 
 arm-linux-gnueabihf-g++-9                      \
