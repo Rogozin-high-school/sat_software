@@ -1,9 +1,3 @@
-/*
-    Created by Maor Gershman, 25.8.2019
-    ---
-    This class will handle the communication with the ground station.
-*/
-
 #pragma once
 
 #include <arpa/inet.h>

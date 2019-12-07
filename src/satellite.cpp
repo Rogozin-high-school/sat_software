@@ -1,9 +1,3 @@
-/*
-    Created by Maor Gershman, 9.9.2019
-    ---
-    This file will contain the satellite class.
-*/
-
 #include <satellite.hpp>
 #include <logger.hpp>
 #include <properties.hpp>

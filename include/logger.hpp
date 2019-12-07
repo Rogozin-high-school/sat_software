@@ -1,10 +1,3 @@
-/*
-    Created by Maor Gershman, 25.8.2019
-    ---
-    This class will print messages to the terminal, 
-    depending on the minimum logging level defined.
-*/
-
 #pragma once
 
 #include <helper.hpp>

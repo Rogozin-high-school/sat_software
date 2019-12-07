@@ -1,9 +1,3 @@
-/*
-    Created by Maor Gershman, 9.9.2019
-    ---
-    This class will handle the communication with the ground station.
-*/
-
 #include <client.hpp>
 #include <logger.hpp>
 #include <packets.hpp>
