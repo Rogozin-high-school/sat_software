@@ -15,7 +15,7 @@ data = {
         ".vscode": True,
         ".gitignore": True,
         "bin": True,
-	    "lib": True,
+        "lib": True,
         "lib_raw": True,
         "res": False,
         "*.sh": False,
