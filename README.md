@@ -11,7 +11,7 @@
         - `sshpass`
 
 # Building
-It is very recommended to compile on the lab's beffy PC. 
+It is very recommended to compile on the lab's beefy computer.  
 Note that Satellite Gen. B's processor architecture is ARMv6 so you need to work a bit harder.  
 But generally just run `build_gen_b.sh` and it will do the work.  
 To run the program, run `run_gen_b.sh`.
