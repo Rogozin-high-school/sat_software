@@ -9,7 +9,7 @@
 #include <modules/module_base.hpp>
 
 #ifdef RASPBERRY_PI
-#include <MPU/MPU9250_Master_I2C.h>
+#include <MPU9250_Master_I2C.h>
 #endif // RASPBERRY_PI
 
 namespace Modules {

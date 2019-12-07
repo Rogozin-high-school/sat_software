@@ -1,4 +1,3 @@
-.vscode/*
-.directory
-*.o
-*.out
+.vscode/
+bin/
+*.ip
