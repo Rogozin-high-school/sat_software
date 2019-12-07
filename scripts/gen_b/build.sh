@@ -2,6 +2,7 @@ home=$(dirname "$0")/../..
 
 cd $home
 
+time \
 arm-linux-gnueabihf-g++-9                           \
     -marm -march=armv6 -mfpu=vfp                    \
     -D RASPBERRY_PI                                 \
@@ -9,13 +10,13 @@ arm-linux-gnueabihf-g++-9                           \
     -Ilib/WiringPi                                  \
     -Ilib/CrossPlatformDataBus                      \
     -Ilib/MPU                                       \
-    -Lbin/link                                      \
+    -Lbin                                           \
     src/*.cpp                                       \
     src/modules/*.cpp                               \
     src/modules/imu/*.cpp                           \
     src/modules/magnetorquer/*.cpp                  \
     -o bin/satellite.out                            \
     -s -g -O0 -std=c++17                            \
-    -lMPU -lwiringPi -lpthread
+    -lMPU -lwiringPi -lpthread -lcrypt -lrt
 
 # TODO: Copy to satellite

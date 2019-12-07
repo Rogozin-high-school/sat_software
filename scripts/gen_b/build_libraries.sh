@@ -1,8 +1,9 @@
 home=$(dirname "$0")/../..
 
 cd $home
-mkdir -p bin/link
-mkdir lib_raw
+rm -rf bin
+mkdir -p bin
+mkdir -p lib_raw
 cd lib_raw
 
 git clone https://github.com/Rogozin-high-school/WiringPi.git
@@ -10,9 +11,8 @@ git clone https://github.com/Rogozin-high-school/CrossPlatformDataBus.git
 git clone https://github.com/Rogozin-high-school/MPU.git
 
 cd WiringPi/wiringPi
-make static
-# sudo make install-static
-mv libwiringPi.a ../../../bin/link
+make
+sudo make install
 
 cd ../..
 
@@ -27,11 +27,7 @@ arm-linux-gnueabihf-g++-9                                               \
     MPU/src/MPU9250_Master_I2C.cpp                                      \
     -c -std=c++17 -fPIC
 
-ar rcs libMPU.a *.o
-ranlib libMPU.a
-rm -f *.o
-mv libMPU.a ../bin/link
+arm-linux-gnueabihf-g++-9 -shared -o ../bin/libMPU.so *.o
 
 cd ..
 rm -rf lib_raw
-clear

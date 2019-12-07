@@ -14,9 +14,9 @@ data = {
     "files.exclude": {
         ".vscode": True,
         ".gitignore": True,
-        "bin": True,
-	    "lib": True,
-        "lib_raw": True,
+        "bin": False,
+	    "lib": False,
+        "lib_raw": False,
         "res": False,
         "*.sh": False,
         "*.py": False,
