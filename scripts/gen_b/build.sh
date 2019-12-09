@@ -4,7 +4,7 @@ cd $home
 
 time \
 arm-linux-gnueabihf-g++-9                           \
-    -marm -march=armv6 -mfpu=vfp                    \
+    -marm -mfpu=vfp                                 \
     -D RASPBERRY_PI                                 \
     -Iinclude                                       \
     -Ilib/WiringPi                                  \
@@ -15,8 +15,9 @@ arm-linux-gnueabihf-g++-9                           \
     src/modules/*.cpp                               \
     src/modules/imu/*.cpp                           \
     src/modules/magnetorquer/*.cpp                  \
-    -o bin/satellite.out                            \
+    -o bin/satellite                                \
     -s -g -O0 -std=c++17                            \
-    -lMPU -lwiringPi -lpthread -lcrypt -lrt
+    -static                                         \
+    -lMPU -lwiringPi -lpthread
 
-# TODO: Copy to satellite
+scp bin/satellite pi:~/

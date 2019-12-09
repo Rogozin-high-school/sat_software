@@ -11,13 +11,13 @@ git clone https://github.com/Rogozin-high-school/CrossPlatformDataBus.git
 git clone https://github.com/Rogozin-high-school/MPU.git
 
 cd WiringPi/wiringPi
-make
-sudo make install
+make static
+mv libwiringPi.a ../../../bin
 
 cd ../..
 
 arm-linux-gnueabihf-g++-9                                               \
-    -marm -march=armv6 -mfpu=vfp                                        \
+    -marm -mfpu=vfp                                                     \
     -ICrossPlatformDataBus/src                                          \
     -IWiringPi/wiringPi                                                 \
     CrossPlatformDataBus/extras/i2c/wiringpi/src/WiringPiI2C.cpp        \
@@ -27,7 +27,9 @@ arm-linux-gnueabihf-g++-9                                               \
     MPU/src/MPU9250_Master_I2C.cpp                                      \
     -c -std=c++17 -fPIC
 
-arm-linux-gnueabihf-g++-9 -shared -o ../bin/libMPU.so *.o
+ar rcs libMPU.a *.o
+rm -f *.o
+mv libMPU.a ../bin
 
 cd ..
 rm -rf lib_raw
