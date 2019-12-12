@@ -6,7 +6,7 @@ SRC         = src/*.cpp
 OBJS        = $(SRC:.cpp=.o)
 LIBS        =
 MAIN        = satellite
-OUT			= $(MAIN)
+OUT         = $(MAIN)
 
 all: $(MAIN)
 
