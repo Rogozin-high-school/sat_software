@@ -13,15 +13,10 @@ data = {
     ],
     "files.exclude": {
         ".vscode": True,
-        ".gitignore": True,
-        "bin": False,
 	    "lib": False,
-        "lib_raw": False,
-        "res": False,
         "*.sh": False,
         "*.py": False,
-        "*.md": False,
-        "*.ip": True
+        "*.md": False
     },
     "editor.minimap.enabled": False
 }

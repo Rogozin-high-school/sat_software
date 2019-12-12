@@ -1,1 +1,0 @@
-gnome-terminal --maximize -- ssh pi 'export TERM=xterm; sudo ./satellite; read'
