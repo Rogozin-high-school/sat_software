@@ -13,7 +13,8 @@ data = {
     ],
     "files.exclude": {
         ".vscode": True,
-        "lib": False,
+        ".gitignore": True,
+        "lib": True,
         "*.sh": False,
         "*.py": False,
         "*.md": False
