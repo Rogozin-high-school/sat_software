@@ -3,9 +3,7 @@
 class Satellite
 {
 public:
-    int initialize() noexcept;
-    int run() noexcept;
-    void cleanup() noexcept;
+    static int initialize() noexcept;
+    static int run() noexcept;
+    static void cleanup() noexcept;
 };
-
-extern Satellite satellite;

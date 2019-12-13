@@ -1,36 +1,49 @@
 #include <satellite.hpp>
+#include <client.hpp>
 #include <logger.hpp>
-
-Satellite satellite;
 
 int main(void)
 {
-    int err = satellite.initialize();
+    int err = Satellite::initialize();
     if (err)
     {
-        log << "satellite.initialize() has failed!\n";
+        log << "satellite.initialize() has failed with code " << err << "!\n";
         return err;
     }
 
-    err = satellite.run();
+    err = Satellite::run();
     if (err)
     {
-        log << "satellite.run() has failed!\n";
-        satellite.cleanup();
+        log << "satellite.run() has failed with code " << err << "!\n";
+        Satellite::cleanup();
         return err;
     }
 }
 
-int Satellite::initialize() noexcept
+inline int Satellite::initialize() noexcept
 {
+    // TODO: Load properties
+    int err = Client::initialize();
+    if (err)
+    {
+        log << "client.initialize() has failed with code " << err << "!\n";
+        return err;
+    }
+    // TODO: Initialize modules
     return 0;
 }
 
-int Satellite::run() noexcept
+inline int Satellite::run() noexcept
 {
+    int err = Client::run();
+    if (err)
+    {
+        log << "client.run() has failed with code " << err << "!\n";
+        return err;
+    }
     return 0;
 }
 
-void Satellite::cleanup() noexcept
+inline void Satellite::cleanup() noexcept
 {
 }

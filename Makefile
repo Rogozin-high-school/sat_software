@@ -3,9 +3,11 @@ DEFINES     = -D LOGGING
 FLAGS       = -s -g -O3 -Wall -std=c++17 $(DEFINES)
 IFLAGS      = -Iinclude
 LFLAGS      = -Llib
-SRC         = src/*.cpp
+SRC         = \
+	src/satellite.cpp \
+	src/client.cpp
 OBJS        = $(SRC:.cpp=.o)
-LIBS        =
+LIBS        = -lpthread
 MAIN        = satellite
 OUT         = bin/$(MAIN)
 
