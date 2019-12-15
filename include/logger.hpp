@@ -1,17 +1,16 @@
 #pragma once
 
 #ifdef LOGGING
-#include <iostream>
+#include <stdio.h>
+#include <stdarg.h>
 #endif // LOGGING
 
-static inline struct
-{ // Wrapper for std::cout, doesn't support stuff like std::hex or std::endl
-    template<class T>
-    auto& operator<<(T&& t)
-    {
+static inline void log(const char *format, ...)
+{
 #ifdef LOGGING
-        std::cout << t;
+    va_list args;
+    va_start(args, format);
+    vprintf(format, args);
+    va_end(args);
 #endif // LOGGING
-        return *this;
-    }
-} log;
+}

@@ -6,7 +6,7 @@ int main(void)
 {
     if (!Satellite::initialize())
     {
-        log << "satellite.initialize() has failed!\n";
+        log("satellite.initialize() has failed!\n");
         return 1;
     }
     Satellite::run();
@@ -18,7 +18,7 @@ inline bool Satellite::initialize() noexcept
     // TODO: Load properties
     if (!Client::initialize())
     {
-        log << "client.initialize() has failed!\n";
+        log("client.initialize() has failed!\n");
         return false;
     }
     // TODO: Initialize modules

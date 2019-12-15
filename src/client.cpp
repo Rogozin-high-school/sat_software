@@ -61,26 +61,26 @@ void start_connection() noexcept
 {
     while (true)
     {
-        log << "Attempting to connect to " << address << ":" << port << "!\n";
+        log("Attempting to connect to %s:%d!\n", address, port);
 
         // Attempt to create the socket file descriptor
         if (!create_socket())
         {
-            log << "client.start_connection().create_socket() has failed!\n";
+            log("client.start_connection().create_socket() has failed!\n");
             continue;
         }
 
         // Attempt to connect the socket file descriptor to the socket address
         if (connect(socketFD, (sockaddr *)&socketAddress, sizeof(socketAddress)))
         {
-            log << "client.start_connection().connect() has failed: " << strerror(errno) << "\n";
+            log("client.start_connection().connect() has failed: %s\n", strerror(errno));
             cleanup();
             usleep(socketTimeoutMicros);
             continue;
         }
         else
         { // If succeeded, break the loop.
-            log << "Connected to the ground station!\n";
+            log("Connected to the ground station!\n");
             break;
         }
     }
@@ -91,7 +91,7 @@ void communicate() noexcept
     ssize_t bytes;
     uint8_t buffer[1024];
 
-    log << "Waiting for initial packet...\n";
+    log("Waiting for an initial packet...\n");
 
     while (intent != Intent::Terminate)
     {
@@ -100,20 +100,20 @@ void communicate() noexcept
         bytes = read(socketFD, buffer, sizeof(buffer));
         if (bytes == -1)
         {
-            log << "client.communicate().read() has failed" << strerror(errno) << "\n";
+            log("client.communicate().read() has failed: %s\n", strerror(errno));
         }
         else if (bytes == 0)
         {
-            log << "client has received EOF!\n";
+            log("client has received EOF!\n");
         }
         else
         {
             uint8_t packetId = buffer[0];
-            log << "Received packet with ID = " << packetId << "\n";
+            log("Received packet with ID = %d\n", packetId);
             switch (packetId)
             {
             case uint8_t(Intent::Terminate):
-                log << "Received terminate packet!\n";
+                log("Received terminate packet!\n");
                 intent = Intent::Terminate;
             default:
                 break;
@@ -126,7 +126,7 @@ void cleanup() noexcept
 {
     if (close(socketFD))
     {
-        log << "close() has failed: " << strerror(errno) << "\n";
+        log("client.cleanup().close() has failed: %s\n", strerror(errno));
     }
 }
 
@@ -136,7 +136,7 @@ bool create_socket() noexcept
         socketFD = socket(AF_INET, SOCK_STREAM, 0);
         if (socketFD == -1)
         {
-            log << "client.create_socket().socket() has failed: " << strerror(errno) << "\n";
+            log("client.create_socket().socket() has failed: %s\n", strerror(errno));
             return false;
         }
     }
@@ -146,7 +146,7 @@ bool create_socket() noexcept
         socketAddress.sin_port = htons(port);
         if (inet_pton(AF_INET, address, &socketAddress.sin_addr.s_addr) != 1)
         {
-            log << "client.create_socket().inet_pton() has failed: " << strerror(errno) << "\n";
+            log("client.create_socket().inet_pton() has failed: %s\n", strerror(errno));
             return false;
         }
     }
@@ -160,7 +160,7 @@ bool create_socket() noexcept
 
         if (setsockopt(socketFD, SOL_SOCKET, SO_RCVTIMEO | SO_SNDTIMEO, &timeout, sizeof(timeval)))
         {
-            log << "client.create_socket().setsockopt() has failed: " << strerror(errno) << "\n";
+            log("client.create_socket().setsockopt() has failed: %s\n", strerror(errno));
             return false;
         }
     }
