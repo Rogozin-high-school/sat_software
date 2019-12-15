@@ -9,13 +9,7 @@ int main(void)
         log << "satellite.initialize() has failed!\n";
         return 1;
     }
-
-    if (!Satellite::run())
-    {
-        log << "satellite.run() has failed!\n";
-        return 1;
-    }
-
+    Satellite::run();
     Satellite::cleanup();
 }
 
@@ -31,14 +25,9 @@ inline bool Satellite::initialize() noexcept
     return true;
 }
 
-inline bool Satellite::run() noexcept
+inline void Satellite::run() noexcept
 {
-    if (!Client::run())
-    {
-        log << "client.run() has failed!\n";
-        return false;
-    }
-    return true;
+    Client::run();
 }
 
 inline void Satellite::cleanup() noexcept

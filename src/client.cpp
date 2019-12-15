@@ -18,14 +18,20 @@ sockaddr_in socketAddress;
 int port;
 char address[16];
 
+enum class Intent : uint8_t
+{
+    None = 0x00,
+    Terminate = 0xff
+};
+
+Intent intent = Intent::None;
+
 //////////////////////////////////
 
 inline void start_connection() noexcept;
-inline bool communicate() noexcept;
+inline void communicate() noexcept;
 inline void cleanup() noexcept;
-
 inline bool create_socket() noexcept;
-inline void analyze(const char *const buffer, ssize_t size) noexcept;
 
 //////////////////////////////////
 
@@ -41,25 +47,14 @@ bool Client::initialize() noexcept
     return true;
 }
 
-bool Client::run() noexcept
+void Client::run() noexcept
 {
-    bool intentionalShutdown = false;
-    while (!intentionalShutdown)
+    while (intent != Intent::Terminate)
     {
         start_connection();
-
-        if (!communicate())
-        { // If returned false, recover.
-            log << "client.communicate() has failed!\n";
-        }
-        else
-        { // If returned true, it means that the shutdown was intentional!
-            intentionalShutdown = true;
-        }
-
+        communicate();
         cleanup();
     }
-    return true;
 }
 
 void start_connection() noexcept
@@ -91,15 +86,17 @@ void start_connection() noexcept
     }
 }
 
-bool communicate() noexcept
+void communicate() noexcept
 {
     ssize_t bytes;
-    char buffer[1024]{};
+    uint8_t buffer[1024];
 
     log << "Waiting for initial packet...\n";
 
-    while (true)
+    while (intent != Intent::Terminate)
     {
+        memset(buffer, 0, sizeof(buffer));
+
         bytes = read(socketFD, buffer, sizeof(buffer));
         if (bytes == -1)
         {
@@ -111,11 +108,18 @@ bool communicate() noexcept
         }
         else
         {
-            analyze(buffer, bytes);
+            uint8_t packetId = buffer[0];
+            log << "Received packet with ID = " << packetId << "\n";
+            switch (packetId)
+            {
+            case uint8_t(Intent::Terminate):
+                log << "Received terminate packet!\n";
+                intent = Intent::Terminate;
+            default:
+                break;
+            }
         }
     }
-
-    return true;
 }
 
 void cleanup() noexcept
@@ -123,10 +127,6 @@ void cleanup() noexcept
     if (close(socketFD))
     {
         log << "close() has failed: " << strerror(errno) << "\n";
-    }
-    else
-    {
-        log << "Client has been cleaned up!\n";
     }
 }
 
@@ -166,15 +166,4 @@ bool create_socket() noexcept
     }
 
     return true;
-}
-
-void analyze(const char *const buffer, ssize_t size) noexcept
-{
-    char packetId = buffer[0];
-    log << "Received packet with ID = " << packetId << "\n";
-    switch (packetId)
-    {
-    default:
-        break;
-    }
 }
