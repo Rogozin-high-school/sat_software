@@ -4,44 +4,41 @@
 
 int main(void)
 {
-    int err = Satellite::initialize();
-    if (err)
+    if (!Satellite::initialize())
     {
-        log << "satellite.initialize() has failed with code " << err << "!\n";
-        return err;
+        log << "satellite.initialize() has failed!\n";
+        return 1;
     }
 
-    err = Satellite::run();
-    if (err)
+    if (!Satellite::run())
     {
-        log << "satellite.run() has failed with code " << err << "!\n";
-        Satellite::cleanup();
-        return err;
+        log << "satellite.run() has failed!\n";
+        return 1;
     }
+
+    Satellite::cleanup();
 }
 
-inline int Satellite::initialize() noexcept
+inline bool Satellite::initialize() noexcept
 {
     // TODO: Load properties
-    int err = Client::initialize();
-    if (err)
+    if (!Client::initialize())
     {
-        log << "client.initialize() has failed with code " << err << "!\n";
-        return err;
+        log << "client.initialize() has failed!\n";
+        return false;
     }
     // TODO: Initialize modules
-    return 0;
+    return true;
 }
 
-inline int Satellite::run() noexcept
+inline bool Satellite::run() noexcept
 {
-    int err = Client::run();
-    if (err)
+    if (!Client::run())
     {
-        log << "client.run() has failed with code " << err << "!\n";
-        return err;
+        log << "client.run() has failed!\n";
+        return false;
     }
-    return 0;
+    return true;
 }
 
 inline void Satellite::cleanup() noexcept

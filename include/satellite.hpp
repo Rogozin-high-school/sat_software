@@ -1,9 +1,8 @@
 #pragma once
 
-class Satellite
+struct Satellite
 {
-public:
-    static int initialize() noexcept;
-    static int run() noexcept;
+    static bool initialize() noexcept;
+    static bool run() noexcept;
     static void cleanup() noexcept;
 };
