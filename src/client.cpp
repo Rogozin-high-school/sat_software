@@ -1,5 +1,6 @@
 #include <client.hpp>
 #include <logger.hpp>
+#include <properties.hpp>
 
 #include <arpa/inet.h>
 #include <sys/socket.h>
@@ -10,7 +11,7 @@
 
 //////////////////////////////////
 
-int socketTimeoutMicros;
+int clientTimeoutMicros;
 
 int socketFD;
 sockaddr_in socketAddress;
@@ -37,13 +38,12 @@ inline bool create_socket() noexcept;
 
 bool Client::initialize() noexcept
 {
-    // TODO: Load from the properties
-
-    // Meanwhile:
-    socketTimeoutMicros = 500 * 1000;
-    port = 8888;
-    strcpy(address, "127.0.0.1");
-
+    // ground_station_address
+    strcpy(address, Properties::get_string("ground_station_address").c_str());
+    // ground_station_port
+    port = Properties::get_int("ground_station_port");
+    // client_timeout_micros
+    clientTimeoutMicros = Properties::get_int("client_timeout_micros");
     return true;
 }
 
@@ -75,7 +75,7 @@ void start_connection() noexcept
         {
             log("client.start_connection().connect() has failed: %s\n", strerror(errno));
             cleanup();
-            usleep(socketTimeoutMicros);
+            usleep(clientTimeoutMicros);
             continue;
         }
         else
@@ -151,10 +151,10 @@ bool create_socket() noexcept
         }
     }
 
-    if (socketTimeoutMicros > 0)
+    if (clientTimeoutMicros > 0)
     { // Set the socket timeout
-        const int timeoutSeconds = socketTimeoutMicros / 1000000;
-        const int timeoutMicroseconds = socketTimeoutMicros % 1000000;
+        const int timeoutSeconds = clientTimeoutMicros / 1000000;
+        const int timeoutMicroseconds = clientTimeoutMicros % 1000000;
 
         const timeval timeout = {timeoutSeconds, timeoutMicroseconds};
 
