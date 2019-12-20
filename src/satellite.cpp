@@ -1,34 +1,54 @@
 #include <satellite.hpp>
 #include <properties.hpp>
+#include <iostream>
 
 int main(void)
 {
-    if (!Satellite::initialize())
+    try 
     {
-        log("satellite.initialize() has failed!\n");
-        return 1;
+        Satellite::initialize();
+        Satellite::run();
     }
-    Satellite::run();
+    catch (const std::string& err)
+    {
+        log("%s\n", err.c_str());
+    }
+
     Satellite::cleanup();
 }
 
-inline bool Satellite::initialize() noexcept
+inline void Satellite::initialize()
 {
-    if (!Properties::load())
+    log("Called Satellite::initialize()\n");
+
+    try
     {
-        log("properties.load() has failed!\n");
-        return false;
+        Properties::load();
+        // TODO: Initialize sub-systems
     }
-    
-    // TODO: Initialize sub-systems
-    
-    return true;
+    catch (const std::string& err)
+    {
+        log("%s\n", err.c_str());
+        throw std::string("Error: Satellite::initialize() has failed!");
+    }
 }
 
-inline void Satellite::run() noexcept
+inline void Satellite::run()
 {
+    log("Called Satellite::run()\n");
+
+    try
+    {
+        // TODO: Run
+    }
+    catch (const std::string& err)
+    {
+        log("%s\n", err.c_str());
+        throw std::string("Error: Satellite::run() has failed!");
+    }
 }
 
 inline void Satellite::cleanup() noexcept
 {
+    log("Called Satellite::cleanup()\n");
 }

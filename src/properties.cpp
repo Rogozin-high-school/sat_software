@@ -5,15 +5,14 @@
 
 std::map<std::string, std::string> properties;
 
-bool Properties::load() noexcept
+void Properties::load(std::string&& fileName)
 {
-    constexpr auto fileName = "properties";
+    log("Called Properties::load() with fileName = \"%s\"\n", fileName.c_str());
 
     std::ifstream file(fileName);
     if (!file)
     {
-        log("[Properties] Can't open file: \"%s\"\n", fileName);
-        return false;
+        throw std::string("Error: Can't open properties file: \"" + std::string(fileName) + "\"!");
     }
 
     std::string line, key, value;
@@ -24,28 +23,29 @@ bool Properties::load() noexcept
         std::getline(stream, value, ' ');
         properties[key] = value;
 
-        log("[Properties] Loaded: %s => %s\n", key.c_str(), value.c_str());
+        log("Loaded property: %s = %s\n", key.c_str(), value.c_str());
     }
 
     file.close();
-    return true;
 }
 
-optional_string Properties::get_string(std::string&& property) noexcept
+const std::string_view Properties::get_string(std::string&& key)
 {
-    if (properties.count(property)) 
-    { // If exists in the map
-        const std::string& raw = properties[property];
-        return raw.substr(1, raw.length() - 2);
+    log("Called Properties::get_string() with key = \"%s\"\n", key.c_str());
+    if (properties.empty())
+    {
+        throw std::string("Error: Properties are yet to be loaded!");
     }
-    return {};
+    const std::string& raw = properties[key];
+    return raw.substr(1, raw.length() - 2);
 }
 
-optional_int Properties::get_int(std::string&& property) noexcept
+int Properties::get_int(std::string&& key)
 {
-    if (properties.count(property))
-    { // If exists in the map
-        return stoi(properties[property]);
+    log("Called Properties::get_int() with key = \"%s\"\n", key.c_str());
+    if (properties.empty())
+    {
+        throw std::string("Error: Properties are yet to be loaded!");
     }
-    return {};
+    return stoi(properties[key]);
 }

@@ -2,7 +2,7 @@
 
 struct Satellite
 {
-    static bool initialize() noexcept;
-    static void run() noexcept;
+    static void initialize();
+    static void run();
     static void cleanup() noexcept;
 };
