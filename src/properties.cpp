@@ -5,6 +5,8 @@
 
 std::map<std::string, std::string> properties;
 
+const std::runtime_error errUnloadedProperties("Properties are yet to be loaded!");
+
 void Properties::load(std::string&& fileName)
 {
     log("Called Properties::load() with fileName = \"%s\"\n", fileName.c_str());
@@ -12,7 +14,7 @@ void Properties::load(std::string&& fileName)
     std::ifstream file(fileName);
     if (!file)
     {
-        throw std::string("Error: Can't open properties file: \"" + std::string(fileName) + "\"!");
+        throw std::runtime_error("Can't open properties file: \"" + std::string(fileName) + "\"!");
     }
 
     std::string line, key, value;
@@ -34,7 +36,7 @@ const std::string_view Properties::get_string(std::string&& key)
     log("Called Properties::get_string() with key = \"%s\"\n", key.c_str());
     if (properties.empty())
     {
-        throw std::string("Error: Properties are yet to be loaded!");
+        throw errUnloadedProperties;
     }
     const std::string& raw = properties[key];
     return raw.substr(1, raw.length() - 2);
@@ -45,7 +47,7 @@ int Properties::get_int(std::string&& key)
     log("Called Properties::get_int() with key = \"%s\"\n", key.c_str());
     if (properties.empty())
     {
-        throw std::string("Error: Properties are yet to be loaded!");
+        throw errUnloadedProperties;
     }
     return stoi(properties[key]);
 }

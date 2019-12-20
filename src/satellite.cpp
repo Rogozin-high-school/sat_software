@@ -1,6 +1,6 @@
 #include <satellite.hpp>
 #include <properties.hpp>
-#include <iostream>
+#include <stdexcept>
 
 int main(void)
 {
@@ -9,9 +9,9 @@ int main(void)
         Satellite::initialize();
         Satellite::run();
     }
-    catch (const std::string& err)
+    catch (const std::runtime_error& err)
     {
-        log("%s\n", err.c_str());
+        log("Error in main(): %s\n", err.what());
     }
 
     Satellite::cleanup();
@@ -26,10 +26,10 @@ inline void Satellite::initialize()
         Properties::load();
         // TODO: Initialize sub-systems
     }
-    catch (const std::string& err)
+    catch (const std::runtime_error& err)
     {
-        log("%s\n", err.c_str());
-        throw std::string("Error: Satellite::initialize() has failed!");
+        log("Error in Satellite::initialize(): %s\n", err.what());
+        throw std::runtime_error("Satellite::initialize() has failed!");
     }
 }
 
@@ -41,10 +41,10 @@ inline void Satellite::run()
     {
         // TODO: Run
     }
-    catch (const std::string& err)
+    catch (const std::runtime_error& err)
     {
-        log("%s\n", err.c_str());
-        throw std::string("Error: Satellite::run() has failed!");
+        log("Error in Satellite::run(): %s\n", err.what());
+        throw std::runtime_error("Satellite::run() has failed!");
     }
 }
 
