@@ -6,14 +6,14 @@ if not os.path.exists(".vscode"):
 
 data = {
     "C_Cpp.default.includePath": [
-        "include"
+        "include",
+        "include/subsystems"
     ],
     "C_Cpp.default.defines": [
         "log(...)=printf(__VA_ARGS__)"
-        # "log(...)"
     ],
     "files.exclude": {
-        ".vscode": True,
+        ".vscode": False,
         ".gitignore": False,
         "lib": False,
         "*.sh": False,

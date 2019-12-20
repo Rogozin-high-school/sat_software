@@ -1,5 +1,6 @@
 #include <satellite.hpp>
 #include <properties.hpp>
+#include <subsystems.hpp>
 #include <stdexcept>
 
 int main(void)
@@ -24,7 +25,7 @@ inline void Satellite::initialize()
     try
     {
         Properties::load();
-        // TODO: Initialize sub-systems
+        Subsystems::initialize();
     }
     catch (const std::runtime_error& err)
     {
