@@ -3,40 +3,49 @@
 #include <fstream>
 #include <sstream>
 
-constexpr auto fileName = "properties";
-
 std::map<std::string, std::string> properties;
 
 bool Properties::load() noexcept
 {
+    constexpr auto fileName = "properties";
+
     std::ifstream file(fileName);
     if (!file)
     {
-        log("Can't open properties file: \"%s\"\n", fileName);
+        log("[Properties] Can't open file: \"%s\"\n", fileName);
         return false;
     }
 
     std::string line, key, value;
-
     while (std::getline(file, line))
     {
         std::stringstream stream(std::move(line));
         std::getline(stream, key, ' ');
         std::getline(stream, value, ' ');
         properties[key] = value;
+
+        log("[Properties] Loaded: %s => %s\n", key.c_str(), value.c_str());
     }
 
     file.close();
     return true;
 }
 
-std::string Properties::get_string(std::string&& property) noexcept
+optional_string Properties::get_string(std::string&& property) noexcept
 {
-    const std::string& raw = properties[property];
-    return raw.substr(1, raw.length() - 2);
+    if (properties.count(property)) 
+    { // If exists in the map
+        const std::string& raw = properties[property];
+        return raw.substr(1, raw.length() - 2);
+    }
+    return {};
 }
 
-int Properties::get_int(std::string&& property) noexcept
+optional_int Properties::get_int(std::string&& property) noexcept
 {
-    return stoi(properties[property]);
+    if (properties.count(property))
+    { // If exists in the map
+        return stoi(properties[property]);
+    }
+    return {};
 }

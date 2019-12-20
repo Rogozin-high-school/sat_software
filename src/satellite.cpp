@@ -22,7 +22,7 @@ inline bool Satellite::initialize() noexcept
     
     // TODO: Initialize sub-systems
     
-    return false;
+    return true;
 }
 
 inline void Satellite::run() noexcept
