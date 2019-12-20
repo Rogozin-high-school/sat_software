@@ -1,7 +1,5 @@
 #include <satellite.hpp>
 #include <properties.hpp>
-#include <client.hpp>
-#include <logger.hpp>
 
 int main(void)
 {
@@ -21,20 +19,14 @@ inline bool Satellite::initialize() noexcept
         log("properties.load() has failed!\n");
         return false;
     }
-
-    if (!Client::initialize())
-    {
-        log("client.initialize() has failed!\n");
-        return false;
-    }
     
-    // TODO: Initialize modules
-    return true;
+    // TODO: Initialize sub-systems
+    
+    return false;
 }
 
 inline void Satellite::run() noexcept
 {
-    Client::run();
 }
 
 inline void Satellite::cleanup() noexcept

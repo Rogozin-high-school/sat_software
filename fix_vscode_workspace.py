@@ -11,10 +11,13 @@ data = {
         "lib/MPU",
         "lib/WiringPi"
     ],
+    "C_Cpp.default.defines": [
+        "log(...)=printf(__VA_ARGS__)"
+    ],
     "files.exclude": {
         ".vscode": True,
         ".gitignore": True,
-        "lib": True,
+        "lib": False,
         "*.sh": False,
         "*.py": False,
         "*.md": False

@@ -1,5 +1,4 @@
 #include <properties.hpp>
-#include <logger.hpp>
 #include <map>
 #include <fstream>
 #include <sstream>
