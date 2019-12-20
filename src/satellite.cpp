@@ -1,7 +1,6 @@
 #include <satellite.hpp>
 #include <properties.hpp>
 #include <subsystems.hpp>
-#include <stdexcept>
 
 int main(void)
 {

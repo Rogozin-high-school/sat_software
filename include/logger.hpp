@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 
 static inline struct LogStream

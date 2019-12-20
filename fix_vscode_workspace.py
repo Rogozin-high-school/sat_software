@@ -13,7 +13,8 @@ data = {
         "LOGGING"
     ],
     "C_Cpp.default.forcedInclude": [
-        "include/logger.hpp"
+        "include/logger.hpp",
+        "stdexcept"
     ],
     "files.exclude": {
         ".vscode": False,
