@@ -10,7 +10,10 @@ data = {
         "include/subsystems"
     ],
     "C_Cpp.default.defines": [
-        "log(...)=printf(__VA_ARGS__)"
+        "LOGGING"
+    ],
+    "C_Cpp.default.forcedInclude": [
+        "include/logger.hpp"
     ],
     "files.exclude": {
         ".vscode": False,

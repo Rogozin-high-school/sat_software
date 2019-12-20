@@ -9,7 +9,7 @@ const std::runtime_error errUnloadedProperties("Properties are yet to be loaded!
 
 void Properties::load(std::string&& fileName)
 {
-    log("Called Properties::load() with fileName = \"%s\"\n", fileName.c_str());
+    log << "Called Properties::load() with fileName = \"" << fileName << "\"" << std::endl;
 
     std::ifstream file(fileName);
     if (!file)
@@ -25,7 +25,7 @@ void Properties::load(std::string&& fileName)
         std::getline(stream, value, ' ');
         properties[key] = value;
 
-        log("Loaded property: %s = %s\n", key.c_str(), value.c_str());
+        log << "Loaded property: " << key << " = " << value << std::endl;
     }
 
     file.close();
@@ -33,7 +33,7 @@ void Properties::load(std::string&& fileName)
 
 const std::string_view Properties::get_string(std::string&& key)
 {
-    log("Called Properties::get_string() with key = \"%s\"\n", key.c_str());
+    log << "Called Properties::get_string() with key = \"" << key << "\"" << std::endl;
     if (properties.empty())
     {
         throw errUnloadedProperties;
@@ -44,7 +44,7 @@ const std::string_view Properties::get_string(std::string&& key)
 
 int Properties::get_int(std::string&& key)
 {
-    log("Called Properties::get_int() with key = \"%s\"\n", key.c_str());
+    log << "Called Properties::get_int() with key = \"" << key << "\"" << std::endl;
     if (properties.empty())
     {
         throw errUnloadedProperties;

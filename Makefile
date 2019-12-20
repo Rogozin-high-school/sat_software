@@ -1,10 +1,5 @@
 COMPILER         = g++
-
-ENABLE_LOGGING   = -D 'log(...) = printf(__VA_ARGS__)' -include cstdio
-DISABLE_LOGGING  = -D 'log(...)' -Wno-unused-value
-LOGGING          = $(ENABLE_LOGGING)
-
-FLAGS            = -s -g -O3 -std=c++2a -Wall $(LOGGING)
+FLAGS            = -s -O3 -std=c++2a -Wall -include logger.hpp -D LOGGING
 IFLAGS           = -Iinclude -Iinclude/subsystems
 LFLAGS           = 
 LIBS             = -lpthread
