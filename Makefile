@@ -2,7 +2,7 @@ COMPILER    = g++
 LOGGING     = -D'log(...)=printf(__VA_ARGS__)'
 NO_LOGGING  = -Wno-unused-value -D'log(...)'
 FLAGS       = -s -g -O3 -std=c++2a -Wall $(LOGGING)
-IFLAGS      = -Iinclude -include stdio.h
+IFLAGS      = -Iinclude -include cstdio
 LFLAGS      = 
 SRC         = \
 	src/satellite.cpp \

@@ -6,13 +6,11 @@ if not os.path.exists(".vscode"):
 
 data = {
     "C_Cpp.default.includePath": [
-        "include",
-        "lib/CrossPlatformDataBus",
-        "lib/MPU",
-        "lib/WiringPi"
+        "include"
     ],
     "C_Cpp.default.defines": [
         "log(...)=printf(__VA_ARGS__)"
+        # "log(...)"
     ],
     "files.exclude": {
         ".vscode": True,
