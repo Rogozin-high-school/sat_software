@@ -1,6 +1,7 @@
 #pragma once
 
-namespace Subsystems
+namespace SubSystems
 {
     void initialize();
+    void cleanup() noexcept;
 }

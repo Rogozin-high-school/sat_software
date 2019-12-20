@@ -25,7 +25,7 @@ inline void Satellite::initialize()
     try
     {
         Properties::load();
-        Subsystems::initialize();
+        SubSystems::initialize();
     }
     catch (const std::runtime_error& err)
     {
@@ -52,4 +52,5 @@ inline void Satellite::run()
 inline void Satellite::cleanup() noexcept
 {
     log("Called Satellite::cleanup()\n");
+    SubSystems::cleanup();
 }

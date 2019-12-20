@@ -1,9 +1,9 @@
 #include <subsystems.hpp>
 #include <stdexcept>
 
-void Subsystems::initialize()
+void SubSystems::initialize()
 {
-    log("Called Subsystems::initialize()\n");
+    log("Called SubSystems::initialize()\n");
 
     try
     {
@@ -11,7 +11,12 @@ void Subsystems::initialize()
     }
     catch (const std::runtime_error& err)
     {
-        log("Error in Subsystems::initialize(): %s\n", err.what());
-        throw std::runtime_error("Subsystems::initialize() has failed!");
+        log("Error in SubSystems::initialize(): %s\n", err.what());
+        throw std::runtime_error("SubSystems::initialize() has failed!");
     }
+}
+
+void SubSystems::cleanup() noexcept
+{
+    log("Called SubSystems::cleanup()\n");
 }
