@@ -1,5 +1,4 @@
 #include <subsystems.hpp>
-#include <stdexcept>
 
 void SubSystems::initialize()
 {

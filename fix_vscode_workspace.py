@@ -17,8 +17,9 @@ data = {
         "stdexcept"
     ],
     "files.exclude": {
-        ".vscode": False,
-        ".gitignore": False,
+        "satellite": True,
+        ".vscode": True,
+        ".gitignore": True,
         "lib": False,
         "*.sh": False,
         "*.py": False,
