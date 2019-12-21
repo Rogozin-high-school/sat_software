@@ -2,7 +2,7 @@
 
 void SubSystems::initialize()
 {
-    function_call();
+    print_function_call();
 
     try
     {
@@ -10,12 +10,12 @@ void SubSystems::initialize()
     }
     catch (const std::exception& ex)
     {
-        failure();
+        print_failure();
         throw ex;
     }
 }
 
 void SubSystems::cleanup() noexcept
 {
-    function_call();
+    print_function_call();
 }

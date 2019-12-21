@@ -6,60 +6,22 @@ static inline struct
 {
       template<typename T>
       auto& operator<<(const T& x) { return *this; }
-} cout, cerr, log, err; // Dummy stream, should be optimized out
+} cout, cerr, log; // Dummy stream, should be optimized out
+
 #define endl nullptr
-#define failure(...)
+#define print_exception(x)
+#define print_failure()
 
 #else // LOGGING
 
 #include <iostream>
 #include <string.h>
+
 #include <cxxabi.h>
 #include <memory>
 
-namespace Codes
+namespace
 {
-      enum class Color
-      {
-            null = 0,
-
-            black = 30,
-            red,
-            green,
-            yellow,
-            blue,
-            magenta,
-            cyan,
-            white
-      };
-
-      enum class Face
-      {
-            reset = 0,
-            
-            bold = 1,
-            underline = 4,
-            inverse = 7,
-
-            bold_off = 21,
-            underline_off = 24,
-            inverse_off = 27
-      };
-      
-      static inline const auto get(Color color = Color::null, Face face = Face::reset)
-      {
-            if (color == Color::null)
-            {
-                  return "\033[" + std::to_string(int(face)) + "m";
-            }
-            else
-            {
-                  return "\033[" + std::to_string(int(face)) + ";" + std::to_string(int(color)) + "m";
-            }
-      }
-
-      static inline const auto reset = get();
-}
 
 const static inline std::string demangle(const char* name) 
 {
@@ -71,43 +33,45 @@ const static inline std::string demangle(const char* name)
       return status ? name : res.get();
 }
 
-#define FUNCTION_NAME \
-      "\"" << __PRETTY_FUNCTION__ << "\""
+#define DEMANGLE(type) demangle(typeid(type).name())
 
-#define FILE_NAME \
-      (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
+// Color codes
+constexpr auto reset = "\e[0m";
 
-#define FILE_NAME_DECORATED \
-      "[" << FILE_NAME << "]"
+constexpr auto bold = "\e[1m";
+constexpr auto rbold = "\e[21m";
+
+constexpr auto underline = "\e[4m";
+constexpr auto runderline = "\e[24m";
+
+constexpr auto italic = "\e[3m";
+constexpr auto ritalic = "\e[23m";
+
+constexpr auto red = "\e[31m";
 
 using std::cout;
 using std::cerr;
-#define endl Codes::reset << std::endl
+#define endl reset << std::endl
 
-#define log \
-      cout << FILE_NAME_DECORATED << "\n\t"
+#define FILE_NAME underline << (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__) << runderline << "\n\t"
 
-#define err(ex) \
-      cerr \
-      << Codes::get(Codes::Color::red) \
-      << "[" << FILE_NAME << "]\n\t" \
-      << Codes::get(Codes::Color::red, Codes::Face::bold) \
-      << demangle(typeid(ex).name()) \
-      << Codes::get(Codes::Color::red) \
-      << " in " << FUNCTION_NAME << ":\n\t" \
-      << ex.what() << endl
+#define FUNCTION_NAME italic << __PRETTY_FUNCTION__ << ritalic
 
-#define failure() \
-      cerr \
-      << Codes::get(Codes::Color::red) \
-      << "[" << FILE_NAME << "]\n\t" \
-      << FUNCTION_NAME << " has failed!" << endl
+#define log cout << FILE_NAME
+
+#define print_exception(exception) \
+      cerr << red << FILE_NAME << \
+      bold << DEMANGLE(exception) << reset << red << " caught in " << FUNCTION_NAME << ":\n\t" << \
+      ex.what() << endl
+
+#define print_failure() \
+      cerr << red << FILE_NAME << FUNCTION_NAME << " has failed!" << endl
 
 #endif // LOGGING
 
 #ifndef LOGGING_FUNCTION_CALLS
 
-#define function_call(...)
+#define print_function_call(...)
 
 #else // LOGGING_FUNCTION_CALLS
 
@@ -115,7 +79,7 @@ using std::cerr;
       "\n\t- Arg #" << num << " (named \"" << #arg << "\") with value = \"" << arg << "\""
 
 #define CALL_0() \
-      "Called \"" << __PRETTY_FUNCTION__ << "\""
+      "Called " << FUNCTION_NAME << ""
 
 #define CALL_1(arg0) \
       CALL_0() << "\n" << CALL_ARG(arg0, 0)
@@ -136,7 +100,9 @@ using std::cerr;
 
 #define GET_CALL(_1, _2, _3, _4, _5, NAME, ...) NAME
 
-#define function_call(...) \
+#define print_function_call(...) \
       log << GET_CALL(__VA_ARGS__ __VA_OPT__(,) CALL_5, CALL_4, CALL_3, CALL_2, CALL_1, CALL_0)(__VA_ARGS__) << endl
 
 #endif // LOGGING_FUNCTION_CALLS
+
+}

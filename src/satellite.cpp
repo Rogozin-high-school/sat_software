@@ -11,7 +11,7 @@ int main(void)
     }
     catch (const std::exception&)
     {
-        failure();
+        print_failure();
     }
 
     Satellite::cleanup();
@@ -19,7 +19,7 @@ int main(void)
 
 inline void Satellite::initialize()
 {
-    function_call();
+    print_function_call();
 
     try
     {
@@ -28,30 +28,29 @@ inline void Satellite::initialize()
     }
     catch (const std::exception& ex)
     {
-        failure();
+        print_failure();
         throw ex;
     }
 }
 
 inline void Satellite::run()
 {
-    function_call();
+    print_function_call();
 
     try
     {
         // TODO: Run
-        Properties::get_string("tick_delay_micros");
     }
     catch (const std::exception& ex)
     {
-        failure();
+        print_failure();
         throw ex;
     }
 }
 
 inline void Satellite::cleanup() noexcept
 {
-    function_call();
+    print_function_call();
 
     SubSystems::cleanup();
 }
