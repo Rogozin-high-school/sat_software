@@ -7,13 +7,17 @@ std::map<std::string, std::string> properties;
 
 void Properties::load(std::string&& fileName)
 {
-    log << "Called Properties::load() with fileName = \"" << fileName << "\"" << std::endl;
+    function_call(fileName);
 
     std::ifstream file(fileName);
     if (!file)
     {
-        throw std::runtime_error("Can't open properties file: \"" + std::string(fileName) + "\"!");
+        std::runtime_error ex("Can't open properties file: \"" + std::string(fileName) + "\"!");
+        err(ex);
+        throw ex;
     }
+
+    log << "Loading properties...\n" << endl;
 
     std::string line, key, value;
     while (std::getline(file, line))
@@ -23,7 +27,7 @@ void Properties::load(std::string&& fileName)
         std::getline(stream, value, ' ');
         properties[key] = value;
 
-        log << "Loaded property: " << key << " = " << value << std::endl;
+        cout << "\t" << key << " = " << value << endl;
     }
 
     file.close();
@@ -31,21 +35,78 @@ void Properties::load(std::string&& fileName)
 
 const std::string_view Properties::get_string(std::string&& key)
 {
-    log << "Called Properties::get_string() with key = \"" << key << "\"" << std::endl;
+    function_call(key);
+    
     if (properties.empty())
     {
-        throw std::runtime_error("Properties are yet to be loaded!");
+        std::runtime_error ex("Properties are yet to be loaded!");
+        err(ex);
+        throw ex;
     }
-    const std::string& raw = properties[key];
-    return raw.substr(1, raw.length() - 2);
+
+    if (properties.count(key))
+    {
+        const std::string& raw = properties[key];
+        const size_t length = raw.length();
+
+        if (length >= 2)
+        {
+            if (raw.front() == '\"' && raw.back() == '\"')
+            {
+                try
+                {
+                    return raw.substr(1, length - 2);
+                }
+                catch (const std::exception& ex)
+                {
+                    err(ex);
+                    throw ex;
+                }
+            }
+        }
+
+        std::logic_error ex("The property with key = \"" + key + "\" isn't a valid string!");
+        err(ex);
+        throw ex;
+    }
+    
+    std::logic_error ex("The property with key = \"" + key + "\" can't be found!");
+    err(ex);
+    throw ex;
 }
 
 int Properties::get_int(std::string&& key)
 {
-    log << "Called Properties::get_int() with key = \"" << key << "\"" << std::endl;
+    function_call(key);
+
     if (properties.empty())
     {
-        throw std::runtime_error("Properties are yet to be loaded!");
+        std::runtime_error ex("Properties are yet to be loaded!");
+        err(ex);
+        throw ex;
     }
-    return stoi(properties[key]);
+
+    if (properties.count(key))
+    {
+        const std::string& raw = properties[key];
+        try
+        {
+            return stoi(raw);
+        }
+        catch (const std::invalid_argument&)
+        {
+            std::invalid_argument ex("The property with key = \"" + key + "\" can't be converted to an integer!");
+            err(ex);
+            throw ex;
+        }
+        catch (const std::exception& ex)
+        {
+            err(ex);
+            throw ex;
+        }
+    }
+    
+    std::logic_error ex("The property with key = \"" + key + "\" can't be found!");
+    err(ex);
+    throw ex;
 }

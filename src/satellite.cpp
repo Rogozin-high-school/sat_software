@@ -9,9 +9,9 @@ int main(void)
         Satellite::initialize();
         Satellite::run();
     }
-    catch (const std::runtime_error& err)
+    catch (const std::exception&)
     {
-        log << "Error in main(): " << err.what() << std::endl;
+        failure();
     }
 
     Satellite::cleanup();
@@ -19,37 +19,39 @@ int main(void)
 
 inline void Satellite::initialize()
 {
-    log << "Called Satellite::initialize()" << std::endl;
+    function_call();
 
     try
     {
         Properties::load();
         SubSystems::initialize();
     }
-    catch (const std::runtime_error& err)
+    catch (const std::exception& ex)
     {
-        log << "Error in Satellite::initialize(): " << err.what() << std::endl;
-        throw std::runtime_error("Satellite::initialize() has failed!");
+        failure();
+        throw ex;
     }
 }
 
 inline void Satellite::run()
 {
-    log << "Called Satellite::run()" << std::endl;
+    function_call();
 
     try
     {
         // TODO: Run
+        Properties::get_string("tick_delay_micros");
     }
-    catch (const std::runtime_error& err)
+    catch (const std::exception& ex)
     {
-        log << "Error in Satellite::run(): " << err.what() << std::endl;
-        throw std::runtime_error("Satellite::run() has failed!");
+        failure();
+        throw ex;
     }
 }
 
 inline void Satellite::cleanup() noexcept
 {
-    log << "Called Satellite::cleanup()" << std::endl;
+    function_call();
+
     SubSystems::cleanup();
 }

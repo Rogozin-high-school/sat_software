@@ -2,20 +2,20 @@
 
 void SubSystems::initialize()
 {
-    log << "Called SubSystems::initialize()" << std::endl;
+    function_call();
 
     try
     {
         // TODO: Initialize sub-systems
     }
-    catch (const std::runtime_error& err)
+    catch (const std::exception& ex)
     {
-        log << "Error in SubSystems::initialize(): " << err.what() << std::endl;
-        throw std::runtime_error("SubSystems::initialize() has failed!");
+        failure();
+        throw ex;
     }
 }
 
 void SubSystems::cleanup() noexcept
 {
-    log << "Called SubSystems::cleanup()" << std::endl;
+    function_call();
 }
