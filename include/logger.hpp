@@ -140,13 +140,13 @@ static inline void print_function_call_raw(const std::string&& flName, const std
                   std::stringstream stream(std::move(stripped));
                   std::array<std::string, sizeof...(Args)> argsArr;
 
-                  for (int i = 0; std::getline(stream, token, ','); i++)
+                  int i, j = &i; // Just to reduce the compiler's warning...
+                  for (i = 0; std::getline(stream, token, ','); i++)
                   {
                         argsArr[i] = token;
                         stream.ignore();
                   }
-
-                  int i = 0, &j = i; // Just to reduce the compiler's warning...
+                  i = 0;
 
                   cout << "\n";
                   ((cout << "\t" << i + 1 << ". " CYAN ITALIC << argsArr[j++] << RESET " => " LIGHT_GREY ITALIC << args << RESET "\n"), ...);
