@@ -7,12 +7,12 @@ std::map<std::string, std::string> properties;
 
 void Properties::load(std::string&& fileName)
 {
-    print_function_call();
+    print_function_call(fileName);
 
     std::ifstream file(fileName);
     if (!file)
     {
-        std::runtime_error ex("Can't open properties file: \"" + std::string(fileName) + "\"!");
+        std::runtime_error ex("Can't open properties file: \"" + fileName + "\"!");
         print_throw_exception(ex);
         throw ex;
     }
@@ -35,7 +35,7 @@ void Properties::load(std::string&& fileName)
 
 const std::string_view Properties::get_string(std::string&& key)
 {
-    print_function_call();
+    print_function_call(key);
     
     if (properties.empty())
     {
@@ -77,7 +77,7 @@ const std::string_view Properties::get_string(std::string&& key)
 
 int Properties::get_int(std::string&& key)
 {
-    print_function_call();
+    print_function_call(key);
 
     if (properties.empty())
     {

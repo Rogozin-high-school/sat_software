@@ -21,6 +21,12 @@ static inline struct
 #include <cxxabi.h>
 #include <memory>
 
+#ifdef LOGGING_FUNCTION_CALLS
+#include <sstream>
+#include <array>
+#include <type_traits>
+#endif // LOGGING_FUNCTION_CALLS
+
 namespace
 {
 
@@ -41,7 +47,9 @@ const static inline std::string demangle(const char* name)
 #define ITALIC "\e[3m"
 #define RITALIC "\e[23m"
 #define RED "\e[31m"
+#define GREEN "\e[32m"
 #define CYAN "\e[36m"
+#define LIGHT_GREY "\e[37m"
 #define RESET "\e[0m"
 
 using std::cout;
@@ -112,23 +120,45 @@ static inline void print_catch_and_handle_exception_raw(const std::string&& flNa
 
 #else // LOGGING_FUNCTION_CALLS
 
-static inline void print_function_call_raw(const std::string&& flName, const std::string&& fnName)
+template<typename ...Args>
+static inline void print_function_call_raw(const std::string&& flName, const std::string&& fnName, const Args&... args)
 {
       fprintf(stdout, 
             "%s\n"
-            "\t%s has been called\n"
-            RESET,
+            "\t%s has been called\n",
 
             (UNDERLINE + flName + RUNDERLINE).c_str(),
             (ITALIC CYAN + fnName + RESET).c_str());
 
-      // TODO: Print parameters
+      if constexpr(sizeof...(Args) > 0)
+      { // Print the parameter types. They're embedded in the function's name
+            std::string stripped(strchr(fnName.c_str(), '('));
+            stripped = stripped.substr(1, stripped.length() - 2);
+
+            if (stripped.length() > 0)
+            {
+                  std::string token;
+                  std::stringstream stream(std::move(stripped));
+                  std::array<std::string, sizeof...(Args)> argsArr;
+
+                  for (int i = 0; std::getline(stream, token, ','); i++)
+                  {
+                        argsArr[i] = token;
+                        stream.ignore();
+                  }
+
+                  int i = 0, &j = i; // Just to reduce the compiler's warning...
+
+                  cout << "\n";
+                  ((cout << "\t" << i + 1 << ". " CYAN ITALIC << argsArr[j++] << RESET " => " LIGHT_GREY ITALIC << args << RESET "\n"), ...);
+            }
+      }
 
       fflush(stdout);
 }
 
-#define print_function_call() \
-      print_function_call_raw(FILE_NAME, FUNCTION_NAME)
+#define print_function_call(...) \
+      print_function_call_raw(FILE_NAME, FUNCTION_NAME __VA_OPT__(,) __VA_ARGS__)
 
 #endif // LOGGING_FUNCTION_CALLS
 
