@@ -10,7 +10,8 @@ data = {
         "include/subsystems"
     ],
     "C_Cpp.default.defines": [
-        "LOGGING"
+        "LOGGING",
+        "LOGGING_FUNCTION_CALLS"
     ],
     "C_Cpp.default.forcedInclude": [
         "include/logger.hpp",

@@ -9,8 +9,9 @@ static inline struct
 } cout, cerr, log; // Dummy stream, should be optimized out
 
 #define endl nullptr
-#define print_exception(x)
-#define print_failure()
+#define print_throw_exception(x)
+#define print_catch_and_throw_exception()
+#define print_catch_and_handle_exception()
 
 #else // LOGGING
 
@@ -33,75 +34,101 @@ const static inline std::string demangle(const char* name)
       return status ? name : res.get();
 }
 
-#define DEMANGLE(type) demangle(typeid(type).name())
-
-// Color codes
-constexpr auto reset = "\e[0m";
-
-constexpr auto bold = "\e[1m";
-constexpr auto rbold = "\e[21m";
-
-constexpr auto underline = "\e[4m";
-constexpr auto runderline = "\e[24m";
-
-constexpr auto italic = "\e[3m";
-constexpr auto ritalic = "\e[23m";
-
-constexpr auto red = "\e[31m";
+#define BOLD "\e[1m"
+#define RBOLD "\e[21m"
+#define UNDERLINE "\e[4m"
+#define RUNDERLINE "\e[24m"
+#define ITALIC "\e[3m"
+#define RITALIC "\e[23m"
+#define RED "\e[31m"
+#define CYAN "\e[36m"
+#define RESET "\e[0m"
 
 using std::cout;
 using std::cerr;
-#define endl reset << std::endl
+#define endl RESET << std::endl
+#define log cout << UNDERLINE << FILE_NAME << RUNDERLINE << "\n\t"
 
-#define FILE_NAME underline << (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__) << runderline << "\n\t"
+#define FILE_NAME \
+      (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 
-#define FUNCTION_NAME italic << __PRETTY_FUNCTION__ << ritalic
+#define FUNCTION_NAME \
+      __PRETTY_FUNCTION__
 
-#define log cout << FILE_NAME
+template<typename Exception>
+static inline void print_throw_exception_raw(const std::string&& flName, const std::string&& fnName, const Exception& ex)
+{
+      fprintf(stderr, 
+            "%s\n"
+            "\t%s has thrown an exception!\n"
+            "\t%s: %s\n" 
+            RESET,
+            
+            (RED UNDERLINE + flName + RUNDERLINE).c_str(),
+            (ITALIC CYAN + fnName + RESET RED).c_str(),
+            (BOLD + demangle(typeid(ex).name()) + RESET RED).c_str(),
+            ex.what());
+      fflush(stderr);
+}
 
-#define print_exception(exception) \
-      cerr << red << FILE_NAME << \
-      bold << DEMANGLE(exception) << reset << red << " caught in " << FUNCTION_NAME << ":\n\t" << \
-      ex.what() << endl
+static inline void print_catch_and_throw_exception_raw(const std::string&& flName, const std::string&& fnName)
+{
+      fprintf(stderr, 
+            "%s\n"
+            "\t%s has caught an exception, and thrown it forward!\n"
+            RESET,
+            
+            (RED UNDERLINE + flName + RUNDERLINE).c_str(),
+            (ITALIC CYAN + fnName + RESET RED).c_str());
+      fflush(stderr);
+}
 
-#define print_failure() \
-      cerr << red << FILE_NAME << FUNCTION_NAME << " has failed!" << endl
+static inline void print_catch_and_handle_exception_raw(const std::string&& flName, const std::string&& fnName)
+{
+      fprintf(stderr, 
+            "%s\n"
+            "\t%s has caught an exception, but handled it!\n"
+            RESET,
+            
+            (RED UNDERLINE + flName + RUNDERLINE).c_str(),
+            (ITALIC CYAN + fnName + RESET RED).c_str());
+      fflush(stderr);
+}
+
+#define print_throw_exception(ex) \
+      print_throw_exception_raw(FILE_NAME, FUNCTION_NAME, ex)
+
+#define print_catch_and_throw_exception() \
+      print_catch_and_throw_exception_raw(FILE_NAME, FUNCTION_NAME)
+
+#define print_catch_and_handle_exception() \
+      print_catch_and_handle_exception_raw(FILE_NAME, FUNCTION_NAME)
 
 #endif // LOGGING
 
 #ifndef LOGGING_FUNCTION_CALLS
 
-#define print_function_call(...)
+#define print_function_call()
 
 #else // LOGGING_FUNCTION_CALLS
 
-#define CALL_ARG(arg, num) \
-      "\n\t- Arg #" << num << " (named \"" << #arg << "\") with value = \"" << arg << "\""
+static inline void print_function_call_raw(const std::string&& flName, const std::string&& fnName)
+{
+      fprintf(stdout, 
+            "%s\n"
+            "\t%s has been called\n"
+            RESET,
 
-#define CALL_0() \
-      "Called " << FUNCTION_NAME << ""
+            (UNDERLINE + flName + RUNDERLINE).c_str(),
+            (ITALIC CYAN + fnName + RESET).c_str());
 
-#define CALL_1(arg0) \
-      CALL_0() << "\n" << CALL_ARG(arg0, 0)
+      // TODO: Print parameters
 
-#define CALL_2(arg0, arg1) \
-      CALL_1(arg0) << CALL_ARG(arg1, 1)
+      fflush(stdout);
+}
 
-#define CALL_3(arg0, arg1, arg2) \
-      CALL_2(arg0, arg1) << CALL_ARG(arg2, 2)
-
-#define CALL_4(arg0, arg1, arg2, arg3) \
-      CALL_3(arg0, arg1, arg2) << CALL_ARG(arg3, 3)
-
-#define CALL_5(arg0, arg1, arg2, arg3, arg4) \
-      CALL_4(arg0, arg1, arg2, arg3) << CALL_ARG(arg4, 4)
-
-// Max number of arguments = 5 for now
-
-#define GET_CALL(_1, _2, _3, _4, _5, NAME, ...) NAME
-
-#define print_function_call(...) \
-      log << GET_CALL(__VA_ARGS__ __VA_OPT__(,) CALL_5, CALL_4, CALL_3, CALL_2, CALL_1, CALL_0)(__VA_ARGS__) << endl
+#define print_function_call() \
+      print_function_call_raw(FILE_NAME, FUNCTION_NAME)
 
 #endif // LOGGING_FUNCTION_CALLS
 

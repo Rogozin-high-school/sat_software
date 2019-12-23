@@ -10,7 +10,7 @@ void SubSystems::initialize()
     }
     catch (const std::exception& ex)
     {
-        print_failure();
+        print_catch_and_throw_exception();
         throw ex;
     }
 }

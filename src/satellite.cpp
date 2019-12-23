@@ -11,7 +11,7 @@ int main(void)
     }
     catch (const std::exception&)
     {
-        print_failure();
+        print_catch_and_handle_exception();
     }
 
     Satellite::cleanup();
@@ -28,7 +28,7 @@ inline void Satellite::initialize()
     }
     catch (const std::exception& ex)
     {
-        print_failure();
+        print_catch_and_throw_exception();
         throw ex;
     }
 }
@@ -43,7 +43,7 @@ inline void Satellite::run()
     }
     catch (const std::exception& ex)
     {
-        print_failure();
+        print_catch_and_throw_exception();
         throw ex;
     }
 }
