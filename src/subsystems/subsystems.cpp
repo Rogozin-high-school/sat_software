@@ -1,4 +1,5 @@
 #include <subsystems.hpp>
+#include <logger.hpp>
 
 void SubSystems::initialize()
 {

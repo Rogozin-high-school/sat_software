@@ -2,6 +2,7 @@
 #include <map>
 #include <fstream>
 #include <sstream>
+#include <logger.hpp>
 
 std::map<std::string, std::string> properties;
 
