@@ -24,7 +24,6 @@ static inline struct
 #ifdef LOGGING_FUNCTION_CALLS
 #include <sstream>
 #include <array>
-#include <type_traits>
 #endif // LOGGING_FUNCTION_CALLS
 
 namespace
@@ -116,7 +115,7 @@ static inline void print_catch_and_handle_exception_raw(const std::string&& flNa
 
 #ifndef LOGGING_FUNCTION_CALLS
 
-#define print_function_call()
+#define print_function_call(...)
 
 #else // LOGGING_FUNCTION_CALLS
 
