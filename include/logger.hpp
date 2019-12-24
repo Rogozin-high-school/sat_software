@@ -159,6 +159,6 @@ static inline void print_function_call_raw(const std::string&& flName, const std
 #define print_function_call(...) \
       print_function_call_raw(FILE_NAME, FUNCTION_NAME __VA_OPT__(,) __VA_ARGS__)
 
-#endif // LOGGING_FUNCTION_CALLS
-
 }
+
+#endif // LOGGING_FUNCTION_CALLS

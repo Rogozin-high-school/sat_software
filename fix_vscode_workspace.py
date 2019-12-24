@@ -11,7 +11,8 @@ data = {
     ],
     "C_Cpp.default.defines": [
         "LOGGING",
-        "LOGGING_FUNCTION_CALLS"
+        "LOGGING_FUNCTION_CALLS",
+        "PROPERTIES_FILE=\"properties\""
     ],
     "C_Cpp.default.forcedInclude": [
         "include/logger.hpp",
