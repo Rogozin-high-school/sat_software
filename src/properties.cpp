@@ -6,7 +6,7 @@
 
 std::map<std::string, std::string> properties;
 
-void Properties::load(std::string&& fileName)
+void Properties::load(std::string &&fileName)
 {
     print_function_call(fileName);
 
@@ -18,7 +18,8 @@ void Properties::load(std::string&& fileName)
         throw ex;
     }
 
-    log << "Loading properties...\n" << endl;
+    log << "Loading properties...\n"
+        << endl;
 
     std::string line, key, value;
     while (std::getline(file, line))
@@ -34,10 +35,10 @@ void Properties::load(std::string&& fileName)
     file.close();
 }
 
-const std::string_view Properties::get_string(std::string&& key)
+const std::string_view Properties::get_string(std::string &&key)
 {
     print_function_call(key);
-    
+
     if (properties.empty())
     {
         std::runtime_error ex("Properties are yet to be loaded!");
@@ -47,7 +48,7 @@ const std::string_view Properties::get_string(std::string&& key)
 
     if (properties.count(key))
     {
-        const std::string& raw = properties[key];
+        const std::string &raw = properties[key];
         const size_t length = raw.length();
 
         if (length >= 2)
@@ -58,7 +59,7 @@ const std::string_view Properties::get_string(std::string&& key)
                 {
                     return raw.substr(1, length - 2);
                 }
-                catch (const std::exception& ex)
+                catch (const std::exception &ex)
                 {
                     print_throw_exception(ex);
                     throw ex;
@@ -70,13 +71,13 @@ const std::string_view Properties::get_string(std::string&& key)
         print_throw_exception(ex);
         throw ex;
     }
-    
+
     std::logic_error ex("The property with key = \"" + key + "\" can't be found!");
     print_throw_exception(ex);
     throw ex;
 }
 
-int Properties::get_int(std::string&& key)
+int Properties::get_int(std::string &&key)
 {
     print_function_call(key);
 
@@ -89,24 +90,24 @@ int Properties::get_int(std::string&& key)
 
     if (properties.count(key))
     {
-        const std::string& raw = properties[key];
+        const std::string &raw = properties[key];
         try
         {
             return stoi(raw);
         }
-        catch (const std::invalid_argument&)
+        catch (const std::invalid_argument &)
         {
             std::invalid_argument ex("The property with key = \"" + key + "\" can't be converted to an integer!");
             print_throw_exception(ex);
             throw ex;
         }
-        catch (const std::exception& ex)
+        catch (const std::exception &ex)
         {
             print_throw_exception(ex);
             throw ex;
         }
     }
-    
+
     std::logic_error ex("The property with key = \"" + key + "\" can't be found!");
     print_throw_exception(ex);
     throw ex;

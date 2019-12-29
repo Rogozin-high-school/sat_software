@@ -4,8 +4,8 @@
 
 static inline struct
 {
-      template<typename T>
-      auto& operator<<(const T& x) { return *this; }
+      template <typename T>
+      auto &operator<<(const T &x) { return *this; }
 } cout, cerr, log; // Dummy stream, should be optimized out
 
 #define endl nullptr
@@ -29,13 +29,11 @@ static inline struct
 namespace
 {
 
-const static inline std::string demangle(const char* name) 
+const static inline std::string demangle(const char *name)
 {
       int status;
-      std::unique_ptr<char, void(*)(void*)> res 
-      {
-            abi::__cxa_demangle(name, nullptr, nullptr, &status), free
-      };
+      std::unique_ptr<char, void (*)(void *)> res{
+          abi::__cxa_demangle(name, nullptr, nullptr, &status), free};
       return status ? name : res.get();
 }
 
@@ -51,8 +49,8 @@ const static inline std::string demangle(const char* name)
 #define LIGHT_GREY "\e[37m"
 #define RESET "\e[0m"
 
-using std::cout;
 using std::cerr;
+using std::cout;
 #define endl RESET << std::endl
 #define log cout << UNDERLINE << FILE_NAME << RUNDERLINE << "\n\t"
 
@@ -62,43 +60,40 @@ using std::cerr;
 #define FUNCTION_NAME \
       __PRETTY_FUNCTION__
 
-template<typename Exception>
-static inline void print_throw_exception_raw(const std::string&& flName, const std::string&& fnName, const Exception& ex)
+template <typename Exception>
+static inline void print_throw_exception_raw(const std::string &&flName, const std::string &&fnName, const Exception &ex)
 {
-      fprintf(stderr, 
-            "%s\n"
-            "\t%s has thrown an exception!\n"
-            "\t%s: %s\n" 
-            RESET,
-            
-            (RED UNDERLINE + flName + RUNDERLINE).c_str(),
-            (ITALIC CYAN + fnName + RESET RED).c_str(),
-            (BOLD + demangle(typeid(ex).name()) + RESET RED).c_str(),
-            ex.what());
+      fprintf(stderr,
+              "%s\n"
+              "\t%s has thrown an exception!\n"
+              "\t%s: %s\n" RESET,
+
+              (RED UNDERLINE + flName + RUNDERLINE).c_str(),
+              (ITALIC CYAN + fnName + RESET RED).c_str(),
+              (BOLD + demangle(typeid(ex).name()) + RESET RED).c_str(),
+              ex.what());
       fflush(stderr);
 }
 
-static inline void print_catch_and_throw_exception_raw(const std::string&& flName, const std::string&& fnName)
+static inline void print_catch_and_throw_exception_raw(const std::string &&flName, const std::string &&fnName)
 {
-      fprintf(stderr, 
-            "%s\n"
-            "\t%s has caught an exception, and thrown it forward!\n"
-            RESET,
-            
-            (RED UNDERLINE + flName + RUNDERLINE).c_str(),
-            (ITALIC CYAN + fnName + RESET RED).c_str());
+      fprintf(stderr,
+              "%s\n"
+              "\t%s has caught an exception, and thrown it forward!\n" RESET,
+
+              (RED UNDERLINE + flName + RUNDERLINE).c_str(),
+              (ITALIC CYAN + fnName + RESET RED).c_str());
       fflush(stderr);
 }
 
-static inline void print_catch_and_handle_exception_raw(const std::string&& flName, const std::string&& fnName)
+static inline void print_catch_and_handle_exception_raw(const std::string &&flName, const std::string &&fnName)
 {
-      fprintf(stderr, 
-            "%s\n"
-            "\t%s has caught an exception, but handled it!\n"
-            RESET,
-            
-            (RED UNDERLINE + flName + RUNDERLINE).c_str(),
-            (ITALIC CYAN + fnName + RESET RED).c_str());
+      fprintf(stderr,
+              "%s\n"
+              "\t%s has caught an exception, but handled it!\n" RESET,
+
+              (RED UNDERLINE + flName + RUNDERLINE).c_str(),
+              (ITALIC CYAN + fnName + RESET RED).c_str());
       fflush(stderr);
 }
 
@@ -111,25 +106,23 @@ static inline void print_catch_and_handle_exception_raw(const std::string&& flNa
 #define print_catch_and_handle_exception() \
       print_catch_and_handle_exception_raw(FILE_NAME, FUNCTION_NAME)
 
-#endif // LOGGING
-
 #ifndef LOGGING_FUNCTION_CALLS
 
 #define print_function_call(...)
 
 #else // LOGGING_FUNCTION_CALLS
 
-template<typename ...Args>
-static inline void print_function_call_raw(const std::string&& flName, const std::string&& fnName, const Args&... args)
+template <typename... Args>
+static inline void print_function_call_raw(const std::string &&flName, const std::string &&fnName, const Args &... args)
 {
-      fprintf(stdout, 
-            "%s\n"
-            "\t%s has been called\n",
+      fprintf(stdout,
+              "%s\n"
+              "\t%s has been called\n",
 
-            (UNDERLINE + flName + RUNDERLINE).c_str(),
-            (ITALIC CYAN + fnName + RESET).c_str());
+              (UNDERLINE + flName + RUNDERLINE).c_str(),
+              (ITALIC CYAN + fnName + RESET).c_str());
 
-      if constexpr(sizeof...(Args) > 0)
+      if constexpr (sizeof...(Args) > 0)
       { // Print the parameter types. They're embedded in the function's name
             std::string stripped(strchr(fnName.c_str(), '('));
             stripped = stripped.substr(1, stripped.length() - 2);
@@ -157,8 +150,10 @@ static inline void print_function_call_raw(const std::string&& flName, const std
 }
 
 #define print_function_call(...) \
-      print_function_call_raw(FILE_NAME, FUNCTION_NAME __VA_OPT__(,) __VA_ARGS__)
-
-}
+      print_function_call_raw(FILE_NAME, FUNCTION_NAME __VA_OPT__(, ) __VA_ARGS__)
 
 #endif // LOGGING_FUNCTION_CALLS
+
+} // namespace
+
+#endif // LOGGING

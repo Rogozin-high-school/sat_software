@@ -5,12 +5,12 @@
 
 int main(void)
 {
-    try 
+    try
     {
         Satellite::initialize();
         Satellite::run();
     }
-    catch (const std::exception&)
+    catch (const std::exception &)
     {
         print_catch_and_handle_exception();
     }
@@ -27,7 +27,7 @@ inline void Satellite::initialize()
         Properties::load();
         SubSystems::initialize();
     }
-    catch (const std::exception& ex)
+    catch (const std::exception &ex)
     {
         print_catch_and_throw_exception();
         throw ex;
@@ -42,7 +42,7 @@ inline void Satellite::run()
     {
         // TODO: Run
     }
-    catch (const std::exception& ex)
+    catch (const std::exception &ex)
     {
         print_catch_and_throw_exception();
         throw ex;

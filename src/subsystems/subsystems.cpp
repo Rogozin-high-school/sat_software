@@ -9,7 +9,7 @@ void SubSystems::initialize()
     {
         // TODO: Initialize sub-systems
     }
-    catch (const std::exception& ex)
+    catch (const std::exception &ex)
     {
         print_catch_and_throw_exception();
         throw ex;

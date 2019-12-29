@@ -2,6 +2,6 @@
 
 namespace SubSystems
 {
-    void initialize();
-    void cleanup() noexcept;
-}
+void initialize();
+void cleanup() noexcept;
+} // namespace SubSystems
