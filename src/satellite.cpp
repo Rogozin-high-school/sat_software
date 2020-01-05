@@ -17,7 +17,7 @@ int main(void)
     Satellite::cleanup();
 }
 
-inline void Satellite::initialize()
+void Satellite::initialize()
 {
     print_function_call();
 
@@ -33,7 +33,7 @@ inline void Satellite::initialize()
     }
 }
 
-inline void Satellite::run()
+void Satellite::run()
 {
     print_function_call();
 
@@ -48,7 +48,7 @@ inline void Satellite::run()
     }
 }
 
-inline void Satellite::cleanup() noexcept
+void Satellite::cleanup() noexcept
 {
     print_function_call();
 
