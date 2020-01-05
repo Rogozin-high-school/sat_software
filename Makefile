@@ -1,5 +1,5 @@
+# COMPILER_DEMO      = g++
 COMPILER_SAT_DEMO  = arm-linux-gnueabihf-g++ -marm -mfpu=vfp
-COMPILER_DEMO      = g++
 PROPERTIES_FILE    = properties
 FLAGS              = -s -O3 -std=gnu++17 -Wall -Wno-unused-variable \
     -D LOGGING \
@@ -13,14 +13,24 @@ SRC                = \
 	src/satellite.cpp \
 	src/properties.cpp \
 	src/subsystems/subsystems.cpp
+OBJS               = $(SRC:.cpp=.o)
 
-build-demo:
-	@$(COMPILER_DEMO) $(IFLAGS) $(FLAGS) $(SRC) -o $(OUT) $(LIBS) $(LFLAGS)
+# build-demo: $(OBJS)
+# 	@rm -f $(OUT)
+# 	@$(COMPILER_DEMO) $(IFLAGS) $(FLAGS) $(OBJS) -o $(OUT) $(LIBS) $(LFLAGS)
+# 	@rm -f $(OBJS)
 
-build-sat-demo:
-	@$(COMPILER_SAT_DEMO) $(IFLAGS) $(FLAGS) $(SRC) -o $(OUT) $(LIBS) $(LFLAGS)
+build-sat-demo: $(OBJS)
+	@rm -f $(OUT)
+	@$(COMPILER_SAT_DEMO) $(IFLAGS) $(FLAGS) $(OBJS) -o $(OUT) $(LIBS) $(LFLAGS)
+	@rm -f $(OBJS)
+
+run-sat-demo: $(OBJS)
+	@ssh ${host} 'rm -r *'
 	@scp -q $(PROPERTIES_FILE) $(OUT) ${host}:~/
 	@rm -f $(OUT)
-
-run-sat-demo:
 	@gnome-terminal --maximize -- ssh ${host} 'export TERM=xterm; sudo ./$(OUT); read'
+
+.cpp.o:
+#	@$(COMPILER_DEMO) $(IFLAGS) $(FLAGS) -c $< -o $@
+	@$(COMPILER_SAT_DEMO) $(IFLAGS) $(FLAGS) -c $< -o $@
