@@ -1,8 +1,8 @@
 #include <properties.hpp>
+#include <logger.hpp>
 #include <map>
 #include <fstream>
 #include <sstream>
-#include <logger.hpp>
 
 std::map<std::string, std::string> properties;
 
@@ -18,9 +18,6 @@ void Properties::load(std::string &&fileName)
         throw ex;
     }
 
-    log << "Loading properties...\n"
-        << endl;
-
     std::string line, key, value;
     while (std::getline(file, line))
     {
@@ -28,8 +25,6 @@ void Properties::load(std::string &&fileName)
         std::getline(stream, key, ' ');
         std::getline(stream, value, ' ');
         properties[key] = value;
-
-        cout << "\t" << key << " = " << value << endl;
     }
 
     file.close();

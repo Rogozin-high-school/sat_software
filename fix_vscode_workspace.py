@@ -15,8 +15,7 @@ data = {
         "PROPERTIES_FILE=\"properties\""
     ],
     "C_Cpp.default.forcedInclude": [
-        "include/logger.hpp",
-        "stdexcept"
+        "include/logger.hpp"
     ],
     "files.exclude": {
         "satellite": True,
@@ -26,8 +25,7 @@ data = {
         "*.sh": False,
         "*.py": False,
         "*.md": False
-    },
-    "editor.minimap.enabled": False
+    }
 }
 
 with open(".vscode/settings.json", "w") as write_file:

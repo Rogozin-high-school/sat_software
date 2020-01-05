@@ -1,17 +1,13 @@
 #pragma once
 
+#include <stdexcept>
+
 #ifndef LOGGING
 
-static inline struct
-{
-      template <typename T>
-      auto &operator<<(const T &x) { return *this; }
-} cout, cerr, log; // Dummy stream, should be optimized out
-
-#define endl nullptr
 #define print_throw_exception(x)
 #define print_catch_and_throw_exception()
 #define print_catch_and_handle_exception()
+#define print_function_call(...)
 
 #else // LOGGING
 
@@ -48,11 +44,6 @@ const static inline std::string demangle(const char *name)
 #define CYAN "\e[36m"
 #define LIGHT_GREY "\e[37m"
 #define RESET "\e[0m"
-
-using std::cerr;
-using std::cout;
-#define endl RESET << std::endl
-#define log cout << UNDERLINE << FILE_NAME << RUNDERLINE << "\n\t"
 
 #define FILE_NAME \
       (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
@@ -141,8 +132,8 @@ static inline void print_function_call_raw(const std::string &&flName, const std
                   }
                   i = 0;
 
-                  cout << "\n";
-                  ((cout << "\t" << i + 1 << ". " CYAN ITALIC << argsArr[j++] << RESET " => " LIGHT_GREY ITALIC << args << RESET "\n"), ...);
+                  std::cout << "\n";
+                  ((std::cout << "\t" << i + 1 << ". " CYAN ITALIC << argsArr[j++] << RESET " => " LIGHT_GREY ITALIC << args << RESET "\n"), ...);
             }
       }
 

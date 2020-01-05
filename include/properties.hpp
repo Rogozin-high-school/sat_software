@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 struct Properties
 {
     static void load(std::string &&fileName = PROPERTIES_FILE);

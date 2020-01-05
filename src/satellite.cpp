@@ -14,7 +14,6 @@ int main(void)
     {
         print_catch_and_handle_exception();
     }
-
     Satellite::cleanup();
 }
 
