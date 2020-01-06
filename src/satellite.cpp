@@ -3,7 +3,7 @@
 #include <subsystems.hpp>
 #include <logger.hpp>
 
-int main(void)
+int main()
 {
     try
     {

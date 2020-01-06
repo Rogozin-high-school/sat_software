@@ -6,8 +6,7 @@ if not os.path.exists(".vscode"):
 
 data = {
     "C_Cpp.default.includePath": [
-        "include",
-        "include/subsystems"
+        "include"
     ],
     "C_Cpp.default.defines": [
         "LOGGING",
@@ -19,7 +18,8 @@ data = {
     ],
     "files.exclude": {
         "satellite": True,
-        "*.o": True,
+        "src/*.o": True,
+        "src/subsystems/*.o": True,
         ".vscode": True,
         ".gitignore": True,
         "lib": False,

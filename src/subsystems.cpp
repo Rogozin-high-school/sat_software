@@ -1,4 +1,5 @@
 #include <subsystems.hpp>
+#include <subsystems/communication.hpp>
 #include <logger.hpp>
 
 void SubSystems::initialize()
@@ -7,7 +8,7 @@ void SubSystems::initialize()
 
     try
     {
-        // TODO: Initialize sub-systems
+        Communication::initialize();
     }
     catch (const std::exception &ex)
     {
@@ -19,4 +20,6 @@ void SubSystems::initialize()
 void SubSystems::cleanup() noexcept
 {
     print_function_call();
+
+    Communication::cleanup();
 }
