@@ -19,12 +19,14 @@ LFLAGS             = \
 OUT                = satellite
 SRC                = \
 	lib/CrossPlatformDataBus/extras/i2c/wiringpi/src/WiringPiI2C.cpp \
-    lib/MPU/src/MPU.cpp \
-    lib/MPU/src/MPU9250.cpp \
-    lib/MPU/src/MPU9250_Master.cpp \
-    lib/MPU/src/MPU9250_Master_I2C.cpp \
+	lib/MPU/src/MPU.cpp \
+	lib/MPU/src/MPU9250.cpp \
+	lib/MPU/src/MPU9250_Master.cpp \
+	lib/MPU/src/MPU9250_Master_I2C.cpp \
 	src/Satellite.cpp \
 	src/Properties.cpp \
+	src/Components.cpp \
+	src/Components/IMU.cpp \
 	src/SubSystems.cpp \
 	src/SubSystems/Communication.cpp \
 	src/SubSystems/Telemetry.cpp

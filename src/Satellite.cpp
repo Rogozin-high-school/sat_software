@@ -1,5 +1,6 @@
 #include <Satellite.hpp>
 #include <Properties.hpp>
+#include <Components.hpp>
 #include <SubSystems.hpp>
 #include <SubSystems/Communication.hpp>
 
@@ -24,6 +25,7 @@ void Satellite::initialize()
     try
     {
         Properties::load();
+        Components::initialize();
         SubSystems::initialize();
     }
     catch (const std::exception &ex)
@@ -54,4 +56,5 @@ void Satellite::cleanup() noexcept
     log_function_call();
 
     SubSystems::cleanup();
+    Components::cleanup();
 }
