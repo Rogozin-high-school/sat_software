@@ -4,6 +4,7 @@ IFLAGS             = \
 	-Ilib/CrossPlatformDataBus/src \
 	-Ilib/WiringPi/wiringPi \
 	-Iinclude \
+	-Iinclude/Components \
 	-Iinclude/SubSystems
 FLAGS              = \
 	-s -O3 -std=gnu++17 -Wall -Wno-unused-variable \
@@ -46,7 +47,7 @@ load-libs:
 	@git clone https://github.com/Rogozin-high-school/WiringPi.git lib/WiringPi
 	@git clone https://github.com/Rogozin-high-school/CrossPlatformDataBus.git lib/CrossPlatformDataBus
 	@git clone https://github.com/Rogozin-high-school/MPU.git lib/MPU
-	@cd lib/WiringPi/wiringPi && make clean
+	@cd lib/WiringPi/wiringPi && make && make clean
 
 clean:
 	@rm -rf $(OUT) $(OBJS)

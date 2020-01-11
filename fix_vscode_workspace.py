@@ -18,8 +18,6 @@ data = {
     ],
     "files.exclude": {
         "satellite": True,
-        "src/*.o": True,
-        "src/subsystems/*.o": True,
         ".vscode": True,
         ".gitignore": True,
         "lib": False,
