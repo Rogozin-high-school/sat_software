@@ -9,7 +9,6 @@ void SubSystems::initialize()
     try
     {
         Communication::initialize();
-        Telemetry::initialize();
     }
     catch (const std::exception &ex)
     {
@@ -23,5 +22,4 @@ void SubSystems::cleanup() noexcept
     log_function_call();
 
     Communication::cleanup();
-    Telemetry::cleanup();
 }
