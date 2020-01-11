@@ -4,10 +4,13 @@ IFLAGS             = \
 	-Ilib/CrossPlatformDataBus/src \
 	-Ilib/WiringPi/wiringPi \
 	-Iinclude \
-	-Iinclude/subsystems
-FLAGS              = -s -O3 -std=gnu++17 -Wall -Wno-unused-variable \
-    -D LOGGING \
-    -D PROPERTIES_FILE=\"$(PROPERTIES_FILE)\" -D LOGGING_FUNCTION_CALLS
+	-Iinclude/SubSystems
+FLAGS              = \
+	-s -O3 -std=gnu++17 -Wall -Wno-unused-variable \
+	-include include/Logger.hpp \
+    -D PROPERTIES_FILE=\"$(PROPERTIES_FILE)\" \
+	-D LOGGING \
+	-D LOGGING_FUNCTION_CALLS
 LIBS               = \
 	-lwiringPi \
 	-lpthread
@@ -20,11 +23,11 @@ SRC                = \
     lib/MPU/src/MPU9250.cpp \
     lib/MPU/src/MPU9250_Master.cpp \
     lib/MPU/src/MPU9250_Master_I2C.cpp \
-	src/satellite.cpp \
-	src/properties.cpp \
-	src/subsystems.cpp \
-	src/subsystems/communication.cpp \
-	src/subsystems/telemetry.cpp
+	src/Satellite.cpp \
+	src/Properties.cpp \
+	src/SubSystems.cpp \
+	src/SubSystems/Communication.cpp \
+	src/SubSystems/Telemetry.cpp
 OBJS               = $(SRC:.cpp=.o)
 
 build-sat-demo: $(OBJS)

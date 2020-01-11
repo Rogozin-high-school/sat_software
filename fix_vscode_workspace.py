@@ -14,7 +14,7 @@ data = {
         "PROPERTIES_FILE=\"properties\""
     ],
     "C_Cpp.default.forcedInclude": [
-        "include/logger.hpp"
+        "include/Logger.hpp"
     ],
     "files.exclude": {
         "satellite": True,

@@ -1,6 +1,5 @@
-#include <subsystems/communication.hpp>
-#include <properties.hpp>
-#include <logger.hpp>
+#include <SubSystems/Communication.hpp>
+#include <Properties.hpp>
 
 #include <arpa/inet.h>
 #include <sys/socket.h>

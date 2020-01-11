@@ -1,5 +1,4 @@
-#include <subsystems/telemetry.hpp>
-#include <logger.hpp>
+#include <SubSystems/Telemetry.hpp>
 
 void SubSystems::Telemetry::initialize()
 {

@@ -1,8 +1,7 @@
-#include <satellite.hpp>
-#include <properties.hpp>
-#include <subsystems.hpp>
-#include <subsystems/communication.hpp>
-#include <logger.hpp>
+#include <Satellite.hpp>
+#include <Properties.hpp>
+#include <SubSystems.hpp>
+#include <SubSystems/Communication.hpp>
 
 int main()
 {
@@ -40,7 +39,6 @@ void Satellite::run()
 
     try
     {
-        Properties::get_int("hello");
         SubSystems::Communication::run();
     }
     catch (const std::exception &ex)
