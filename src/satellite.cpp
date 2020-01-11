@@ -1,6 +1,7 @@
 #include <satellite.hpp>
 #include <properties.hpp>
 #include <subsystems.hpp>
+#include <subsystems/communication.hpp>
 #include <logger.hpp>
 
 int main()
@@ -12,14 +13,14 @@ int main()
     }
     catch (const std::exception &)
     {
-        print_catch_and_handle_exception();
+        log_catch_and_handle_exception();
     }
     Satellite::cleanup();
 }
 
 void Satellite::initialize()
 {
-    print_function_call();
+    log_function_call();
 
     try
     {
@@ -28,29 +29,30 @@ void Satellite::initialize()
     }
     catch (const std::exception &ex)
     {
-        print_catch_and_throw_exception();
+        log_catch_and_throw_exception();
         throw ex;
     }
 }
 
 void Satellite::run()
 {
-    print_function_call();
+    log_function_call();
 
     try
     {
-        // TODO: Run
+        Properties::get_int("hello");
+        SubSystems::Communication::run();
     }
     catch (const std::exception &ex)
     {
-        print_catch_and_throw_exception();
+        log_catch_and_throw_exception();
         throw ex;
     }
 }
 
 void Satellite::cleanup() noexcept
 {
-    print_function_call();
+    log_function_call();
 
     SubSystems::cleanup();
 }

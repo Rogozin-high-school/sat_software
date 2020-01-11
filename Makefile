@@ -1,17 +1,30 @@
-COMPILER_SAT_DEMO  = arm-linux-gnueabihf-g++ -march=armv6 -marm -mfpu=vfpv2 -no-pie
+COMPILER_SAT_DEMO  = arm-linux-gnueabihf-g++ -march=armv6 -marm -mfpu=vfpv2 -no-pie -fPIC
 PROPERTIES_FILE    = properties
+IFLAGS             = \
+	-Ilib/CrossPlatformDataBus/src \
+	-Ilib/WiringPi/wiringPi \
+	-Iinclude \
+	-Iinclude/subsystems
 FLAGS              = -s -O3 -std=gnu++17 -Wall -Wno-unused-variable \
     -D LOGGING \
-    -D LOGGING_FUNCTION_CALLS \
-    -D PROPERTIES_FILE=\"$(PROPERTIES_FILE)\"
-IFLAGS             = -Iinclude -Iinclude/subsystems
-LFLAGS             = -static-libstdc++
+    -D PROPERTIES_FILE=\"$(PROPERTIES_FILE)\" -D LOGGING_FUNCTION_CALLS
+LIBS               = \
+	-lwiringPi \
+	-lpthread
+LFLAGS             = \
+	-Llib/WiringPi/wiringPi
 OUT                = satellite
 SRC                = \
+	lib/CrossPlatformDataBus/extras/i2c/wiringpi/src/WiringPiI2C.cpp \
+    lib/MPU/src/MPU.cpp \
+    lib/MPU/src/MPU9250.cpp \
+    lib/MPU/src/MPU9250_Master.cpp \
+    lib/MPU/src/MPU9250_Master_I2C.cpp \
 	src/satellite.cpp \
 	src/properties.cpp \
 	src/subsystems.cpp \
-	src/subsystems/communication.cpp
+	src/subsystems/communication.cpp \
+	src/subsystems/telemetry.cpp
 OBJS               = $(SRC:.cpp=.o)
 
 build-sat-demo: $(OBJS)
@@ -22,8 +35,12 @@ build-sat-demo: $(OBJS)
 load-sat-demo:
 	@scp -q $(PROPERTIES_FILE) $(OUT) sat-demo:~/
 
-run-sat-demo:
-	@gnome-terminal --full-screen -- ssh sat-demo 'sudo ./$(OUT); read' 2>/dev/null
+load-libs:
+	@rm -rf lib
+	@git clone https://github.com/Rogozin-high-school/WiringPi.git lib/WiringPi
+	@git clone https://github.com/Rogozin-high-school/CrossPlatformDataBus.git lib/CrossPlatformDataBus
+	@git clone https://github.com/Rogozin-high-school/MPU.git lib/MPU
+	@cd lib/WiringPi/wiringPi && make clean
 
 clean:
 	@rm -rf $(OUT) $(OBJS)

@@ -2,10 +2,9 @@
 
 namespace SubSystems
 {
-struct Communication
+struct Telemetry
 {
     static void initialize();
-    static void run() noexcept;
     static void cleanup() noexcept;
 };
 } // namespace SubSystems

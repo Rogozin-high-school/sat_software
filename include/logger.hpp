@@ -4,34 +4,28 @@
 
 #ifndef LOGGING
 
-#define print_throw_exception(x)
-#define print_catch_and_throw_exception()
-#define print_catch_and_handle_exception()
-#define print_function_call(...)
+#define log_throw_exception(x)
+#define log_catch_and_throw_exception()
+#define log_catch_and_handle_exception()
+#define log_function_call(...)
 
 #else // LOGGING
 
 #include <iostream>
-#include <string.h>
-
-#include <cxxabi.h>
+#include <iomanip>
+#include <sstream>
 #include <memory>
 
+#include <string.h>
+#include <stdarg.h>
+#include <cxxabi.h>
+
 #ifdef LOGGING_FUNCTION_CALLS
-#include <sstream>
 #include <array>
 #endif // LOGGING_FUNCTION_CALLS
 
 namespace
 {
-
-const static inline std::string demangle(const char *name)
-{
-      int status;
-      std::unique_ptr<char, void (*)(void *)> res{
-          abi::__cxa_demangle(name, nullptr, nullptr, &status), free};
-      return status ? name : res.get();
-}
 
 #define BOLD "\e[1m"
 #define RBOLD "\e[21m"
@@ -43,72 +37,112 @@ const static inline std::string demangle(const char *name)
 #define GREEN "\e[32m"
 #define CYAN "\e[36m"
 #define LIGHT_GREY "\e[37m"
+#define WHITE "\e[39m"
 #define RESET "\e[0m"
 
-#define FILE_NAME \
-      (strchr(__FILE__, '/') ? strchr(__FILE__, '/') + 1 : __FILE__)
+#define PADDING "                 "
 
-#define FUNCTION_NAME \
-      __PRETTY_FUNCTION__
-
-template <typename Exception>
-static inline void _print_throw_exception(const std::string &&flName, const std::string &&fnName, const Exception &ex)
+static inline const std::string module_name(const char *fileName)
 {
-      printf("%s\n"
-             "\t%s has thrown an exception!\n"
-             "\t%s: %s\n" RESET,
+      // Trim the path
+      const std::string fileName_noPath{strrchr(fileName, '/') ? strrchr(fileName, '/') + 1 : fileName};
 
-             (RED UNDERLINE + flName + RUNDERLINE).c_str(),
-             (ITALIC CYAN + fnName + RESET RED).c_str(),
-             (BOLD + demangle(typeid(ex).name()) + RESET RED).c_str(),
-             ex.what());
+      // Trim the ".cpp" suffix
+      std::string fileName_noSuffix = fileName_noPath.substr(0, fileName_noPath.size() - 4);
+
+      // Set the first character uppercase
+      fileName_noSuffix[0] = toupper(fileName_noSuffix[0]);
+
+      return fileName_noSuffix;
 }
 
-static inline void _print_catch_and_throw_exception(const std::string &&flName, const std::string &&fnName)
+static inline void _log(const char *color, const char *fileName, const char *format, ...)
 {
-      printf("%s\n"
-             "\t%s has caught an exception, and thrown it forward!\n" RESET,
+      va_list va;
+      va_start(va, format);
 
-             (RED UNDERLINE + flName + RUNDERLINE).c_str(),
-             (ITALIC CYAN + fnName + RESET RED).c_str());
+      std::stringstream formatStr;
+
+      formatStr << color;
+      if (fileName != nullptr)
+      {
+            formatStr << std::left << std::setw(sizeof(PADDING) - sizeof(" -> ")) << std::setfill(' ') << module_name(fileName);
+      }
+      formatStr << " -> " << format << RESET << "\n";
+
+      vprintf(formatStr.str().c_str(), va);
+      va_end(va);
 }
 
-static inline void _print_catch_and_handle_exception(const std::string &&flName, const std::string &&fnName)
-{
-      printf("%s\n"
-             "\t%s has caught an exception, but handled it!\n" RESET,
+//
 
-             (RED UNDERLINE + flName + RUNDERLINE).c_str(),
-             (ITALIC CYAN + fnName + RESET RED).c_str());
+#define verbose_f(fileName, format, ...) \
+      _log(WHITE, fileName, format __VA_OPT__(, ) __VA_ARGS__)
+
+#define debug_f(fileName, format, ...) \
+      _log(LIGHT_GREY, fileName, format __VA_OPT__(, ) __VA_ARGS__)
+
+#define info_f(fileName, format, ...) \
+      _log(CYAN, fileName, format __VA_OPT__(, ) __VA_ARGS__)
+
+#define warn_f(fileName, format, ...) \
+      _log(RED, fileName, format __VA_OPT__(, ) __VA_ARGS__)
+
+#define err_f \
+      warn_f // Meanwhile the same format
+
+//
+
+#define verbose(format, ...) \
+      verbose_f(__FILE__, format __VA_OPT__(, ) __VA_ARGS__)
+
+#define debug(format, ...) \
+      debug_f(__FILE__, format __VA_OPT__(, ) __VA_ARGS__)
+
+#define info(format, ...) \
+      info_f(__FILE__, format __VA_OPT__(, ) __VA_ARGS__)
+
+#define warn(format, ...) \
+      warn_f(__FILE__, format __VA_OPT__(, ) __VA_ARGS__)
+
+#define err \
+      warn // Meanwhile the same format
+
+//
+
+static inline const std::string demangle(const char *name)
+{
+      int status;
+      std::unique_ptr<char, void (*)(void *)> res{
+          abi::__cxa_demangle(name, nullptr, nullptr, &status), free};
+      return status ? name : res.get();
 }
 
-#define print_throw_exception(ex) \
-      _print_throw_exception(FILE_NAME, FUNCTION_NAME, ex)
+//
 
-#define print_catch_and_throw_exception() \
-      _print_catch_and_throw_exception(FILE_NAME, FUNCTION_NAME)
+#define log_throw_exception(ex) \
+      err(ITALIC CYAN "%s" RESET RED " has thrown an exception!\n" PADDING BOLD "%s: " RESET RED "%s", __PRETTY_FUNCTION__, demangle(typeid(ex).name()).c_str(), ex.what())
 
-#define print_catch_and_handle_exception() \
-      _print_catch_and_handle_exception(FILE_NAME, FUNCTION_NAME)
+#define log_catch_and_throw_exception() \
+      err(ITALIC CYAN "%s" RESET RED " has caught an exception, and thrown it forward!", __PRETTY_FUNCTION__)
+
+#define log_catch_and_handle_exception() \
+      err(ITALIC CYAN "%s" RESET RED " has caught an exception, but handled it!", __PRETTY_FUNCTION__)
 
 #ifndef LOGGING_FUNCTION_CALLS
 
-#define print_function_call(...)
+#define log_function_call(...)
 
 #else // LOGGING_FUNCTION_CALLS
 
 template <typename... Args>
-static inline void _print_function_call(const std::string &&flName, const std::string &&fnName, const Args &... args)
+static inline void _log_function_call(const char *fileName, const char *funcName, const Args &... args)
 {
-      printf("%s\n"
-             "\t%s has been called\n",
-
-             (UNDERLINE + flName + RUNDERLINE).c_str(),
-             (ITALIC CYAN + fnName + RESET).c_str());
+      verbose_f(fileName, ITALIC CYAN "%s", funcName);
 
       if constexpr (sizeof...(Args) > 0)
       { // Print the parameter types. They're embedded in the function's name
-            std::string stripped(strchr(fnName.c_str(), '('));
+            std::string stripped(strchr(funcName, '('));
             stripped = stripped.substr(1, stripped.length() - 2);
 
             if (stripped.length() > 0)
@@ -125,14 +159,14 @@ static inline void _print_function_call(const std::string &&flName, const std::s
                   }
                   i = 0;
 
-                  std::cout << "\n";
-                  ((std::cout << "\t" << i + 1 << ". " CYAN ITALIC << argsArr[j++] << RESET " => " LIGHT_GREY ITALIC << args << RESET << std::endl), ...);
+                  // std::cout << "\n";
+                  ((std::cout << PADDING << i + 1 << ". " ITALIC CYAN << argsArr[j++] << RESET " => " ITALIC LIGHT_GREY << args << RESET << std::endl), ...);
             }
       }
 }
 
-#define print_function_call(...) \
-      _print_function_call(FILE_NAME, FUNCTION_NAME __VA_OPT__(, ) __VA_ARGS__)
+#define log_function_call(...) \
+      _log_function_call(__FILE__, __PRETTY_FUNCTION__ __VA_OPT__(, ) __VA_ARGS__)
 
 #endif // LOGGING_FUNCTION_CALLS
 
