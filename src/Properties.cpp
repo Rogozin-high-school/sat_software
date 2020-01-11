@@ -29,7 +29,7 @@ void Properties::load(std::string &&fileName)
 
     file.close();
 
-    verbose("Loaded the properties!");
+    info("Loaded the properties!");
 }
 
 const std::string_view Properties::get_string(std::string &&key)

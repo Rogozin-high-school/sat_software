@@ -40,6 +40,7 @@ void Satellite::run()
     try
     {
         SubSystems::Communication::run();
+        getchar(); // Meanwhile, pause the main thread
     }
     catch (const std::exception &ex)
     {
