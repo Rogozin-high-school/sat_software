@@ -2,7 +2,7 @@
 
 namespace SubSystems
 {
-struct Maneuvering
+struct OrbitControl
 {
 };
 } // namespace SubSystems

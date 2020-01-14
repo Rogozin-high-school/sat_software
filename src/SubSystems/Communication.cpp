@@ -108,7 +108,7 @@ void communicate() noexcept
 
         bytes = read(socketFD, buffer, sizeof(buffer));
         if (bytes <= 0)
-        {
+        { 
             info("Lost connection with the ground station!");
             break;
         }
@@ -145,14 +145,8 @@ bool create_socket() noexcept
         socketAddr.sin_port = htons(gsPort);
 
         int ret = inet_pton(AF_INET, gsIPAddress, &socketAddr.sin_addr.s_addr);
-        if (ret == 0)
+        if (ret == 0 || ret == -1)
         {
-            // log("client.create_socket().inet_pton() has failed: %s Bad address!\n", gsIPAddress);
-            return false;
-        }
-        else if (ret == -1)
-        {
-            // log("client.create_socket().inet_pton() has failed: %s\n", strerror(errno));
             return false;
         }
     }

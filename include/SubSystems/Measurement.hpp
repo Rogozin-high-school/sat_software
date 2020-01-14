@@ -2,7 +2,7 @@
 
 namespace SubSystems
 {
-struct Telemetry
+struct Measurement
 {
 };
 } // namespace SubSystems
