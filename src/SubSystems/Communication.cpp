@@ -8,11 +8,7 @@
 #include <unistd.h>
 #include <errno.h>
 
-enum class Intent : uint8_t
-{
-    None = 0x00,
-    Terminate = 0xff
-} intent;
+SubSystems::Communication::Command SubSystems::Communication::command;
 
 int timeoutMicros; // Communication timeout in microseconds
 
@@ -56,7 +52,7 @@ void SubSystems::Communication::run() noexcept
     log_function_call();
 
     std::thread thread([&] {
-        while (intent != Intent::Terminate)
+        while (command != Command::Terminate)
         {
             info("Attempting to connect to the ground station...");
 
@@ -100,10 +96,13 @@ void start_connection() noexcept
 
 void communicate() noexcept
 {
+    using Communication = SubSystems::Communication;
+    using Command = Communication::Command;
+
     ssize_t bytes;
     uint8_t buffer[1024];
 
-    while (intent != Intent::Terminate)
+    while (Communication::command != Command::Terminate)
     {
         std::fill(std::begin(buffer), std::end(buffer), 0);
 
@@ -120,9 +119,9 @@ void communicate() noexcept
 
             switch (packetId)
             {
-            case uint8_t(Intent::Terminate):
+            case uint8_t(Command::Terminate):
                 warn(BOLD "Terminating!");
-                intent = Intent::Terminate;
+                Communication::command = Command::Terminate;
             default:
                 break;
             }

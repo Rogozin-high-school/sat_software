@@ -4,6 +4,8 @@
 #include <SubSystems.hpp>
 #include <SubSystems/Communication.hpp>
 
+#include <unistd.h>
+
 int main()
 {
     try
@@ -39,16 +41,29 @@ void Satellite::run()
 {
     log_function_call();
 
+    using Communication = SubSystems::Communication;
+    using Command = Communication::Command;
+
     try
     {
-        SubSystems::Communication::run();
-        getchar(); // Meanwhile, pause the main thread
+        Communication::run();
+
+        while (Communication::command != Command::Terminate)
+        {
+            Satellite::update();
+            usleep(1000000 / refreshRateHz);
+        }
     }
     catch (const std::exception &ex)
     {
         log_catch_and_throw_exception();
         throw ex;
     }
+}
+
+void Satellite::update()
+{
+    
 }
 
 void Satellite::cleanup() noexcept

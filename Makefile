@@ -6,6 +6,8 @@ IFLAGS             = \
 	-Iinclude \
 	-Iinclude/Components \
 	-Iinclude/SubSystems
+LFLAGS             = \
+	-Llib/WiringPi/wiringPi
 FLAGS              = \
 	-s -O3 -std=gnu++17 -Wall -Wno-unused-variable \
 	-include include/Logger.hpp \
@@ -15,8 +17,6 @@ FLAGS              = \
 LIBS               = \
 	-lwiringPi \
 	-lpthread
-LFLAGS             = \
-	-Llib/WiringPi/wiringPi
 OUT                = satellite
 SRC                = \
 	lib/CrossPlatformDataBus/extras/i2c/wiringpi/src/WiringPiI2C.cpp \
@@ -47,7 +47,7 @@ load-libs:
 	@git clone https://github.com/Rogozin-high-school/WiringPi.git lib/WiringPi
 	@git clone https://github.com/Rogozin-high-school/CrossPlatformDataBus.git lib/CrossPlatformDataBus
 	@git clone https://github.com/Rogozin-high-school/MPU.git lib/MPU
-	@cd lib/WiringPi/wiringPi && make && make clean
+	@cd lib/WiringPi/wiringPi && make static
 
 clean:
 	@rm -rf $(OUT) $(OBJS)
