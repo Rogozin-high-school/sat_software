@@ -30,8 +30,8 @@ SRC                = \
 	src/Components/IMU.cpp \
 	src/SubSystems.cpp \
 	src/SubSystems/Communication.cpp \
-	src/SubSystems/Telemetry.cpp \
-	src/SubSystems/Maneuvering.cpp
+	src/SubSystems/Measurement.cpp \
+	src/SubSystems/OrbitControl.cpp
 OBJS               = $(SRC:.cpp=.o)
 
 build-sat-demo: $(OBJS)

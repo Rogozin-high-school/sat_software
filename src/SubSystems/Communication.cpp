@@ -102,14 +102,21 @@ void communicate() noexcept
     ssize_t bytes;
     uint8_t buffer[1024];
 
+    // Send ID
+    {
+        uint8_t type = 1; // Satellite type ID
+        send(socketFD, &type, sizeof(type), 0);
+    }
+
     while (Communication::command != Command::Terminate)
     {
         std::fill(std::begin(buffer), std::end(buffer), 0);
 
         bytes = read(socketFD, buffer, sizeof(buffer));
         if (bytes <= 0)
-        { 
+        {
             info("Lost connection with the ground station!");
+            std::this_thread::sleep_for(std::chrono::seconds(1));
             break;
         }
         else
@@ -151,15 +158,15 @@ bool create_socket() noexcept
         }
     }
 
-    if (timeoutMicros > 0)
-    { // Set the socket timeout
-        const timeval timeout = {timeoutMicros / 1000000, timeoutMicros % 1000000};
-        if (setsockopt(socketFD, SOL_SOCKET, SO_RCVTIMEO | SO_SNDTIMEO, &timeout, sizeof(timeval)))
-        {
-            // log("client.create_socket().setsockopt() has failed: %s\n", strerror(errno));
-            return false;
-        }
-    }
+    // if (timeoutMicros > 0)
+    // { // Set the socket timeout
+    //     const timeval timeout = {timeoutMicros / 1000000, timeoutMicros % 1000000};
+    //     if (setsockopt(socketFD, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeval)))
+    //     {
+    //         // log("client.create_socket().setsockopt() has failed: %s\n", strerror(errno));
+    //         return false;
+    //     }
+    // }
 
     return true;
 }

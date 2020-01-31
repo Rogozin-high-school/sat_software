@@ -1,6 +1,5 @@
 #include <SubSystems.hpp>
 #include <SubSystems/Communication.hpp>
-#include <SubSystems/Telemetry.hpp>
 
 void SubSystems::initialize()
 {
